@@ -184,9 +184,108 @@ const getProfile = asyncHandler(async(req, res, next) => {
     }
 })
 
+const updateUserDetails = asyncHandler(async(req, res, next) => {
+    try{
+        const { name, username } = req.body;
+        const userId = req.user._id;
+
+        if(!name && !username){
+            throw new ApiError(400, "Atleast one field is necessry..");
+        }
+
+        if(username){
+            const userNameExists = await User.findOne({ 
+                username, 
+                _id: { $ne: userId }
+            });
+            if(userNameExists){
+                throw new ApiError(400, "Username already exists..");
+            }
+        }
+
+        let updationFields = {};
+        if(username) updationFields.username = username;
+        if(name) updationFields.name = name;
+        
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {$set : updationFields},
+            {new : true, runValidators : true}
+        )
+
+        if(!updatedUser){
+            throw new ApiError(400, "Details not updated..");
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                updatedUser,
+                "User Details updated successfully"
+            )
+        )
+
+
+
+
+    }catch(err){
+        throw new ApiError(400, err?.message || "Error occurred while updating  user details");
+    }
+})
+
+const updateUserAvatar = asyncHandler(async(req, res, next) => {
+    try{
+        const userId = req.user._id;
+        const avatarLocalPath = req.file?.path;
+        if(!avatarLocalPath){
+            throw new ApiError(400, "Avatar file is required");
+        }
+
+        const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+        if(!avatar.secure_url){
+            throw new ApiError(400, "Error while updating the user avatar");
+        }
+
+        const userPrev = await User.findById(userId);
+        await deleteFromCloudinary(userPrev?.avatar?.public_id);
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            {
+                $set : {
+                    avatar : {
+                        secure_url : avatar.secure_url,
+                        public_id : avatar.public_id
+                    }
+                }
+            },
+            {new : true}
+        )
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                user,
+                "Avatar Image Updated Successfully"
+            )
+        );
+
+
+    }catch(err){
+        console.log(`Error occurred while updating user Avatar : ${err}`);
+        throw new ApiError(400, "Error occurred while updating Avatar");
+    }
+})
+
 export { 
     register,
     login,
     logout,
-    getProfile
+    getProfile,
+    updateUserDetails,
+    updateUserAvatar
 }
