@@ -392,6 +392,33 @@ const changePassword = asyncHandler(async(req, res, next) => {
     }
 })
 
+const getAllUsers = asyncHandler(async(req, res, next) => {
+    try{
+        const allUsers = await User.find({});
+        if(allUsers.length == 0){
+            return res.status(200)
+            .json(
+                new ApiResponse(
+                    200, {}, "No User has registered till now"
+                )
+            )
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                allUsers,
+                "All Users fetched Successfully"
+            )
+        )
+    }catch(err){
+        console.log(`Error occurred in fetching all users : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching all the users");
+    }
+})
+
+
 
 export { 
     register,
@@ -402,5 +429,6 @@ export {
     updateUserAvatar,
     forgotPassword,
     resetPassword,
-    changePassword
+    changePassword,
+    getAllUsers
 }
