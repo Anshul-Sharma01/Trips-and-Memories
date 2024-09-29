@@ -53,7 +53,8 @@ const userSchema = new Schema({
         minLength : [0, "Number of Memories can't be less than 0"]
     },
     refreshToken : {
-        type : String
+        type : String,
+        select : false,
     },
     forgotPasswordToken : String,
     forgotPasswordExpiry : Date,
