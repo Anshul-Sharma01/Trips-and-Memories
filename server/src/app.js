@@ -15,10 +15,10 @@ app.use(express.static("public"));
 
 
 import userRoutes from "./routes/user.routes.js";
-
+import memoryRoutes from "./routes/memory.routes.js";
 
 app.use("/api/v1/users", userRoutes);
-
+app.use("/api/v1/memory", memoryRoutes);
 
 export { app };
 
