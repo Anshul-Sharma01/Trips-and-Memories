@@ -3,7 +3,7 @@ import { Memory } from "../modals/memory.model";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
 const fetchAllMemories = asyncHandler(async(req, res, next) => {
@@ -193,7 +193,7 @@ const createMemory = asyncHandler(async(req, res, next) => {
                 title,
                 content,
                 author : userId,
-                tripDate  : tripDate ?? Date.now(),
+                tripDate  : tripDate || Date.now(),
                 location,
                 tags,
                 category,
@@ -215,6 +215,8 @@ const createMemory = asyncHandler(async(req, res, next) => {
                     "New Memory Created Successfully"
                 )
             )
+        }else{
+            throw new ApiError(400, err?.message || "Error occurred while creating a blog");
         }
         
 
@@ -228,10 +230,27 @@ const updateMemory = asyncHandler(async(req, res, next) => {
     try{
         const { title, content, location, tags, category } = req.body;
         const { memoryId } = req.params;
+        
+        if(!isValidObjectId(memoryId)){
+            throw new ApiError(400, " Invalid Memory Id ");
+        }
 
         if(!title && !content && !location && !tags && !category){
             throw new ApiError(400, "Atleast one field is required for updation");
         }
+
+        
+        const memory = await Memory.findById(memoryId);
+        if(!memory){
+            throw new ApiError(404, "Memory does not exists !!");
+        }
+
+        if(memory.author.toString() !== userId.toString()){
+            throw new ApiError(403, "You are not authorized to update the Memory Thumbnail");
+        }
+
+        
+
         let updationFields = {};
         if(title) updationFields.title = title;
         if(content) updationFields.content = content;
@@ -260,17 +279,111 @@ const updateMemory = asyncHandler(async(req, res, next) => {
 
     }catch(err){
         console.error(`Error occurred while updating the memory details : ${err}`);
-        throw new ApiError(400, "Some Error occurred while updating memory details");
+        throw new ApiError(400, err?.message ||  "Some Error occurred while updating memory details");
     }
 })
 
 const updateMemoryThumbnail = asyncHandler(async(req, res, next) => {
+    try{
+        const { memoryId } = req.params;
+        const userId = req.user._id;
 
+
+        if(!isValidObjectId(memoryId)){
+            throw new ApiError(400, "Invalid Memory Id");
+        }
+
+        const memory = await Memory.findById(memoryId);
+        if(!memory){
+            throw new ApiError(404, "Memory does not exists !!");
+        }
+
+        if(memory.author.toString() !== userId.toString()){
+            throw new ApiError(403, "You are not authorized to update the Memory Thumbnail");
+        }
+
+        if(req.file){
+            const thumb = req.file?.path;
+            const thumbnail = await uploadOnCloudinary(thumb);
+            if(!thumbnail){
+                throw new ApiError(400, "Error occurred while updating thumbnail !! ");
+            }
+
+            const prevThumbnailId = memory.thumbnail.public_id;
+
+            const updatedMemory = await Memory.findByIdAndUpdate(
+                memoryId,
+                {
+                    $set : {
+                        thumbnail : {
+                            public_id : thumbnail.public_id,
+                            secure_url : thumbnail.secure_url
+                        }
+                    }
+                },
+                { new : true }
+            )
+
+            if(!updatedMemory){
+                throw new ApiError(400, "Error occurred while updating the thumbnail, please try again later..");
+            }
+
+            await deleteFromCloudinary(prevThumbnailId);
+
+            return res.status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    updatedMemory,
+                    "Memory Thumbnail Updated Successfully"
+                )
+            );
+
+
+        }else{
+            throw new ApiError(403, "Thumbnail File is required");
+        }
+
+    }catch(err){
+        console.error(`Error occurred while updating thumbnail : ${err}`);
+        throw new ApiError(400, err?.message ||  "Error occurred while updating the memory thumbnail !!");
+
+    }
 })
 
-const deleteMemory = asyncHandler(async(req, res, next) => {
+const deleteMemory = asyncHandler(async (req, res, next) => {
+    try {
+        const { memoryId } = req.params;
+        const userId = req.user._id;
 
-})
+        if (!isValidObjectId(memoryId)) {
+            throw new ApiError(400, "Invalid Memory Id");
+        }
+
+        const memory = await Memory.findById(memoryId);
+        if (!memory) {
+            throw new ApiError(404, "Memory does not exist");
+        }
+
+        if (memory.author.toString() !== userId.toString()) {
+            throw new ApiError(403, "You are not authorized to delete this memory");
+        }
+
+        const deletedMemory = await Memory.findByIdAndDelete(memoryId);
+        if (!deletedMemory) {
+            throw new ApiError(400, "Memory not deleted, please try again later");
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, deletedMemory, "Memory deleted successfully")
+        );
+
+    } catch (err) {
+        console.error(`Error occurred while deleting the memory: ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while deleting the memory");
+    }
+});
+
 
 export {
     fetchAllMemories,
