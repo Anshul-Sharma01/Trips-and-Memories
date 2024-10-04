@@ -10,10 +10,6 @@ const bucketListSchema = new Schema({
         type : Schema.Types.ObjectId,
         ref : "Memory"
     },
-    memoryAuthor : {
-        type : Schema.Types.ObjectId,
-        ref : "User"
-    }
 }, {
     timestamps : true
 })
