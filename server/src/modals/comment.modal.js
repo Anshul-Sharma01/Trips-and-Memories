@@ -11,6 +11,10 @@ const commentSchema = new Schema({
         required : [true, "Comment Content is required.."],
         trim : true
     },
+    memory : {
+        type : Schema.Types.ObjectId,
+        ref : "Memory"
+    },
     numberOfLikes : {
         type : Number,
         default : 0,
