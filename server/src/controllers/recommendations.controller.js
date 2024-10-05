@@ -21,20 +21,27 @@ const provideRecommendations = asyncHandler(async(req, res, next) => {
             )
         }
 
-        //const allCategories = prevTrips.map((ele) => ele.category);
         const categoryCount = {};
         prevTrips.forEach((ele) => {
             const category = ele.category;
             categoryCount[category] = (categoryCount[category] || 0) + 1;
         })
 
-        const mostCommonCategory = Object.keys(categoryCount).reduce((a,b) => categoryCount[a] > categoryCount[b] ? a : b);
+        const categories = Object.keys(categoryCount);
+        const uniqueCount = new Set(Object.values(categoryCount));
 
+        let mostCommonCategory;
+        if(uniqueCount.size == 1){
+            mostCommonCategory = categories[Math.floor(Math.random() * categories.length)];
+        }else{
+            mostCommonCategory = categories.reduce((a,b) => categoryCount[a] > categoryCount[b] ? a : b);
+        }
 
         const recommendedTrips = await Memory.aggregate([
-            {$match : { $category : mostCommonCategory }},
+            {$match : {category : mostCommonCategory}},
             {$sample : {size : 5}}
         ]);
+
 
         return res.status(200).json(
             new ApiResponse(
