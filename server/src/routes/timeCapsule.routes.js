@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTimeCapsule, fetchAllTimeCapsulesofUser } from "../controllers/timeCapsule.controller.js";
+import { createTimeCapsule, deleteTimeCapsule, fetchAllTimeCapsulesofUser, fetchTimeCapsuleDetails } from "../controllers/timeCapsule.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 
@@ -13,6 +13,14 @@ router.route("/create")
 
 router.route("/get/my")
 .get(fetchAllTimeCapsulesofUser);
+
+
+router.route("/get/:capsuleId")
+.get(fetchTimeCapsuleDetails);
+
+router.route("/delete/:capsuleId")
+.delete(deleteTimeCapsule);
+
 
 
 
