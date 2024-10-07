@@ -19,12 +19,14 @@ import memoryRoutes from "./routes/memory.routes.js";
 import likeRoutes from "./routes/like.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
 import bucketListRoutes from "./routes/bucketList.routes.js";
+import timeCapsuleRoutes from "./routes/timeCapsule.routes.js";
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/memory", memoryRoutes);
 app.use("/api/v1/like", likeRoutes);
 app.use("/api/v1/comment", commentRoutes);
 app.use("/api/v1/bucket-list", bucketListRoutes);
+app.use("/api/v1/time-capsule", timeCapsuleRoutes);
 
 export { app };
 
