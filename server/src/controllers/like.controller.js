@@ -1,9 +1,9 @@
 import { isValidObjectId } from "mongoose";
-import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asyncHandler";
-import { Like } from "../modals/like.modal.js";
-import { Memory } from "../modals/memory.model";
-import { ApiResponse } from "../utils/ApiResponse";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { Like } from "../models/like.model.js";
+import { Memory } from "../models/memory.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 
 const toggleMemoryLike = asyncHandler(async (req, res, next) => {

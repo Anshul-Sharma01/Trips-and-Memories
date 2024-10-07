@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import mongoose from "mongoose";
-import { asyncHandler } from "./asyncHandler";
-import { TimeCapsule } from "../modals/timeCapsule.modal.js";
+import { asyncHandler } from "./asyncHandler.js";
+import { TimeCapsule } from "../models/timeCapsule.model.js";
 
 const unlockTimeCapsules = asyncHandler(async(req, res, next) => {
     try{

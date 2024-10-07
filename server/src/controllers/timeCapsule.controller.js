@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { TimeCapsule } from "../modals/timeCapsule.modal.js";
+import { TimeCapsule } from "../models/timeCapsule.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";

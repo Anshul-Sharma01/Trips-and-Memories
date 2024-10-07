@@ -3,8 +3,8 @@ import { isValidObjectId } from "mongoose";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { Memory } from "../modals/memory.model.js";
-import { BucketList } from "../modals/bucketList.modal.js";
+import { Memory } from "../models/memory.model.js";
+import { BucketList } from "../models/bucketList.model.js";
 
 const toggleBucketListItem = asyncHandler(async( req, res, next) => {
     try{

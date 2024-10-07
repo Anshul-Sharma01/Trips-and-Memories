@@ -1,9 +1,9 @@
 import { isValidObjectId } from "mongoose";
-import { ApiError } from "../utils/ApiError";
+import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { Comment } from "../modals/comment.modal.js";
+import { Comment } from "../models/comment.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { Memory } from "../modals/memory.model.js";
+import { Memory } from "../models/memory.model.js";
 
 
 

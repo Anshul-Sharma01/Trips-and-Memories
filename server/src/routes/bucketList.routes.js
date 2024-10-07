@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { clearBucketList, getAllBucketListItems, toggleBucketListItem } from "../controllers/bucketList.controller";
+import { clearBucketList, getAllBucketListItems, toggleBucketListItem } from "../controllers/bucketList.controller.js";
 
 
 const router = Router();

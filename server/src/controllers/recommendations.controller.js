@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { Memory } from "../modals/memory.model.js";
+import { Memory } from "../models/memory.model.js";
 
 
 const provideRecommendations = asyncHandler(async(req, res, next) => {
