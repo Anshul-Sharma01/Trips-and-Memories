@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createTimeCapsule, fetchAllTimeCapsulesofUser } from "../controllers/timeCapsule.controller.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 
 const router = Router();
@@ -7,10 +8,10 @@ const router = Router();
 
 
 router.route("/create")
-.post(createTimeCapsule);
+.post( upload.single('memoryImg') ,createTimeCapsule);
 
 
-router.route("/get/:userId")
+router.route("/get/my")
 .get(fetchAllTimeCapsulesofUser);
 
 
