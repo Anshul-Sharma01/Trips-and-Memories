@@ -33,6 +33,8 @@ const timeCapsuleSchema = new Schema({
         type : String,
         required : [true, "The description of memory is required for the time capsule"]
     }
+}, {
+    timestamps : true
 })
 
 
