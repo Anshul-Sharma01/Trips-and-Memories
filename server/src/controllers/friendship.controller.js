@@ -171,11 +171,71 @@ const listAllFriends = asyncHandler(async(req, res, next) => {
     }
 })
 
+const getPendingRequests = asyncHandler(async(req, res, next) => {
+    try{
+        const userId = req.user._id;
+        
+        const pendingRequests = await Friendship.find({
+            recipient : userId,
+            status : "pending"
+        }).populate('requester', 'name email');
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200, 
+                pendingRequests,
+                "Pending Friend Requests fetched Successfully"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while fetching pending friend requests : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching pending friend requests !!");
+    }
+})
+
+const removeFriend = asyncHandler(async(req, res, next) => {
+    try{
+        const { friendId } = req.params;
+        const userId = req.user._id;
+        if(!isValidObjectId(friendId)){
+            throw new ApiError(400, "Invalid Friend Id");
+        }
+
+        const friendship = await Friendship.findOneAndDelete({
+            $or : [
+                { requester : userId, recipient : friendId, status : 'accepted'},
+                { requester : friendId, recipient : userId, status : 'accepted'}
+            ]
+        });
+
+        if(!friendship){
+            throw new ApiError(400, "Friendshi not found !!");
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                friendship,
+                "Friend Removed Successfully"
+            )
+        );
+    }catch(err){
+        console.error(`Error occurred while removing a friend from friend list : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while removing a friend from friend list !!");
+    }
+})
+
 export {
     sendFriendRequest,
     cancelFriendRequest,
     acceptFriendRequest,
     declineFriendRequest,
     listAllFriends,
+    getPendingRequests,
+    removeFriend,
+
 }
 
