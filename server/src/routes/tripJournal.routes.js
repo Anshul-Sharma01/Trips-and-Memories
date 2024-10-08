@@ -17,4 +17,5 @@ router.route("/add-entry/:journalId")
 .post(upload.array("journalImg", 5), addEntryToJournal);
 
 
+
 export default router;
