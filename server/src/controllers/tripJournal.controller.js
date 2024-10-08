@@ -126,8 +126,100 @@ const fetchTripJournal = asyncHandler(async(req, res, next) => {
     }
 })
 
+const deleteJournalEntry = asyncHandler(async(req, res, next) => {
+    try{
+        const { journalId, entryId } = req.params;
+        const userId = req.user._id;
+        if(!isValidObjectId(journalId) || !isValidObjectId(entryId)){
+            throw new ApiError(400, "Invalid Journal or Entry Id");
+        }
+
+        const journal = await TripJournal.findById(journalId);
+
+        if(!journal || journal.isDeleted){
+            throw new ApiError(404, "Trip Journal not found !!");
+        }
+
+        const entry = journal.entries.id(entryId);
+        if(!entry){
+            throw new ApiError(404, "Journal entry not found !!");
+        }
+
+        if(entry.contributor.toString() !== userId.toString() && journal.createdBy.toString() !== userId.toString()){
+            throw new ApiError(403, "You are not authorized to delete this entry !!");
+        }
+
+        entry.remove();
+        await journal.save();
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journal,
+                "Journal entry deleted successfully"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while deleting a journal entry from trip journal : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while deleting a Trip-Journal !!");
+    }
+})
+
+const updateJournalEntry = asyncHandler(async(req, res, next) => {
+    try{
+        const { journalId, entryId } = req.params;
+        const userId = req.user._id;
+        const { content } = req.body;
+        
+        if(!content){
+            throw new ApiError(400, "Please provide the content for updation !!");
+        }
+
+        if(!isValidObjectId(journalId) || !isValidObjectId(entryId)){
+            throw new ApiError(400, "Invalid Journal or Entry Id");
+        }
+
+        const journal = await TripJournal.findById(journalId);
+        if(!journal || journal.isDeleted){
+            throw new ApiError(404, "Trip Journal not found !!");
+        }
+
+        const entry = journal.entries.id(entryId);
+        if(!entry){
+            throw new ApiError(404, "Journal entry not found !!");
+        }
+
+        if(entry.contributor.toString() !== userId.toString()){
+            throw new ApiError(403, "You can only update your own entries !!");
+        }
+
+        if(content){
+            entry.content = content;
+        }
+
+        await journal.save();
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journal,
+                "Journal entry updated successfully"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while updating an entry in the Trip - Journal : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while updating an entry in trip journal ");
+    }
+})
+
 export { 
     createTripJournal,
     addEntryToJournal,
-    fetchTripJournal
+    fetchTripJournal,
+    deleteJournalEntry,
+    updateJournalEntry
 }
