@@ -104,7 +104,8 @@ const fetchTripJournal = asyncHandler(async(req, res, next) => {
 
         const journal = await TripJournal.findById(journalId)
         .populate("contributors", "name email")
-        .populate("entries.contributor", "name email");
+        .populate("entries.contributor", "name email")
+        .populate("createdBy", "name email");
 
 
         if(!journal || journal.isDeleted){
@@ -216,10 +217,85 @@ const updateJournalEntry = asyncHandler(async(req, res, next) => {
     }
 })
 
+const closeJournal = asyncHandler(async(req, res, next) => {
+    try{
+        const { journalId } = req.params;
+        const userId = req.user._id;
+
+        if(!isValidObjectId(journalId)){
+            throw new ApiError(400, "Invalid Journal Id");
+        }
+
+        const journal = await TripJournal.findById(journalId);
+        if(!journal || journal.isDeleted){
+            throw new ApiError(404, "Trip Journal not found !!");
+        }
+
+        if(journal.createdBy.toString() !== userId.toString()){
+            throw new ApiError(403, "Only the creator can close this journal !!");
+        }
+
+        journal.status = "closed";
+        await journal.save();
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journal,
+                "Journal Closed Successfully"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while closing the Journal : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while closing the journal");
+    }
+})
+
+const manageContributors = asyncHandler(async(req, res, next) => {
+    try{
+        const { journalId } = req.params;
+        const { contributors } = req.body;
+        const userId = req.user._id;
+
+        if(!isValidObjectId(journalId)){
+            throw new ApiError(400, "Invalid Journal Id");
+        }
+
+        const journal = await TripJournal.findById(journalId);
+        if(!journal || journal.isDeleted){
+            throw new ApiError(404, "Trip Journal not found !!");
+        }
+
+        if(journal.createdBy.toString() !== userId.toString()){
+            throw new ApiError(403, "Only the Journal creator can manage contributors");
+        }
+
+        journal.contributors = contributors;
+        await journal.save();
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journal,
+                "Contributors updated successfully"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while managing the contributors : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while managing the contributors !!");
+    }
+})
+
 export { 
     createTripJournal,
     addEntryToJournal,
     fetchTripJournal,
     deleteJournalEntry,
-    updateJournalEntry
+    updateJournalEntry,
+    closeJournal,
+    manageContributors
 }

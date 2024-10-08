@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addEntryToJournal, createTripJournal, deleteJournalEntry, fetchTripJournal, updateJournalEntry } from "../controllers/tripJournal.controller.js";
+import { addEntryToJournal, closeJournal, createTripJournal, deleteJournalEntry, fetchTripJournal, manageContributors, updateJournalEntry } from "../controllers/tripJournal.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
@@ -21,6 +21,12 @@ router.route("/delete/:journalId/:entryId")
 
 router.route("/update/:journalId/:entryId")
 .patch(updateJournalEntry);
+
+router.route("/close/:journalId")
+.get(closeJournal);
+
+router.route("/manage/contributors/:journalId")
+.patch(manageContributors);
 
 
 export default router;
