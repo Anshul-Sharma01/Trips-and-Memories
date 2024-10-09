@@ -28,13 +28,15 @@ Welcome to the **Trips & Memories** project! This application aims to help users
 - **Trip Journals** 📖
   - Users can create trip journals to document their trips.
   - Multiple contributors can be invited to add entries, enriching the journal with various perspectives.
+  - Users can generate AI-generated stories based on the trip journal title and description.
 
 - **Friend Workflow** 👥
   - Users can create a friend list and accept friend requests from others.
   - Friends can be added as contributors to trip journals, facilitating collaboration on shared travel experiences.
 
 ## Project Status 🚧
-- Currently, the backend development is ongoing, and the frontend has not yet started.
+- The backend development is currently completed, including user authentication, time capsule creation, memories management, bucket list management, trip journals, and AI-generated stories.
+- The frontend development has not yet started.
 
 ## Technologies Used 💻
 - **Database:** MongoDB for data storage.
@@ -45,6 +47,7 @@ Welcome to the **Trips & Memories** project! This application aims to help users
 - **Authentication:** JSON Web Tokens (JWT) for access and refresh tokens.
 - **Email Service:** Nodemailer for sending emails, such as password reset links.
 - **Task Scheduling:** Node-Cron for scheduling automatic unlocking of time capsules.
+- **AI Integration:** Hugging Face API for generating AI-generated trip stories based on journal entries.
 - **Others:** 
   - bcryptjs for hashing passwords.
   - cookie-parser for parsing cookies.
@@ -54,6 +57,6 @@ Welcome to the **Trips & Memories** project! This application aims to help users
   - mongoose for MongoDB object modeling.
 
 ## Future Work 🔮
-- Add More features such as Ai generated trip stories and much more
-- Implement frontend development.
+- Implement frontend development using React.js.
 - Enhance user experience with additional features and improvements.
+- Continue to refine and expand existing features based on user feedback.
