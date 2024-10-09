@@ -60,7 +60,11 @@ const tripJournalSchema = new Schema({
                 default : Date.now
             }
         }
-    ]
+    ],
+    aiGeneratedStory : {
+        type : String,
+        default : null
+    }
 },{
     timestamps : true
 })
