@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import LandingPage from "./Pages/LandingPage.jsx";
+import { Routes, Route } from "react-router-dom";
 import './App.css'
 
 function App() {
@@ -6,7 +8,10 @@ function App() {
 
   return (
     <>
+      <Routes>
+        <Route path="/" element={<LandingPage/>} ></Route>
 
+      </Routes>
     </>
   )
 }
