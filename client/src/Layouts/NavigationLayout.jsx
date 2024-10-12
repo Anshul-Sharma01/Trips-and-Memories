@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { useState } from "react";
 import { ImCross } from "react-icons/im";
+import ThemeToggle from "../Components/ThemeToggle";
 
 function NavigationLayout() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -21,7 +22,7 @@ function NavigationLayout() {
                 <Link to="/" className="text-2xl font-bold hover:text-teal-300 transition-colors">Trips & Memories</Link>
             </div>
 
-            <ul className="flex space-x-6">
+            <ul className="flex justify-center items-center space-x-6">
                 <li><Link to="/explore" className="hover:text-teal-300 transition-colors">Explore</Link></li>
                 {isLoggedIn ? (
                     <>
@@ -35,6 +36,9 @@ function NavigationLayout() {
                         <li><Link to="/signup" className="hover:text-teal-300 transition-colors">Sign Up</Link></li>
                     </>
                 )}
+                <li>
+                    <ThemeToggle />
+                </li>
             </ul>
 
             {isDrawerOpen && (
