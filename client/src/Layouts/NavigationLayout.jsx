@@ -2,11 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { useState } from "react";
 import { ImCross } from "react-icons/im";
+import { useSelector } from "react-redux";
 import ThemeToggle from "../Components/ThemeToggle";
 
 function NavigationLayout() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(true); 
+
+    
+    const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);

@@ -3,7 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { TripJournal } from "../models/tripJournal.model.js";
 import { isValidObjectId } from "mongoose";
 import { generateTripStory } from "../utils/generateTripStory.js";
-import { ApiResponse } from "../utils/ApiResponse";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createTripStory = asyncHandler(async(req, res, next) => {
     try{
