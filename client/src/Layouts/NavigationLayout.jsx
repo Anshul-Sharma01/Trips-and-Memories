@@ -2,18 +2,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { useState } from "react";
 import { ImCross } from "react-icons/im";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ThemeToggle from "../Components/ThemeToggle";
+import { logoutUserAccount } from "../Redux/Slices/authSlice";
 
 function NavigationLayout() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    
+    const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
     };
+
+    async function handleLogout(){
+        const res = await dispatch(logoutUserAccount());
+        console.log("Successfully logged-out : ", res);
+    }
 
     return (
         <nav className="bg-blue-600 text-white flex items-center justify-between p-4 relative z-20 shadow-md">
@@ -35,8 +41,8 @@ function NavigationLayout() {
                     </>
                 ) : (
                     <>
-                        <li><Link to="/login" className="hover:text-teal-300 transition-colors">Log In</Link></li>
-                        <li><Link to="/signup" className="hover:text-teal-300 transition-colors">Sign Up</Link></li>
+                        <li><Link to="/auth/login" className="hover:text-teal-300 transition-colors">Log In</Link></li>
+                        <li><Link to="/auth/register" className="hover:text-teal-300 transition-colors">Sign Up</Link></li>
                     </>
                 )}
                 <li>
@@ -59,12 +65,12 @@ function NavigationLayout() {
                                     <li><Link to="/my-memories" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
                                     <li><Link to="/my-friends" className="hover:text-teal-300 transition-colors">Friends List</Link></li>
                                     <li><Link to="/recom" className="hover:text-teal-300 transition-colors">Recommendations</Link></li>
-                                    <li><Link to="/" className="hover:text-red-500 transition-colors">Log Out</Link></li>
+                                    <li><Link to="/" className="hover:text-red-500 transition-colors"><button onClick={handleLogout}>Log Out</button></Link></li>
                                 </>
                             ) : (
                                 <>
-                                    <li><Link to="/login" className="hover:text-teal-300 transition-colors">Log In</Link></li>
-                                    <li><Link to="/signup" className="hover:text-teal-300 transition-colors">Sign Up</Link></li>
+                                    <li><Link to="/auth/login" className="hover:text-teal-300 transition-colors">Log In</Link></li>
+                                    <li><Link to="/auth/register" className="hover:text-teal-300 transition-colors">Sign Up</Link></li>
                                 </>
                             )}
                         </ul>

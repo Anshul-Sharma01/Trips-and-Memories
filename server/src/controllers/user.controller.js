@@ -98,6 +98,7 @@ const register = asyncHandler(async(req, res, next) => {
 const login = asyncHandler(async(req, res, next) => {
     try{    
         const { loginInput, password } = req.body;
+        // console.log(loginInput, password);
 
         if(!loginInput || !password) {
             throw new ApiError(400, "All fields are necessary");
@@ -105,19 +106,22 @@ const login = asyncHandler(async(req, res, next) => {
 
         const userExists = await User.findOne({
             $or : [{username : loginInput}, {email : loginInput}],
-        });
+        }).select("+password");
+        
 
         if(!userExists){
             throw new ApiError(400, "User does not exists..");
         }
 
+
         const isPasswordValid = await userExists.isPasswordCorrect(password);
+
 
         if(!isPasswordValid){
             throw new ApiError(401, "Invalid User Credentials");
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(userExists._id);
 
         const loggedInUser = await User.findById(userExists._id);
 
