@@ -16,14 +16,13 @@ function NavigationLayout() {
         setIsDrawerOpen(!isDrawerOpen);
     };
 
-    async function handleLogout(){
+    async function handleLogout() {
         const res = await dispatch(logoutUserAccount());
         console.log("Successfully logged-out : ", res);
     }
 
     return (
-        <nav className="bg-blue-600 text-white flex items-center justify-between p-4 relative z-20 shadow-md">
-
+        <nav className="bg-blue-600 dark:bg-gray-800 text-white flex items-center justify-between p-4 relative z-20 shadow-md">
             <div className="flex items-center space-x-4">
                 <button onClick={toggleDrawer} className="focus:outline-none transition-transform transform hover:scale-110">
                     <FiMenu size={"32px"} className="text-white" />
@@ -31,7 +30,8 @@ function NavigationLayout() {
                 <Link to="/" className="text-2xl font-bold hover:text-teal-300 transition-colors">Trips & Memories</Link>
             </div>
 
-            <ul className="flex justify-center items-center space-x-6">
+
+            <ul className="hidden md:flex justify-center items-center space-x-6">
                 <li><Link to="/explore" className="hover:text-teal-300 transition-colors">Explore</Link></li>
                 {isLoggedIn ? (
                     <>
@@ -50,9 +50,10 @@ function NavigationLayout() {
                 </li>
             </ul>
 
+
             {isDrawerOpen && (
                 <div className="fixed inset-0 bg-gray-700 bg-opacity-80 z-30 text-lg">
-                    <div className="absolute left-0 top-0 bg-gray-800 text-white p-4 w-64 h-full shadow-lg">
+                    <div className="absolute left-0 top-0 bg-gray-800 text-white p-4 w-64 h-full shadow-lg dark:bg-gray-900">
                         <button onClick={toggleDrawer} className="mb-10 hover:text-teal-300 transition-colors absolute right-4">
                             <ImCross />
                         </button>
@@ -65,7 +66,7 @@ function NavigationLayout() {
                                     <li><Link to="/my-memories" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
                                     <li><Link to="/my-friends" className="hover:text-teal-300 transition-colors">Friends List</Link></li>
                                     <li><Link to="/recom" className="hover:text-teal-300 transition-colors">Recommendations</Link></li>
-                                    <li><Link to="/" className="hover:text-red-500 transition-colors"><button onClick={handleLogout}>Log Out</button></Link></li>
+                                    <li><button onClick={handleLogout} className="hover:text-red-500 transition-colors">Log Out</button></li>
                                 </>
                             ) : (
                                 <>
