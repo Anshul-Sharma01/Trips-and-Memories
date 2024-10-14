@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isEmail, isPassword } from "../Helpers/regexMatcher.js";
 import { authenticateUser } from '../Redux/Slices/authSlice.js';
 
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
 
     const [loginData, setLoginData] = useState({
         loginInput: "",
@@ -55,6 +57,12 @@ function Login() {
             [name]: value
         });
     }
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/"); 
+        }
+    }, [isLoggedIn, navigate]);
 
     return (
         <main className='flex flex-col justify-center items-center h-screen bg-gradient-to-r from-blue-100 to-gray-100'>

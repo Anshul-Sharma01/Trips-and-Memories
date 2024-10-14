@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LuUser2 } from "react-icons/lu";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isEmail, isPassword } from "../Helpers/regexMatcher.js";
 import { createUserAccount } from '../Redux/Slices/authSlice.js';
 
@@ -10,6 +10,9 @@ function Register() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
+
 
     const [ avatarUrl, setAvatarUrl ] = useState();
     const [userData, setUserData] = useState({
@@ -102,6 +105,12 @@ function Register() {
         });
     }
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/"); 
+        }
+    }, [isLoggedIn, navigate]);
+
     return (
         <main className='flex flex-col justify-center items-center h-screen bg-gray-100'>
             <section className='border-2 border-solid border-gray-300 flex flex-col justify-center items-center rounded-xl gap-4 shadow-lg p-6 bg-white'>
@@ -189,7 +198,7 @@ function Register() {
                     </button>
                 </form>
                 <div>
-                    <p>Already have an account ? <Link to="/login" className='text-blue-900 font-bold'>Login</Link></p>
+                    <p>Already have an account ? <Link to="/auth/login" className='text-blue-900 font-bold'>Login</Link></p>
                 </div>
             </section>
         </main>
