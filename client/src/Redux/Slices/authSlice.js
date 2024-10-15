@@ -90,7 +90,7 @@ export const fetchMyProfile = createAsyncThunk("/user/me/profile", async() => {
 export const changePasswordThunk = createAsyncThunk("/auth/change-password", async (data) => {
     try{
         const res = axiosInstance.post("users/change-password", data);
-        toastHandler(res, "Updating your password", "Password changed successfully", "Failed to change the password");
+        toastHandler(res, "Updating your password", "Password changed successfully", "Old Password does not match or and error occurred");
         return (await res).data;
     }catch(err){
         console.error(`Error occurred while changing password : ${err}`);

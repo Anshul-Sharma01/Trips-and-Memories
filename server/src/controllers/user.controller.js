@@ -367,7 +367,7 @@ const changePassword = asyncHandler(async(req, res, next) => {
             throw new ApiError(400, "All fields are mandatory");
         }
 
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select("+password");
         if(!user){
             throw new ApiError(400, "User does not exists");
         }
@@ -392,7 +392,7 @@ const changePassword = asyncHandler(async(req, res, next) => {
 
 
     }catch(err){
-        throw new ApiError(400, "Error occurred while changing password, plase try again later..");
+        throw new ApiError(400, err?.message || "Error occurred while changing password, plase try again later..");
     }
 })
 

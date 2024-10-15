@@ -7,6 +7,8 @@ import ForgotPassword from './Pages/ForgotPassword.jsx';
 import ResetPassword from './Pages/ResetPassword.jsx';
 import NotFound from './Pages/NotFound.jsx';
 import Denied from "./Pages/Denied.jsx";
+import Profile from "./Pages/Profile.jsx";
+import ChangePassword from "./Pages/ChangePassword.jsx";
 
 function App() {
 
@@ -20,7 +22,10 @@ function App() {
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
 
+        <Route path="/user/me/profile" element={<Profile/>}></Route>
+
         <Route path="/denied" element={<Denied />} > </Route>
+        <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>
 
         <Route path='*' element={<NotFound />} />
 

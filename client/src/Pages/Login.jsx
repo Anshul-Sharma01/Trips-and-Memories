@@ -33,11 +33,6 @@ function Login() {
             return;
         }
 
-        if (!isPassword(password)) {
-            toast.dismiss();
-            toast.error("Password should be at least 8 characters long with a number and special character");
-            return;
-        }
 
         const response = await dispatch(authenticateUser({ loginInput, password }));
 
