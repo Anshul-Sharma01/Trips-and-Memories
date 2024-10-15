@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../Helpers/axiosInstance.js";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 
 const updateLocalStorage = (user) => {
@@ -76,6 +77,45 @@ export const resetPasswordThunk = createAsyncThunk("/auth/reset-password", async
     }
 });
 
+export const fetchMyProfile = createAsyncThunk("/user/me/profile", async() => {
+    try{
+        const res = axiosInstance.get("users/me");
+        toastHandler(res, "Fetching your profile...", "profile fetched successfully", "Failed to fetch the profile");
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while fetching the users profile : ${err}`);
+    }
+})
+
+export const changePasswordThunk = createAsyncThunk("/auth/change-password", async (data) => {
+    try{
+        const res = axiosInstance.post("users/change-password", data);
+        toastHandler(res, "Updating your password", "Password changed successfully", "Failed to change the password");
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while changing password : ${err}`);
+    }
+})
+
+export const updateProfileDetails = createAsyncThunk("/user/me/update-profile", async(data) => {
+    try{
+        const res = axiosInstance.patch("users/update-profile", data);
+        toastHandler(res, "Updating profile details", "Successfully updated profile", "Failed to update the profile details !!");
+        return (await res).data;
+    }catch(err){
+        console.log(`Error occurred while updating profile details : ${err}`);
+    }
+})
+
+export const updateProfileAvatar = createAsyncThunk("/user/me/update-avatar", async(data) => {
+    try{
+        const res = axiosInstance.patch("users/update-avatar", data);
+        toastHandler(res, "Updating the profile avatar", "Successfully updated the profile avatar", "Failed to update the profile avatar");
+        return (await res).data;
+    }catch(err){
+        console.lor(`Error occurred while updating profile avatar : ${err}`);
+    }
+})
 
 const authSlice = createSlice({
     name: 'auth',
@@ -122,7 +162,19 @@ const authSlice = createSlice({
                     state.userData = {};
                     state.userRole = "";
                 }
-            });
+            })
+            .addCase(updateProfileDetails.fulfilled, (state, action) => {
+                if(action?.payload?.statusCode == 200){
+                    localStorage.setItem("userData",JSON.stringify(action?.payload?.data));
+                    state.userData = action?.payload?.data;
+                }
+            })
+            .addCase(updateProfileAvatar.fulfilled, (state, action) => {
+                if(action?.payload?.statusCode === 200){
+                    localStorage.setItem("userData", JSON.stringify(action?.payload?.data));
+                    state.userData = action?.payload?.data;
+                }
+            })
     }
 });
 
