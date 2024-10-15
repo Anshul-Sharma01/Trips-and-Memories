@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { isPassword } from '../Helpers/regexMatcher.js'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { resetPasswordThunk } from '../Redux/Slices/authSlice.js';
 
 function ResetPassword() {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { resetToken } = useParams();
+
+    const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
+
+    // console.log("Reset-Token : ", resetToken);
 
     const [passwordData, setPasswordData] = useState({
         newPassword: '',
@@ -20,7 +28,7 @@ function ResetPassword() {
         });
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         
         const { newPassword, confirmPassword } = passwordData;
@@ -43,9 +51,24 @@ function ResetPassword() {
             return;
         }
 
-        toast.success("Password successfully reset!");
-        navigate('/auth/login');
+        
+        const res = await dispatch(resetPasswordThunk({resetToken, password : newPassword}));
+        // console.log("Reset-Password-JSX : ", res);
+        if(res?.payload?.statusCode === 200){
+            setPasswordData({
+                newPassword : "",
+                confirmPassword : ""
+            })
+            navigate("/auth/login");
+        }
+        
     }
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/");
+        }
+    }, [isLoggedIn, navigate]);
 
     return (
         <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">

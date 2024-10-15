@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { forgotPasswordThunk } from '../Redux/Slices/authSlice';
 
 function ForgotPassword() {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
 
     const [email, setEmail] = useState('');
@@ -14,14 +16,27 @@ function ForgotPassword() {
         setEmail(e.target.value);
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         if(!email){
             toast.dismiss();
             toast.error("Please enter your email address");
         }
+
+        const res = await dispatch(forgotPasswordThunk({email}));
+        console.log(res);
+        if(res?.payload?.statusCode == 200){
+            setEmail("");
+            navigate("/auth/login");
+        }
         
     }
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/");
+        }
+    }, [isLoggedIn, navigate]);
 
     return (
         <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">

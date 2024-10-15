@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../Helpers/axiosInstance.js";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 
 
@@ -57,6 +58,33 @@ export const logoutUserAccount = createAsyncThunk("/auth/logout", async() => {
     }
 })
 
+export const forgotPasswordThunk = createAsyncThunk("/auth/forgot-password", async(data) => {
+    try{
+        const res = axiosInstance.post("users/reset", data);
+        toast.promise(res, {
+            loading : 'sending reset token..',
+            success : (data) => data?.data?.message,
+            error : "Email not registered or an error occurred !!"
+        })
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while forgetting password : ${err}`);
+    }
+})
+
+export const resetPasswordThunk = createAsyncThunk("/auth/reset-password", async(data) => {
+    try{
+        const res = axiosInstance.post(`users/reset/${data.resetToken}`, {password : data.password});
+        toast.promise(res, {
+            loading : "Updating your password",
+            success : (data) => data?.data?.message,
+            error : "Failed to update the password"
+        })
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while resetting the password : ${err}`);
+    }
+})
 
 const authSlice = createSlice({
     name : 'auth',
