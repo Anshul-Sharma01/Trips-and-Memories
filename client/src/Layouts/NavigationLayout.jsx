@@ -37,7 +37,7 @@ function NavigationLayout() {
                     <>
                         <li><Link to="/my-journals" className="hover:text-teal-300 transition-colors">My Journals</Link></li>
                         <li><Link to="/my-bucket-list" className="hover:text-teal-300 transition-colors">My Bucket List</Link></li>
-                        <li><Link to="/me" className="hover:text-teal-300 transition-colors">My Profile</Link></li>
+                        <li><Link to="/user/me/profile" className="hover:text-teal-300 transition-colors">My Profile</Link></li>
                     </>
                 ) : (
                     <>
