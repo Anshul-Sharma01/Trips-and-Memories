@@ -32,7 +32,7 @@ function NavigationLayout() {
 
 
             <ul className="hidden md:flex justify-center items-center space-x-6">
-                <li><Link to="/explore" className="hover:text-teal-300 transition-colors">Explore</Link></li>
+                <li><Link to="/memory/all" className="hover:text-teal-300 transition-colors">Explore</Link></li>
                 {isLoggedIn ? (
                     <>
                         <li><Link to="/my-journals" className="hover:text-teal-300 transition-colors">My Journals</Link></li>

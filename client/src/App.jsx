@@ -11,6 +11,7 @@ import Profile from "./Pages/Profile.jsx";
 import ChangePassword from "./Pages/ChangePassword.jsx";
 import CreateMemory from "./Pages/Memory/CreateMemory.jsx";
 import PersonalMemories from "./Pages/Memory/PersonalMemories.jsx";
+import AllMemories from "./Pages/Memory/AllMemories.jsx";
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
         <Route path="/denied" element={<Denied />} > </Route>
         <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>
 
-
+        <Route path="/memory/all" element={<AllMemories/>}></Route>
         <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
         <Route path="/memory/my" element={<PersonalMemories/>}></Route>
 
