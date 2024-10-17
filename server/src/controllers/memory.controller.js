@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
+import { User } from "../models/user.model.js";
 
 
 const fetchAllMemories = asyncHandler(async(req, res, next) => {
@@ -171,60 +172,73 @@ const viewMemory = asyncHandler(async(req, res, next) => {
 
 
 const createMemory = asyncHandler(async(req, res, next) => {
-    try{
-        const { title, content, tripDate, location, tags, category, } = req.body;
+    try {
+        const { title, content, tripDate, location, tags, category } = req.body;
         const userId = req.user._id;
-        if(!title || !content || !location || !tags || !category){
+
+
+        if (!title || !content || !location || !tags || !category) {
             throw new ApiError(400, "All Fields are mandatory");
         }
 
-        if(!Array.isArray(tags)){
-            throw new ApiError(400, "Please provide tags");
+
+        if (!Array.isArray(tags)) {
+            throw new ApiError(400, "Please provide tags in an array");
         }
 
-        if(req.file){
-            const thumbnailPath = req.file?.path;
-            const thumbnail = await uploadOnCloudinary(thumbnailPath);
-            if(!thumbnail){
-                throw new ApiError(400, "Error occurred while processing thumbnail file");
+
+        if (!req.file) {
+            throw new ApiError(400, "Thumbnail is required to create a memory");
+        }
+
+
+        const thumbnailPath = req.file.path;
+        const thumbnail = await uploadOnCloudinary(thumbnailPath);
+        if (!thumbnail) {
+            throw new ApiError(400, "Error occurred while processing thumbnail file");
+        }
+
+
+        const memory = await Memory.create({
+            title,
+            content,
+            author: userId,
+            tripDate: tripDate || Date.now(),
+            location,
+            tags,
+            category,
+            thumbnail: {
+                public_id: thumbnail.public_id,
+                secure_url: thumbnail.secure_url
             }
+        });
 
-            const memory = await Memory.create({
-                title,
-                content,
-                author : userId,
-                tripDate  : tripDate || Date.now(),
-                location,
-                tags,
-                category,
-                thumbnail : {
-                    public_id : thumbnail.public_id,
-                    secure_url : thumbnail.secure_url
-                }
-            })
+        if (!memory) {
+            throw new ApiError(400, "Error occurred while creating a new memory");
+        }
 
-            if(!memory){
-                throw new ApiError(400, "Error occurred while creating new memory");
-            }
 
-            return res.status(201)
-            .json(
-                new ApiResponse(
-                    201,
-                    memory,
-                    "New Memory Created Successfully"
-                )
+        await User.findByIdAndUpdate(
+            userId,
+            { $inc: { numberOfMemories: 1 } }
+        );
+
+
+        return res.status(201).json(
+            new ApiResponse(
+                201,
+                memory,
+                "New Memory Created Successfully"
             )
-        }else{
-            throw new ApiError(400, err?.message || "Error occurred while creating a blog");
-        }
-        
+        );
 
-    }catch(err){
-        console.error(`Error occurred while creating a new memory : ${err}`);
-        throw new ApiError(400, "Error occurred while creating a new memory");
+    } catch (err) {
+
+        console.error(`Error occurred while creating a new memory: ${err}`);
+        throw new ApiError(400, err.message || "Error occurred while creating a new memory");
     }
 });
+
 
 const updateMemory = asyncHandler(async(req, res, next) => {
     try{
@@ -373,6 +387,11 @@ const deleteMemory = asyncHandler(async (req, res, next) => {
         if (!deletedMemory) {
             throw new ApiError(400, "Memory not deleted, please try again later");
         }
+
+        await User.findByIdAndUpdate(
+            userId,
+            {$inc : {numberOfMemories : -1}}
+        );
 
         return res.status(200).json(
             new ApiResponse(200, deletedMemory, "Memory deleted successfully")

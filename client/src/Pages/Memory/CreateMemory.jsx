@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
+import BackButton from '../../Components/BackButton';
+import { createMemoryThunk } from '../../Redux/Slices/memorySlice';
+import { useNavigate } from 'react-router-dom';
 
 function CreateMemory(){
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         title: '',
@@ -49,33 +53,44 @@ function CreateMemory(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
 
-        if (!formData.title || !formData.content || !formData.tripDate || !formData.location || !formData.category || formData.tags.length == 0) {
+        if (!formData.title || !formData.content || !formData.tripDate || !formData.location || !formData.category || formData.tags.length === 0 || !thumbnail) {
             toast.dismiss();
             toast.error("All fields are mandatory");
             return;
         }
-        
-        const memoryData = {
-            ...formData,
-            thumbnail,
-        };
+    
 
+        const memoryData = new FormData();
+        memoryData.append('title', formData.title);
+        memoryData.append('content', formData.content);
+        memoryData.append('tripDate', formData.tripDate);
+        memoryData.append('location', formData.location);
+        memoryData.append('category', formData.category);
+        memoryData.append('thumbnail', thumbnail); 
+        formData.tags.forEach(tag => memoryData.append('tags', tag));
+    
+        const res = await dispatch(createMemoryThunk(memoryData));
+        if (res?.payload?.statusCode === 201) {
 
-        // setFormData({
-        //     title: '',
-        //     content: '',
-        //     tripDate: '',
-        //     location: '',
-        //     category: '',
-        //     tags: [],
-        // });
-        // setThumbnail(null);
-        // setPreview(null);
+            setFormData({
+                title: '',
+                content: '',
+                tripDate: '',
+                location: '',
+                category: '',
+                tags: [],
+            });
+            setThumbnail(null);
+            setPreview(null);
+            navigate("/"); 
+        }
     };
-
+    
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6 flex flex-col items-center justify-center">
+            <BackButton/>
             <div className="max-w-4xl w-full">
                 <h2 className="text-4xl font-bold mb-10 text-center text-gray-900 dark:text-white">
                     Create a New Memory

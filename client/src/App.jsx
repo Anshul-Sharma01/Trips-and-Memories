@@ -29,7 +29,7 @@ function App() {
         <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>
 
 
-        <Route path="/user/create-memory" element={<CreateMemory/>} ></Route>
+        <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
 
         <Route path='*' element={<NotFound />} />
 
