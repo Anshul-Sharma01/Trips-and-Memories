@@ -9,6 +9,7 @@ import NotFound from './Pages/NotFound.jsx';
 import Denied from "./Pages/Denied.jsx";
 import Profile from "./Pages/Profile.jsx";
 import ChangePassword from "./Pages/ChangePassword.jsx";
+import CreateMemory from "./Pages/Memory/CreateMemory.jsx";
 
 function App() {
 
@@ -26,6 +27,9 @@ function App() {
 
         <Route path="/denied" element={<Denied />} > </Route>
         <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>
+
+
+        <Route path="/user/create-memory" element={<CreateMemory/>} ></Route>
 
         <Route path='*' element={<NotFound />} />
 
