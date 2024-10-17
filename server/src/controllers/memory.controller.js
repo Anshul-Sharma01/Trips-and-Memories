@@ -192,7 +192,7 @@ const createMemory = asyncHandler(async(req, res, next) => {
         }
 
 
-        const thumbnailPath = req.file.path;
+        const thumbnailPath = req.file?.path;
         const thumbnail = await uploadOnCloudinary(thumbnailPath);
         if (!thumbnail) {
             throw new ApiError(400, "Error occurred while processing thumbnail file");

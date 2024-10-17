@@ -11,31 +11,35 @@ cloudinary.config({
     api_secret : process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadOnCloudinary = async ( localFilePath) => {
-    try{
-        if(!localFilePath){
+const uploadOnCloudinary = async (localFilePath) => {
+    try {
+        if (!localFilePath) {
             throw new Error("No file path provided");
         }
-        const cloudinaryResponse = await cloudinary.uploader.upload(localFilePath, {
-            resource_type : "auto"
-        }).catch((err) => {
-            console.log("Cloudinary Error : ", err);
-        })
 
-        if(fs.existsSync(localFilePath)){
-            fs.unlinkSync(localFilePath);
+
+        const cloudinaryResponse = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto"
+        });
+
+
+        if (fs.existsSync(localFilePath)) {
+            fs.unlinkSync(localFilePath); 
+            console.log(`File ${localFilePath} successfully deleted..`);
         }
 
-        return cloudinaryResponse;
-    }catch(err){
-        console.log(`Some error occurred at cloudinary : ${err}`);
-        if(localFilePath && fs.existsSync(localFilePath)){
+        return cloudinaryResponse; 
+    } catch (err) {
+        console.error(`Some error occurred at Cloudinary: ${err}`);
+
+        if (localFilePath && fs.existsSync(localFilePath)) {
             fs.unlinkSync(localFilePath);
             console.log(`File ${localFilePath} successfully deleted..`);
         }
         throw new Error("Failed to upload file to Cloudinary");
     }
-}
+};
+
 
 const deleteFromCloudinary = async(pathId) => {
     try{
