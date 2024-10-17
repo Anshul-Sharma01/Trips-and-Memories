@@ -20,9 +20,9 @@ export const createMemoryThunk = createAsyncThunk("/memory/create-memory", async
     }
 })
 
-export const fetchPersonalMemoriesThunk = createAsyncThunk("/memory/my", async() => {
+export const fetchPersonalMemoriesThunk = createAsyncThunk("/memory/my", async({page, limit}) => {
     try{
-        const res = axiosInstance.get("memory/my");
+        const res = axiosInstance.get(`memory/my?limit=${limit}&page=${page}`);
         toast.promise(res, {
             loading : 'Fetching Personal Memories',
             success : (data) => data?.data?.message,
@@ -51,9 +51,9 @@ export const viewMemoryThunk = createAsyncThunk("/memory/view-memory/:memoryId",
     }
 })
 
-export const fetchAllMemoriesThunk = createAsyncThunk("/memory/all", async() => {
+export const fetchAllMemoriesThunk = createAsyncThunk("/memory/all", async({page, limit}) => {
     try{
-        const res = axiosInstance.get("memory/all");
+        const res = axiosInstance.get(`memory/all?limit=${limit}&page=${page}`);
         toast.promise(res, {
             loading : 'Fetching all memories',
             success : (data) => data?.data?.message,
@@ -81,7 +81,6 @@ export const deleteMemoryThunk = createAsyncThunk("/memory/delete/:memoryId", as
         console.error(`Error occurred while deleting the memory : ${err}`);
     }
 })
-
 
 export const updateMemoryDetailsThunk = createAsyncThunk("/memory/update-details/:memoryId", async(data) => {
     try{

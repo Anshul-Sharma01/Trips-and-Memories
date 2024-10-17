@@ -76,6 +76,7 @@ const fetchAllMemories = asyncHandler(async(req, res, next) => {
 const fetchPersonalMemories = asyncHandler(async(req, res, next) => {
     try{    
         const userId = req.user._id;
+        console.log("UserID ----> ",userId);
 
         let { page, limit } = req.query;
         page = parseInt(page) || 1;
@@ -137,7 +138,7 @@ const fetchPersonalMemories = asyncHandler(async(req, res, next) => {
 
 
     }catch(err){
-        console.error(`Error occurred while fetching personal Memories : ${err}`);
+        console.error(`Error occurred while fetching personal Memories ..: ${err}`);
         throw new ApiError(400, `Some error occurred while fetching Personal Memories`);
     }
 })

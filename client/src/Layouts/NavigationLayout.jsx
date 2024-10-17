@@ -63,7 +63,7 @@ function NavigationLayout() {
                             {isLoggedIn ? (
                                 <>
                                     <li><Link to="/time-capsules" className="hover:text-teal-300 transition-colors">Time Capsules</Link></li>
-                                    <li><Link to="/my-memories" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
+                                    <li><Link to="/memory/my" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
                                     <li><Link to="/my-friends" className="hover:text-teal-300 transition-colors">Friends List</Link></li>
                                     <li><Link to="/recom" className="hover:text-teal-300 transition-colors">Recommendations</Link></li>
                                     <li><button onClick={handleLogout} className="hover:text-red-500 transition-colors">Log Out</button></li>
