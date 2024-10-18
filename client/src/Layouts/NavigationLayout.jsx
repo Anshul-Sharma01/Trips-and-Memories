@@ -59,9 +59,9 @@ function NavigationLayout() {
                         </button>
                         <ul className="space-y-2 mt-6 flex flex-col justify-start items-center gap-2">
                             <li><Link to="/" className="hover:text-teal-300 transition-colors">Home</Link></li>
-                            <li><Link to="/memory/create-memory" className="hover:text-teal-300 transition-colors">Create Memory</Link></li>
                             {isLoggedIn ? (
                                 <>
+                                    <li><Link to="/memory/create-memory" className="hover:text-teal-300 transition-colors">Create Memory</Link></li>
                                     <li><Link to="/time-capsules" className="hover:text-teal-300 transition-colors">Time Capsules</Link></li>
                                     <li><Link to="/memory/my" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
                                     <li><Link to="/my-friends" className="hover:text-teal-300 transition-colors">Friends List</Link></li>

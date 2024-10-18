@@ -55,7 +55,6 @@ const toggleBucketListItem = asyncHandler(async( req, res, next) => {
     }
 })
 
-
 const clearBucketList = asyncHandler(async(req, res, next) => {
     try{
         const userId = req.user._id;
