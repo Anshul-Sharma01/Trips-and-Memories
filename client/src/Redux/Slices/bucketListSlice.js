@@ -32,7 +32,6 @@ export const getBucketListThunk = createAsyncThunk("/bucket-list/get", async() =
     }
 })
 
-
 export const clearBucketListThunk = createAsyncThunk("/bucket-list/clear", async() => {
     try{
         const res = axiosInstance.get("bucket-list/clear");
