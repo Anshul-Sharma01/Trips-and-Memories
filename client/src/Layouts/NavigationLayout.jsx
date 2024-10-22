@@ -32,6 +32,7 @@ function NavigationLayout({ children }) {
                 </div>
 
                 <ul className="hidden md:flex justify-center items-center space-x-6">
+                    <li><Link to="/" className="hover:text-teal-300 transition-colors">Home</Link></li>
                     <li><Link to="/memory/all" className="hover:text-teal-300 transition-colors">Explore</Link></li>
                     {isLoggedIn ? (
                         <>

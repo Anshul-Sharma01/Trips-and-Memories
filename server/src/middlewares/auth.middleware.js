@@ -4,28 +4,26 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
 
-export const verifyJWT = asyncHandler(async(req, _, next) => {
-    try{
-        const token = req.cookies?.accessToken || req.header('Authorizaton')?.replace("Bearer"," ");
+export const verifyJWT = asyncHandler(async (req, res, next) => {
+    try {
+        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "").trim();
 
-        if(!token){
+        if (!token) {
             throw new ApiError(403, "Unauthorized request");
         }
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
         const user = await User.findById(decodedToken?._id);
 
-        if(!user){
+        if (!user) {
             throw new ApiError(403, "Invalid Access Token");
         }
 
         req.user = user;
         next();
-
-
-    }catch(err){
-        console.error(`Error occurred in authenticating user : ${err}`);
+    } catch (err) {
+        console.error(`Error in user authentication: ${err}`);
         throw new ApiError(403, err?.message || "Invalid Access Token");
     }
-})
+});
+
