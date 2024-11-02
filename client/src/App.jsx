@@ -13,6 +13,7 @@ import CreateMemory from "./Pages/Memory/CreateMemory.jsx";
 import PersonalMemories from "./Pages/Memory/PersonalMemories.jsx";
 import AllMemories from "./Pages/Memory/AllMemories.jsx";
 import ViewMemory from "./Pages/Memory/ViewMemory.jsx";
+import BucketList from "./Pages/Memory/BucketList.jsx";
 
 function App() {
 
@@ -35,6 +36,8 @@ function App() {
         <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
         <Route path="/memory/my" element={<PersonalMemories/>}></Route>
         <Route path="/memory/:memoryId" element={<ViewMemory/>}></Route>
+
+        <Route path="/my-bucket-list" element={<BucketList/>}></Route>
 
         <Route path='*' element={<NotFound />} />
 
