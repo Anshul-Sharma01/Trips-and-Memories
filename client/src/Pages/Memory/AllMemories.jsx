@@ -34,10 +34,14 @@ function AllMemories() {
                 </div>
 
                 <div className="flex justify-center">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="flex flex-wrap gap-6 max-w-6xl justify-center">
                         {allMemoriesData?.allMemories.length > 0 ? (
                             allMemoriesData.allMemories.map(memory => (
-                                <MemoryCard key={memory._id} memory={memory} />
+                                <MemoryCard 
+                                    key={memory._id} 
+                                    memory={memory} 
+                                    className="flex-none w-80"
+                                />
                             ))
                         ) : (
                             <p className="text-gray-600 dark:text-gray-400 text-center col-span-full">
@@ -46,6 +50,7 @@ function AllMemories() {
                         )}
                     </div>
                 </div>
+
 
 
                 <div className="flex justify-center items-center mt-10 space-x-4">
