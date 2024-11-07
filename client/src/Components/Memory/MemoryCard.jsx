@@ -13,7 +13,7 @@ function MemoryCard({ memory }) {
 
             <div className="p-4">
                 <Link to={`/memory/${memory._id}`} className="hover:text-blue-600">
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-white hover:text-blue-600">
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-cyan-500">
                         {memory.title}
                     </h3>
                 </Link>

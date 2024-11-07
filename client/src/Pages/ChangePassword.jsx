@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { changePasswordThunk } from '../Redux/Slices/authSlice';
+import { changePasswordThunk } from '../Redux/Slices/authSlice.js';
+import BackButton from "../Components/BackButton.jsx";
 
 function ChangePassword() {
 
@@ -34,6 +35,7 @@ function ChangePassword() {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+            <BackButton/>
             <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 w-full max-w-md mx-4 sm:mx-auto">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center mb-6">
                     Change Password

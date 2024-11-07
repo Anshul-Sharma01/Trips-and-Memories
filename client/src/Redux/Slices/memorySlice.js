@@ -82,9 +82,9 @@ export const deleteMemoryThunk = createAsyncThunk("/memory/delete/:memoryId", as
     }
 })
 
-export const updateMemoryDetailsThunk = createAsyncThunk("/memory/update-details/:memoryId", async(data) => {
+export const updateMemoryDetailsThunk = createAsyncThunk("/memory/update-details/:memoryId", async({ memoryId, formData }) => {
     try{
-        const res = axiosInstance.patch(`memory/update/${data.memoryId}`, data);
+        const res = axiosInstance.patch(`memory/update/${memoryId}`, formData);
         toast.promise(res, {
             loading : 'Updating the memory...',
             success : (data) => data?.data?.message,
@@ -98,9 +98,9 @@ export const updateMemoryDetailsThunk = createAsyncThunk("/memory/update-details
     }
 })
 
-export const updateThumbnailThunk = createAsyncThunk("/memory/update-thumbnail/:memoryId", async(data) => {
+export const updateThumbnailThunk = createAsyncThunk("/memory/update-thumbnail/:memoryId", async({ memoryId, formData}) => {
     try{
-        const res = axiosInstance.patch(`memory/update-thumbnail/${data.memoryId}`, data);
+        const res = axiosInstance.patch(`memory/update-thumbnail/${memoryId}`, formData);
         toast.promise(res, {
             loading : 'Updating the memory thumbnail...',
             success : (data) => data?.data?.message,
