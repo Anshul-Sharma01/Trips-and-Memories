@@ -84,7 +84,11 @@ export const deleteMemoryThunk = createAsyncThunk("/memory/delete/:memoryId", as
 
 export const updateMemoryDetailsThunk = createAsyncThunk("/memory/update-details/:memoryId", async({ memoryId, formData }) => {
     try{
-        const res = axiosInstance.patch(`memory/update/${memoryId}`, formData);
+        const res = axiosInstance.post(`memory/update/${memoryId}`, formData,{
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
         toast.promise(res, {
             loading : 'Updating the memory...',
             success : (data) => data?.data?.message,

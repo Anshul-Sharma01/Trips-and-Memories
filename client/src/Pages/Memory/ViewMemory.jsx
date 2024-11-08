@@ -1,10 +1,11 @@
+// ViewMemory.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import BackButton from '../../Components/BackButton.jsx';
 import { viewMemoryThunk } from '../../Redux/Slices/memorySlice.js';
 import NavigationLayout from '../../Layouts/NavigationLayout.jsx';
-import { FaCalendarAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 import UpdateMemoryThumbnail from '../../Components/Memory/UpdateMemoryThumbnail.jsx';
 import UpdateMemoryDetails from '../../Components/Memory/UpdateMemoryDetails.jsx';
 
@@ -31,7 +32,6 @@ function ViewMemory() {
         viewMemory();
     }, [dispatch, memoryId]);
     
-
     return (
         <NavigationLayout>
             <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300 flex flex-col items-center p-4">
@@ -60,9 +60,20 @@ function ViewMemory() {
                         <h1 className="text-5xl font-bold text-gray-900 dark:text-white">
                             {memoryData?.title}
                         </h1>
-                        <span className="flex justify-center p-4 items-center font-mono tracking-widest text-gray-500 dark:text-gray-400">
-                            <FaCalendarAlt className="mr-1 text-blue-500" /> {new Date(memoryData?.tripDate).toLocaleDateString()}
-                        </span>
+                        <div className="flex justify-center space-x-6 p-4 items-center font-mono tracking-widest text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center space-x-2">
+                                <FaCalendarAlt className="text-blue-500" />
+                                <span>{new Date(memoryData?.tripDate).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <FaMapMarkerAlt className="text-red-500" />
+                                <span>{memoryData?.location}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <FaTag className="text-green-500" />
+                                <span>{memoryData?.category}</span>
+                            </div>
+                        </div>
                     </div>
 
                     <p className="text-lg leading-relaxed mb-8">
@@ -85,7 +96,7 @@ function ViewMemory() {
                         </div>
 
                         <div className="text-sm font-medium">
-                            <span className="font-semibold">{memoryData?.likes}</span> {memoryData?.likes === 1 ? 'Like' : 'Likes'}
+                            <span className="font-semibold">{memoryData?.numberOfLikes}</span> {memoryData?.numberOfLikes === 1 ? 'Like' : 'Likes'}
                         </div>
                     </div>
 
@@ -94,10 +105,8 @@ function ViewMemory() {
                             <>
                                 <UpdateMemoryDetails
                                     memoryData={memoryData}
-                                    className="px-8 py-4 bg-green-500 hover:bg-green-600 rounded-lg text-white font-semibold  shadow-md transition-all duration-300 dark:bg-green-600 dark:hover:bg-green-700"
-                                    
-                                >
-                                </UpdateMemoryDetails>
+                                    className="px-8 py-4 bg-green-500 hover:bg-green-600 rounded-lg text-white font-semibold shadow-md transition-all duration-300 dark:bg-green-600 dark:hover:bg-green-700"
+                                />
                                 <button
                                     className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 dark:bg-red-600 dark:hover:bg-red-700"
                                     onClick={() => {/* Placeholder for Delete Memory logic */}}
@@ -107,15 +116,6 @@ function ViewMemory() {
                             </>
                         )}
                     </div>
-
-                    {/* <div className="mt-10">
-                        <Link
-                            to="/memory/all"
-                            className="inline-block px-8 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full shadow-md transition-all duration-300 dark:bg-blue-600 dark:hover:bg-blue-700"
-                        >
-                            Back to Memories
-                        </Link>
-                    </div> */}
                 </div>
             </div>
         </NavigationLayout>

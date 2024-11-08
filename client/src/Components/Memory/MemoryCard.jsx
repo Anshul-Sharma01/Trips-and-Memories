@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaCalendarAlt, FaHeart } from 'react-icons/fa';
+import { FaCalendarAlt, FaHeart, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 
 function MemoryCard({ memory }) {
     return (
@@ -18,12 +18,21 @@ function MemoryCard({ memory }) {
                     </h3>
                 </Link>
 
+                <div className="flex items-center mt-2 space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center">
+                        <FaMapMarkerAlt className="mr-1 text-red-500" /> {memory.location}
+                    </span>
+                    <span className="flex items-center">
+                        <FaTag className="mr-1 text-green-500" /> {memory.category}
+                    </span>
+                </div>
+
                 <div className="flex justify-between items-center mt-4 text-sm">
                     <span className="flex items-center text-gray-500 dark:text-gray-400">
                         <FaHeart className="mr-1 text-red-500" /> {memory.likes} {memory.likes === 1 ? 'Like' : 'Likes'}
                     </span>
                     <span className="flex items-center font-mono tracking-widest text-gray-500 dark:text-gray-400">
-                        <FaCalendarAlt className="mr-1  text-blue-500" /> {new Date(memory.tripDate).toLocaleDateString()}
+                        <FaCalendarAlt className="mr-1 text-blue-500" /> {new Date(memory.tripDate).toLocaleDateString()}
                     </span>
                 </div>
             </div>

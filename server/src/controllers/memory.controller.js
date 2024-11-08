@@ -242,61 +242,54 @@ const createMemory = asyncHandler(async(req, res, next) => {
 
 
 const updateMemory = asyncHandler(async(req, res, next) => {
-    try{
+    try {
         const { title, content, location, tags, category } = req.body;
         const { memoryId } = req.params;
-        
-        if(!isValidObjectId(memoryId)){
+        const userId = req.user._id;
+
+        if (!isValidObjectId(memoryId)) {
             throw new ApiError(400, " Invalid Memory Id ");
         }
 
-        if(!title && !content && !location && !tags && !category){
-            throw new ApiError(400, "Atleast one field is required for updation");
+        if (!title && !content && !location && !tags && !category) {
+            throw new ApiError(400, "At least one field is required for updation");
         }
 
-        
         const memory = await Memory.findById(memoryId);
-        if(!memory){
-            throw new ApiError(404, "Memory does not exists !!");
+        if (!memory) {
+            throw new ApiError(404, "Memory does not exist !!");
         }
 
-        if(memory.author.toString() !== userId.toString()){
-            throw new ApiError(403, "You are not authorized to update the Memory Thumbnail");
+        if (memory.author.toString() !== userId.toString()) {
+            throw new ApiError(403, "You are not authorized to update the Memory");
         }
-
-        
 
         let updationFields = {};
-        if(title) updationFields.title = title;
-        if(content) updationFields.content = content;
-        if(location) updationFields.location = location;
-        if(tags) updationFields.tags = tags;
-        if(category) updationFields.category = category;
+        if (title) updationFields.title = title;
+        if (content) updationFields.content = content;
+        if (location) updationFields.location = location;
+        if (tags) updationFields.tags = tags; 
+        if (category) updationFields.category = category;
 
         const updatedMemory = await Memory.findByIdAndUpdate(
             memoryId,
-            {$set : updationFields},
-            {new : true}
+            { $set: updationFields },
+            { new: true }
         );
 
-        if(!updatedMemory){
+        if (!updatedMemory) {
             throw new ApiError(400, "Error updating Memory details");
         }
 
-        return res.status(200)
-        .json(
-            new ApiResponse(
-                200,
-                updatedMemory,
-                "Memory Details Updated Successfully"
-            )
-        )
-
-    }catch(err){
-        console.error(`Error occurred while updating the memory details : ${err}`);
-        throw new ApiError(400, err?.message ||  "Some Error occurred while updating memory details");
+        return res.status(200).json(
+            new ApiResponse(200, updatedMemory, "Memory Details Updated Successfully")
+        );
+    } catch (err) {
+        console.error(`Error occurred while updating the memory details: ${err}`);
+        throw new ApiError(400, err?.message || "Some Error occurred while updating memory details");
     }
-})
+});
+
 
 const updateMemoryThumbnail = asyncHandler(async(req, res, next) => {
     try{
