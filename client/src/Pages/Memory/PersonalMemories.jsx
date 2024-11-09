@@ -33,7 +33,7 @@ function PersonalMemories() {
 
             <div className="flex justify-center">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {personalMemoriesData?.personalMemories.length > 0 ? (
+                    {personalMemoriesData?.personalMemories?.length > 0 ? (
                         personalMemoriesData.personalMemories.map(memory => (
                             <MemoryCard key={memory._id} memory={memory} />
                         ))

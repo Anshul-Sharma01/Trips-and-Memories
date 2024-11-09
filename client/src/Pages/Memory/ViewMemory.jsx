@@ -8,6 +8,7 @@ import NavigationLayout from '../../Layouts/NavigationLayout.jsx';
 import { FaCalendarAlt, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 import UpdateMemoryThumbnail from '../../Components/Memory/UpdateMemoryThumbnail.jsx';
 import UpdateMemoryDetails from '../../Components/Memory/UpdateMemoryDetails.jsx';
+import DeleteMemoryModal from '../../Components/Memory/DeleteMemoryModal.jsx';
 
 function ViewMemory() {
     const { memoryId } = useParams();
@@ -105,14 +106,11 @@ function ViewMemory() {
                             <>
                                 <UpdateMemoryDetails
                                     memoryData={memoryData}
-                                    className="px-8 py-4 bg-green-500 hover:bg-green-600 rounded-lg text-white font-semibold shadow-md transition-all duration-300 dark:bg-green-600 dark:hover:bg-green-700"
                                 />
-                                <button
-                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 dark:bg-red-600 dark:hover:bg-red-700"
-                                    onClick={() => {/* Placeholder for Delete Memory logic */}}
-                                >
-                                    Delete Memory
-                                </button>
+                                <DeleteMemoryModal
+                                    memoryId={memoryData._id}
+                                />
+
                             </>
                         )}
                     </div>

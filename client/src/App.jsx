@@ -16,6 +16,7 @@ import ViewMemory from "./Pages/Memory/ViewMemory.jsx";
 import BucketList from "./Pages/Memory/BucketList.jsx";
 import UpdateMemoryThumbnail from "./Components/Memory/UpdateMemoryThumbnail.jsx";
 import UpdateMemoryDetails from "./Components/Memory/UpdateMemoryDetails.jsx";
+import DeleteMemoryModal from "./Components/Memory/DeleteMemoryModal.jsx";
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<UpdateMemoryDetails/>}></Route>
+        <Route path="/modal/check" element={<DeleteMemoryModal/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />

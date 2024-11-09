@@ -75,7 +75,7 @@ function UpdateMemoryDetails({ memoryData }) {
         <div className="text-right p-4">
             <button
                 onClick={openModal}
-                className="px-5 py-2.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 shadow-md"
+                className="px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-md dark:bg-green-600 dark:hover:bg-green-700 transition duration-300 shadow-md"
             >
                 Update Memory
             </button>
