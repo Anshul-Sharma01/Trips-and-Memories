@@ -35,6 +35,22 @@ export const fetchPersonalMemoriesThunk = createAsyncThunk("/memory/my", async({
     }
 })
 
+export const fetchSearchMemoriesThunk = createAsyncThunk("/memory/all", async({ query, page, limit}) => {
+    try{
+        const res = axiosInstance.get(`memory/search?query=${query}&page=${page}&limit=${limit}`);
+        toast.promise(res, {
+            loading : 'fetching memories based on search query...',
+            success : (data) => data?.data?.message,
+            error : "Failed to search for memories !!"
+        })
+        
+        return (await res).data;
+
+    }catch(err){
+        console.error(`Error occurred while fetching search memories : ${err}`);
+    }
+})
+
 export const viewMemoryThunk = createAsyncThunk("/memory/view-memory/:memoryId", async({memoryId}) => {
     try{
         const res = axiosInstance.get(`memory/view/${memoryId}`);

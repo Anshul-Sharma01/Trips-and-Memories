@@ -1,23 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchAllMemoriesThunk } from '../../Redux/Slices/memorySlice.js';
+import { fetchAllMemoriesThunk, fetchSearchMemoriesThunk } from '../../Redux/Slices/memorySlice.js';
 import MemoryCard from '../../Components/Memory/MemoryCard.jsx';
 import BackButton from '../../Components/BackButton.jsx';
 import NavigationLayout from '../../Layouts/NavigationLayout.jsx';
+import SearchMemory from '../../Components/Memory/SearchMemory.jsx';
+
 
 function AllMemories() {
     const dispatch = useDispatch();
-    const [allMemoriesData, setAllMemoriesData] = useState({ allMemories: [], totalPages: 1 });
+    const [allMemoriesData, setAllMemoriesData] = useState();
     const [limit] = useState(6); 
     const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [fetchAll, setFetchAll] = useState(false);
 
-    useEffect(() => {
-        async function fetchAllMemories() {
-            const res = await dispatch(fetchAllMemoriesThunk({ page, limit }));
-            setAllMemoriesData(res?.payload?.data || { allMemories: [], totalPages: 1 });
+    const handleForwardNavigation = () => {
+        if(page < totalPages) {
+            setPage((prev) => prev + 1);
         }
-        fetchAllMemories();
-    }, [dispatch, page, limit]);
+    }
+
+    const handleBackwardPagination = () => {
+        if(page > 1) {
+            setPage((prev) => prev - 1);
+        }
+    }
+    async function fetchAllMemories() {
+        const res = await dispatch(fetchAllMemoriesThunk({ page, limit }));
+        setAllMemoriesData(res?.payload?.data);
+        setTotalPages(res?.payload?.data?.totalPages);
+        setFetchAll(false);
+    }
+
+    async function fetchSearchQuery(query){
+        const res = await dispatch(fetchSearchMemoriesThunk({ page, limit, query }));
+        // console.log(res);
+        setAllMemoriesData(res?.payload?.data);
+        setTotalPages(res?.payload?.data?.totalPages);
+    }
+    
+    useEffect(() => {
+        if(fetchAll){
+            fetchAllMemories();
+        }else{
+            fetchAllMemories();
+        }
+    }, [dispatch, page, limit, fetchAll]);
 
     return (
         <NavigationLayout>
@@ -31,6 +60,9 @@ function AllMemories() {
                     <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Explore the memories shared by everyone
                     </p>
+                    <div className='w-[500px]'>
+                        <SearchMemory onSearch={fetchSearchQuery} setFetchAll={setFetchAll} />
+                    </div>
                 </div>
 
                 <div className="flex justify-center">
@@ -55,7 +87,7 @@ function AllMemories() {
 
                 <div className="flex justify-center items-center mt-10 space-x-4">
                     <button
-                        onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                        onClick={handleBackwardPagination}
                         disabled={page === 1}
                         className={`px-6 py-2 text-white rounded-md shadow-md ${
                             page === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
@@ -64,10 +96,10 @@ function AllMemories() {
                         Previous
                     </button>
                     <button
-                        onClick={() => setPage(prev => Math.min(prev + 1, allMemoriesData.totalPages))}
-                        disabled={page === allMemoriesData.totalPages}
+                        onClick={handleForwardNavigation}
+                        disabled={page >= totalPages}
                         className={`px-6 py-2 text-white rounded-md shadow-md ${
-                            page === allMemoriesData.totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
+                            page === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
                         }`}
                     >
                         Next

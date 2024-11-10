@@ -143,6 +143,70 @@ const fetchPersonalMemories = asyncHandler(async(req, res, next) => {
     }
 })
 
+const fetchMemoryBySearch = asyncHandler(async(req, res, next) => {
+    try{
+        let { page, limit, query } = req.query;
+
+        if(!query){
+            throw new ApiError(400, "No search query is provided for searching...");
+        }
+
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 6;
+
+        const skip = ( page - 1 ) * limit;
+
+        const searchCondition = {
+            $or : [
+                { title : {$regex : query, $options : "i"} },
+                { category : {$regex : query, $options : "i"} },
+                { tags: { $in: [new RegExp(query, "i")] }  }
+            ]
+        }
+
+        const totalMemories = await Memory.countDocuments(searchCondition);
+        if(totalMemories === 0){
+            return res.status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        allMemories : [],
+                        totalMemories,
+                        totalPages : 0,
+                        currentPage : page
+                    },
+                    "No Memory found matching the query"
+                )
+            )
+        }
+
+        const totalPages = Math.ceil(totalMemories / limit);
+        const allMemories = await Memory.find(searchCondition)
+        .skip(skip)
+        .limit(limit)
+        .populate("author", "username avatar");
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    allMemories,
+                    totalMemories,
+                    totalPages,
+                    currentPage : page
+                },
+                "Memories matching query fetched successfully"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while fetching Memory by search query !!`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching Memory by search query !!!");
+    }
+})
+
 const viewMemory = asyncHandler(async(req, res, next) => {
     try{    
         const { memoryId } = req.params;
@@ -400,6 +464,7 @@ const deleteMemory = asyncHandler(async (req, res, next) => {
 
 export {
     fetchAllMemories,
+    fetchMemoryBySearch,
     fetchPersonalMemories,
     viewMemory,
     createMemory,
