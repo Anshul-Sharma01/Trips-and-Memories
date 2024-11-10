@@ -1,6 +1,8 @@
+// MemoryCard.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaHeart, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
+import ToggleBucketList from '../BucketList/ToggleBucketList';
 
 function MemoryCard({ memory }) {
     return (
@@ -31,6 +33,10 @@ function MemoryCard({ memory }) {
                     <span className="flex items-center text-gray-500 dark:text-gray-400">
                         <FaHeart className="mr-1 text-red-500" /> {memory.likes} {memory.likes === 1 ? 'Like' : 'Likes'}
                     </span>
+
+
+                    <ToggleBucketList memoryId={memory._id} />
+
                     <span className="flex items-center font-mono tracking-widest text-gray-500 dark:text-gray-400">
                         <FaCalendarAlt className="mr-1 text-blue-500" /> {new Date(memory.tripDate).toLocaleDateString()}
                     </span>
