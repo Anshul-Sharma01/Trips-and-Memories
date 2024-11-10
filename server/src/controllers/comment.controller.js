@@ -74,7 +74,6 @@ const deleteComment = asyncHandler(async(req, res, next) => {
     }
 });
 
-
 const fetchAllComments = asyncHandler(async(req, res, next) => {
     try {
         const { memoryId } = req.params;
