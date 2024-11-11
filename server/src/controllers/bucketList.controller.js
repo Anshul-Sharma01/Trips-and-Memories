@@ -79,23 +79,46 @@ const clearBucketList = asyncHandler(async(req, res, next) => {
 const getAllBucketListItems = asyncHandler(async(req, res, next) => {
     try{
         const userId = req.user._id;
+        let { page, limit } = req.query;
 
-        const fullBucketList = await BucketList.find({ owner: userId }).populate('memory');
-        if(fullBucketList.length == 0){
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 4;
+
+        const skip = ( page - 1 ) * limit;
+
+        const totalItems = await BucketList.countDocuments({ owner : userId});
+        if(totalItems === 0){
             return res.status(200)
             .json(
                 new ApiResponse(
                     200,
-                    fullBucketList,
+                    {
+                        fullBucketList : [],
+                        totalItems,
+                        totalPages : 0,
+                        currentPage : page,
+                    },
                     "You haven't added any Items in Bucket List yet"
                 )
             );
         }
+
+        const fullBucketList = await BucketList.find({owner : userId})
+        .skip(skip)
+        .limit(limit)
+        .populate("memory");
+        const totalPages = Math.ceil(totalItems / limit);
+
         return res.status(200)
         .json(
             new ApiResponse(
                 200,
-                fullBucketList,
+                {
+                    fullBucketList,
+                    totalItems,
+                    totalPages,
+                    currentPage : page
+                },
                 "Bucket List Items fetched Successfully"
             )
         )

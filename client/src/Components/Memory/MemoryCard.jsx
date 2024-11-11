@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaHeart, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 import ToggleBucketList from '../BucketList/ToggleBucketList';
 
-function MemoryCard({ memory }) {
+function MemoryCard({ memory}) {
     return (
         <div className="memory-card w-80 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer">
             <div>
