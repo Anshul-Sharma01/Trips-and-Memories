@@ -62,7 +62,7 @@ function CommentsSection({ memoryId }) {
                                 ownerId={comment?.owner?._id}
                                 ownerUserName={comment?.owner?.username}
                                 content={comment?.content}
-                                totalLikes={comment.totalLikes || 0}
+                                totalLikes={comment?.numberOfLikes || 0}
                                 commentId={comment._id}
                             />
                         ))

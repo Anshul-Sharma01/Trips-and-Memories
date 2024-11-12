@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaHeart, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 import ToggleBucketList from '../BucketList/ToggleBucketList';
+import ToggleLike from '../Like/ToggleLike';
 
 function MemoryCard({ memory}) {
     return (
@@ -31,7 +32,7 @@ function MemoryCard({ memory}) {
 
                 <div className="flex justify-between items-center mt-4 text-sm">
                     <span className="flex items-center text-gray-500 dark:text-gray-400">
-                        <FaHeart className="mr-1 text-red-500" /> {memory.likes} {memory.likes === 1 ? 'Like' : 'Likes'}
+                        <ToggleLike memoryId={memory._id} numberOfLikes={memory.numberOfLikes}/>
                     </span>
 
 
