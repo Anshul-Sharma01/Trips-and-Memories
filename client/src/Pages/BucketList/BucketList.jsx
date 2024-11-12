@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import BackButton from "../../Components/BackButton";
 import { useEffect, useState } from "react";
 import MemoryCard from "../../Components/Memory/MemoryCard";
-import { getBucketListThunk } from "../../Redux/Slices/bucketListSlice";
+import { clearBucketListThunk, getBucketListThunk } from "../../Redux/Slices/bucketListSlice";
 import { toggleRefresh } from "../../Redux/Slices/bucketListSlice";
+import toast from "react-hot-toast";
 
 function BucketList() {
     
@@ -14,6 +15,7 @@ function BucketList() {
     const [limit] = useState(2);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(1);
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -24,6 +26,7 @@ function BucketList() {
         const res = await dispatch(getBucketListThunk({ page, limit }));
         setBucketListData(res?.payload?.data?.fullBucketList);
         setTotalPages(res?.payload?.data?.totalPages);
+        setTotalItems(res?.payload?.data?.totalItems);
         console.log("response : ", res);
     }
     
@@ -36,6 +39,16 @@ function BucketList() {
             setPage((prev) => prev + 1);
         }
     };
+
+    const clearFullBucketList = async () => {
+        if(totalItems === 0){
+            toast.dismiss();
+            toast.error("Bucket List already empty !!");
+            return;
+        }
+        await dispatch(clearBucketListThunk());
+        dispatch(toggleRefresh());
+    }
 
     const handleBackwardNavigation = () => {
         if (page > 1) {
@@ -52,7 +65,7 @@ function BucketList() {
                         <span className="capitalize">{userData?.name}'s </span>
                         Bucket List
                     </h1>
-                    <p>Explore Your Bucket List</p>
+                    <p className="dark:text-slate-400">Explore Your Bucket List</p>
                 </div>
 
                 <div className="flex justify-center">
@@ -84,6 +97,12 @@ function BucketList() {
                         }`}
                     >
                         Previous
+                    </button>
+                    <button
+                        onClick={clearFullBucketList} 
+                        disabled={totalItems === 0}
+                        className={`px-6 py-2 text-white rounded-md shadow-md ${totalItems === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"} dark:bg-red-600 dark:hover:bg-red-700`}>
+                        Empty Bucket List
                     </button>
                     <button
                         onClick={handleForwardNavigation}

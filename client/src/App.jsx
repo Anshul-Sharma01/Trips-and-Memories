@@ -19,6 +19,9 @@ import UpdateMemoryDetails from "./Components/Memory/UpdateMemoryDetails.jsx";
 import DeleteMemoryModal from "./Components/Memory/DeleteMemoryModal.jsx";
 import ToggleBucketList from "./Components/BucketList/ToggleBucketList.jsx";
 import BucketList from "./Pages/BucketList/BucketList.jsx";
+import Comment from "./Components/Comments/Comment.jsx";
+import CommentsSection from "./Components/Comments/CommentsSection.jsx";
+import DeleteComment from "./Components/Comments/DeleteComment.jsx";
 
 
 function App() {
@@ -29,7 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<BucketList/>}></Route>
+        <Route path="/modal/check" element={<CommentsSection/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />

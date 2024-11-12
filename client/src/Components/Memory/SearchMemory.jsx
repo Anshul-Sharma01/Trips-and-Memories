@@ -4,7 +4,7 @@ import { MdOutlineSearch } from "react-icons/md";
 
 function SearchMemory({ onSearch, setFetchAll }){
 
-    const [query, setQuery] = useState();
+    const [query, setQuery] = useState("");
 
     const handleChangeInQuery = (e) => {
         const val = e.target.value;

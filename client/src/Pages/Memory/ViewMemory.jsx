@@ -9,6 +9,7 @@ import { FaCalendarAlt, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
 import UpdateMemoryThumbnail from '../../Components/Memory/UpdateMemoryThumbnail.jsx';
 import UpdateMemoryDetails from '../../Components/Memory/UpdateMemoryDetails.jsx';
 import DeleteMemoryModal from '../../Components/Memory/DeleteMemoryModal.jsx';
+import CommentsSection from '../../Components/Comments/CommentsSection.jsx';
 
 function ViewMemory() {
     const { memoryId } = useParams();
@@ -113,6 +114,9 @@ function ViewMemory() {
 
                             </>
                         )}
+                    </div>
+                    <div>
+                        <CommentsSection memoryId={memoryData._id}/>
                     </div>
                 </div>
             </div>

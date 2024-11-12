@@ -87,7 +87,7 @@ const fetchAllComments = asyncHandler(async(req, res, next) => {
             throw new ApiError(404, "Memory does not exist");
         }
 
-        const allComments = await Comment.find({ memory: memoryId }).sort({ createdAt: -1 });
+        const allComments = await Comment.find({ memory: memoryId }).sort({ createdAt: -1 }).populate("owner","avatar username");
 
         return res.status(200).json(
             new ApiResponse(200, allComments, allComments.length > 0 ? "Comments Fetched Successfully" : "No Comments Yet")

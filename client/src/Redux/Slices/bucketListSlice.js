@@ -7,7 +7,7 @@ const initialState = {
     refreshToggle : false
 }
 
-export const toggleBucketListItemThunk = createAsyncThunk("/bucket-list/toggle/:memoryId", async({memoryId}, {dispatch}) => {
+export const toggleBucketListItemThunk = createAsyncThunk("/bucket-list/toggle/:memoryId", async({memoryId}) => {
     try{
         const res = axiosInstance.get(`bucket-list/toggle/${memoryId}`);
         toast.promise(res, {
