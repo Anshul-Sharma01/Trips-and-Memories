@@ -133,6 +133,23 @@ export const updateThumbnailThunk = createAsyncThunk("/memory/update-thumbnail/:
     }
 })
 
+export const fetchAuthorMemoriesThunk = createAsyncThunk("/author/:authorId", async({ authorId }) => {
+    try{
+        const res = axiosInstance.get(`memory/get/${authorId}`);
+        toast.promise(res, {
+            loading : 'Fetching author memories...',
+            success : (data) => data?.data?.message,
+            error : 'Failed to fetch the author memories'
+        })
+
+        return (await res).data;
+
+    }catch(err){
+        console.error(`Error occurred while fetching memories for particular author : ${err}`);
+    }
+})
+
+
 const memorySlice = createSlice({
     name : 'memory',
     initialState : {},

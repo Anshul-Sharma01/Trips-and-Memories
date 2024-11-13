@@ -207,6 +207,66 @@ const fetchMemoryBySearch = asyncHandler(async(req, res, next) => {
     }
 })
 
+const fetchMemoryByAuthor = asyncHandler(async(req, res, next) => {
+    try{
+        let { page, limit } = req.query;
+        const { authorId } = req.params;
+
+        if(!isValidObjectId(authorId)){
+            throw new ApiError(400, "Invalid Author Id");
+        }
+
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 6;
+
+        const skip = ( page - 1 ) * limit;
+
+        const totalMemories = await Memory.countDocuments({ author : authorId });
+        
+
+        if(totalMemories.length == 0){
+            return res.status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        authorMemories : [],
+                        totalMemories,
+                        totalPages : 0,
+                        currentPage : page
+                    },
+                    "No Memory found for this author"
+                )
+            )
+        }
+
+        const authorMemories = await Memory.find({ author : authorId })
+        .skip(skip)
+        .limit(limit)
+        .populate("author", "username author");
+
+        const totalPages = Math.ceil(totalMemories / limit);
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    authorMemories,
+                    totalMemories,
+                    totalPages,
+                    currentPage : page
+                },
+                "Memories for the particular author fetched successfully"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while fetching memories of a particular author`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching memories for a particular author");
+    }
+})
+
 const viewMemory = asyncHandler(async(req, res, next) => {
     try{    
         const { memoryId } = req.params;
@@ -466,6 +526,7 @@ export {
     fetchAllMemories,
     fetchMemoryBySearch,
     fetchPersonalMemories,
+    fetchMemoryByAuthor,
     viewMemory,
     createMemory,
     updateMemory,

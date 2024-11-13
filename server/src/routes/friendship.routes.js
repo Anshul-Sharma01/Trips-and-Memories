@@ -1,20 +1,22 @@
 import { Router } from "express";
 
 import { acceptFriendRequest, cancelFriendRequest, declineFriendRequest, getPendingRequests, listAllFriends, removeFriend, sendFriendRequest } from "../controllers/friendship.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
+router.use(verifyJWT);
 
 router.route("/request/:recipientId")
-.post(sendFriendRequest);
+.get(sendFriendRequest);
 
 router.route("/request/cancel/:requestId")
 .delete(cancelFriendRequest);
 
 router.route("/accept/:requestId")
-.post(acceptFriendRequest);
+.get(acceptFriendRequest);
 
 router.route("/decline/:requestId")
-.post(declineFriendRequest);
+.get(declineFriendRequest);
 
 router.route("/requests/pending")
 .get(getPendingRequests);

@@ -23,6 +23,9 @@ import Comment from "./Components/Comments/Comment.jsx";
 import CommentsSection from "./Components/Comments/CommentsSection.jsx";
 import DeleteComment from "./Components/Comments/DeleteComment.jsx";
 import ToggleLike from "./Components/Like/ToggleLike.jsx";
+import Friend from "./Components/Friends/Friend.jsx";
+import FriendProfile from "./Pages/Friends/FriendProfile.jsx";
+import AllFriends from "./Pages/Friends/AllFriends.jsx";
 
 
 function App() {
@@ -33,7 +36,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<ToggleLike/>}></Route>
+        <Route path="/modal/check" element={<AllFriends/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
