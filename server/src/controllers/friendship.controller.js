@@ -207,36 +207,36 @@ const searchFriendsByUsername = asyncHandler(async (req, res, next) => {
 });
 
 const declineFriendRequest = asyncHandler(async(req, res, next) => {
-    try{
+    try {
         const { requestId } = req.params;
         const userId = req.user._id;
-        if(!isValidObjectId(requestId)){
+        
+        if (!isValidObjectId(requestId)) {
             throw new ApiError(400, "Invalid Request Id");
         }
 
         const friendRequest = await Friendship.findById(requestId);
 
-        if(!friendRequest || friendRequest.recipient.toString() !== userId.toString()){
+        if (!friendRequest || friendRequest.recipient.toString() !== userId.toString()) {
             throw new ApiError(404, "Friend request not found or you are not the recipient");
         }
 
-        friendRequest.status = "declined";
-        await friendRequest.save();
+        await friendRequest.deleteOne();
 
-        return res.status(200)
-        .json(
+        return res.status(200).json(
             new ApiResponse(
                 200,
-                friendRequest,
-                "Friend Request Declined Successfully"
+                null,
+                "Friend Request Declined and Deleted Successfully"
             )
-        )
+        );
 
-    }catch(err){
-        console.error(`Error occurred while declining the friend request : ${err}`);
-        throw new ApiError(400, err?.message || "Error occurred while decling the friend request !!");
+    } catch (err) {
+        console.error(`Error occurred while declining the friend request: ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while declining the friend request!");
     }
-})
+});
+
 
 const listAllFriends = asyncHandler(async (req, res, next) => {
     try {

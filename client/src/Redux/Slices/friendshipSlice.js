@@ -4,8 +4,10 @@ import toast from "react-hot-toast";
 
 const initialState = {
     usersData: [],
+    friendsList : [],
     totalPages: 1,
     searchQuery : "",
+    refreshKey: 0,
 };
 
 export const sendFriendRequestThunk = createAsyncThunk("/friends/add/send", async ({ recipientId }, { dispatch, getState }) => {
@@ -54,31 +56,39 @@ export const cancelFriendRequestThunk = createAsyncThunk("/friends/", async ({ r
     }
 );
 
-export const acceptFriendRequestThunk = createAsyncThunk("/friends", async({ requestId }) => {
+export const acceptFriendRequestThunk = createAsyncThunk("/friends", async({ requestId }, { dispatch }) => {
     try{
         console.log("Here is the requestId : ", requestId );
-        const res = axiosInstance.get(`friends/accept/${requestId}`);
-        toast.promise(res, {
-            loading : 'Updating friends list',
-            success : (data) => data?.data?.message,
-            error : "Failed to accept the friend request",
-        });
-        return (await res).data;
+        const res = await axiosInstance.get(`friends/accept/${requestId}`);
+        // toast.promise(res, {
+        //     loading : 'Updating friends list',
+        //     success : (data) => data?.data?.message,
+        //     error : "Failed to accept the friend request",
+        // });
+
+        await dispatch(fetchAllFriendsThunks());
+        return res.data;
     }catch(err){
         console.error(`Error occurred while accepting the friend request : ${err}`);
     }
 })
 
-export const declineFriendRequestThunk = createAsyncThunk("/friends", async({ requestId }) => {
+export const declineFriendRequestThunk = createAsyncThunk("/friends", async({ requestId, getState }) => {
     try{
-        const res = axiosInstance.get(`friends/decline/${requestId}`);
+        const res =  axiosInstance.get(`friends/decline/${requestId}`);
         toast.promise(res, {
             loading : 'Declining the friend request',
             success : (data) => data?.data?.message,
             error : "Failed to delcine the friend request"
         });
 
-        return (await res).data;
+        const { searchQuery } = getState().friendship;
+        if(searchQuery){
+            await dispatch(fetchSearchedUserThunk({ page : 1, limit : 10, query : searchQuery }));
+        }
+        toast.dismiss();
+
+        return res.data;
 
     }catch(err){
         console.error(`Error occurred while declining the friend request : ${err}`);
@@ -101,22 +111,30 @@ export const fetchPendingRequestsThunk = createAsyncThunk("/friends", async () =
     }
 })
 
-export const removeFriendThunk = createAsyncThunk("/friends/", async({ friendId }) => {
-    try{
-        const res = axiosInstance.get(`friends/remove/${friendId}`);
+export const removeFriendThunk = createAsyncThunk("/friends-remove/", async({ friendId }, { dispatch, getState }) => {
+    try {
+        const res = axiosInstance.delete(`friends/remove/${friendId}`);
         toast.promise(res, {
-            loading : "removing friend from friends list...",
-            success : (data) => data?.data?.message,
-            error : "Failed to remove friend from friends list"
+            loading: "Removing friend from friends list...",
+            success: (data) => data?.data?.message,
+            error: "Failed to remove friend from friends list",
         });
 
-        return (await res).data;
-    }catch(err){
-        console.error(`Error occurred while removing friend from friends list : ${err}`);
-    }
-})
+        const { searchQuery } = getState().friendship;
+        if(searchQuery){
+            dispatch(fetchSearchedUserThunk({ page : 1, limit : 10, query : searchQuery}));
+        }
 
-export const fetchAllFriendsThunks = createAsyncThunk("/friends", async() => {
+        await dispatch(fetchAllFriendsThunks());
+        dispatch(friendShipSlice.actions.incrementRefreshKey());
+
+        return res.data;
+    } catch (err) {
+        console.error(`Error occurred while removing friend from friends list: ${err}`);
+    }
+});
+
+export const fetchAllFriendsThunks = createAsyncThunk("/friends-list", async() => {
     try{
         const res = axiosInstance.get("friends/list");
         toast.promise(res, {
@@ -153,13 +171,20 @@ const friendShipSlice = createSlice({
         clearUsersData: (state) => {
             state.usersData = [];
         },
+        incrementRefreshKey: (state) => {
+            state.refreshKey += 1;
+        },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchSearchedUserThunk.fulfilled, (state, action) => {
-            state.usersData = action?.payload?.data?.searchedUser;
-            state.totalPages = action?.payload?.data?.totalPages;
-            state.searchQuery = action?.meta?.arg?.query;
-        })
+        builder
+            .addCase(fetchSearchedUserThunk.fulfilled, (state, action) => {
+                state.usersData = action?.payload?.data?.searchedUser;
+                state.totalPages = action?.payload?.data?.totalPages;
+                state.searchQuery = action?.meta?.arg?.query;
+            })
+            .addCase(fetchAllFriendsThunks.fulfilled, (state, action) => {
+                state.friendsList = action?.payload?.data?.friends
+            })
     },
 });
 

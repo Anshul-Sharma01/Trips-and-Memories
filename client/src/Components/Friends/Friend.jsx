@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SendRequest from "./SendRequest.jsx";
 import CancelRequest from "./CancelRequest.jsx";
 import { acceptFriendRequestThunk, declineFriendRequestThunk } from "../../Redux/Slices/friendshipSlice.js";
+import RemoveFriend from "./RemoveFriend.jsx"
 
 // Friend Component
 function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) {
@@ -54,9 +55,7 @@ function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) 
                     <CancelRequest requestId={requestId} />
                 )}
                 {friendStatus === "friend" && (
-                    <button className="remove-button px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200">
-                        Remove Friend
-                    </button>
+                    <RemoveFriend friendId={friendId}/>
                 )}
                 {friendStatus === "none" && (
                     <SendRequest friendId={friendId} />

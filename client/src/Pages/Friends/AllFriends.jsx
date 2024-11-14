@@ -1,27 +1,23 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFriendsThunks } from "../../Redux/Slices/friendshipSlice";
 import BackButton from "../../Components/BackButton";
 import SearchFriend from "../../Components/Friends/SearchFriend";
 import Friend from "../../Components/Friends/Friend";
 
 function AllFriends() {
-    const [friendsList, setFriendsList] = useState([]);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
     const dispatch = useDispatch();
+    const friendsList = useSelector((state) => state?.friendship?.friendsList) || []
+    const refreshKey = useSelector((state) => state?.friendship?.refreshKey);
 
     async function fetchAllFriends(){
         const res = await dispatch(fetchAllFriendsThunks());
-        setFriendsList(res?.payload?.data?.friends)
-        setTotalPages(res?.payload?.data?.totalPages);
-        console.log("Response of friends-list :", res);
     }
 
     useEffect(() => {
         fetchAllFriends();
-    }, [])
+    }, [refreshKey])
 
     return (
         <div className="all-friends-container flex flex-col justify-center items-center h-screen p-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
@@ -39,13 +35,13 @@ function AllFriends() {
                         {
                             friendsList.map((ele) => 
                             <Friend
+                                key={ele?._id}
                                 imgSrc={ele?.friend?.avatar?.secure_url}
                                 friendId={ele?.friend?._id}
                                 friendStatus={ele?.friendshipStatus}
                                 username={ele?.friend?.username}
                                 email={ele?.friend?.email}
                                 name={ele?.friend?.name}
-                                key={ele?._id}
                             />
                             
                             )
@@ -53,26 +49,7 @@ function AllFriends() {
                     </div>
                 )
             }
-            <div className="flex justify-center items-center mt-10 space-x-6">
-                <button
-                    className={`px-6 py-3 text-white font-semibold rounded-lg transition duration-300 shadow-lg transform ${
-                        page === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800'
-                    }`}
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                >
-                    Previous
-                </button>
-                <button
-                    className={`px-6 py-3 text-white font-semibold rounded-lg transition duration-300 shadow-lg transform ${
-                        page === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800'
-                    }`}
-                    onClick={() => setPage(page + 1)}
-                    disabled={page === totalPages}
-                >
-                    Next
-                </button>
-            </div>
+            
             <section className="overflow-y-scroll h-[400px] w-[90%] max-w-3xl bg-gray-200 dark:bg-gray-800 px-6 py-4 rounded-xl shadow-inner mt-10">
                 <SearchFriend />
             </section>
