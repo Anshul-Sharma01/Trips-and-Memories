@@ -111,6 +111,20 @@ export const fetchAllFriendsThunks = createAsyncThunk("/friends", async() => {
     }
 })
 
+export const fetchSearchedUserThunk = createAsyncThunk("/friends", async({ page, limit, query }) => {
+    try{
+        const res = axiosInstance.get(`friends/search-query?page=${page}&limit=${limit}&query=${query}`);
+        toast.promise(res, {
+            loading : "Searching for user...",
+            success : (data) => data?.data?.message,
+            error : "Failed to search for user !!"
+        })
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while fetching searched user : ${err}`);
+    }
+})
+
 const friendShipSlice = createSlice({
     name : 'createSlice',
     initialState : {},

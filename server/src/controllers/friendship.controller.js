@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import  { ApiResponse } from "../utils/ApiResponse.js";
 import { isValidObjectId } from "mongoose";
 import { Friendship } from "../models/friendship.model.js";
+import { User } from "../models/user.model.js";
 
 const sendFriendRequest = asyncHandler(async(req, res, next) => {
     try{
@@ -112,6 +113,94 @@ const acceptFriendRequest = asyncHandler(async(req, res, next) => {
     }
 })
 
+const searchFriendsByUsername = asyncHandler(async (req, res, next) => {
+    try {
+        let { page, limit, query } = req.query;
+        const requesterId = req.user._id;
+
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 10;
+        const skip = (page - 1) * limit;
+
+        if (!query) {
+            throw new ApiError(400, "Search query not provided");
+        }
+
+        const searchingCondition = {
+            username: { $regex: query, $options: "i" }
+        };
+
+        const totalUsers = await User.countDocuments(searchingCondition);
+
+        if (totalUsers === 0) {
+            return res.status(200).json(
+                new ApiResponse(
+                    200,
+                    {
+                        searchedUser: [],
+                        totalUsers: 0,
+                        totalPages: 0,
+                        currentPage: page
+                    },
+                    "No users found"
+                )
+            );
+        }
+
+        const users = await User.find(searchingCondition)
+            .skip(skip)
+            .limit(limit)
+            .select("_id username name avatar");
+
+        const userIds = users.map(user => user._id);
+
+        // Fetch all friendships in one query
+        const friendships = await Friendship.find({
+            $or: [
+                { requester: requesterId, recipient: { $in: userIds } },
+                { recipient: requesterId, requester: { $in: userIds } }
+            ]
+        });
+
+        const friendshipMap = friendships.reduce((map, friendship) => {
+            const friendId = friendship.requester.equals(requesterId) ? friendship.recipient : friendship.requester;
+            let status;
+            if (friendship.status === "accepted") {
+                status = "friend";
+            } else if (friendship.requester.equals(requesterId)) {
+                status = "requestSent";
+            } else {
+                status = "requestReceived";
+            }
+            map[friendId.toString()] = status;
+            return map;
+        }, {});
+
+        const searchedUser = users.map(user => ({
+            user,
+            friendshipStatus: friendshipMap[user._id.toString()] || "none"
+        }));
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    searchedUser,
+                    totalUsers,
+                    totalPages: Math.ceil(totalUsers / limit),
+                    currentPage: page
+                },
+                "Users found for the specified query!"
+            )
+        );
+
+    } catch (err) {
+        console.error("Error occurred while searching for friends by username:", err);
+        next(new ApiError(400, err.message || "Error occurred while searching for friends!"));
+    }
+});
+
+
 
 const declineFriendRequest = asyncHandler(async(req, res, next) => {
     try{
@@ -145,88 +234,102 @@ const declineFriendRequest = asyncHandler(async(req, res, next) => {
     }
 })
 
-const listAllFriends = asyncHandler(async(req, res, next) => {
-    try{
+const listAllFriends = asyncHandler(async (req, res, next) => {
+    try {
         const userId = req.user._id;
 
         const acceptedFriends = await Friendship.find({
-            $or : [
-                { requester : userId}, { recipient : userId }
-            ],
-            status : 'accepted'
-        }).populate('request recipient', 'name email');
+            $or: [{ requester: userId }, { recipient: userId }],
+            status: 'accepted'
+        }).populate('requester recipient', 'name email');
 
-        return res.status(200)
-        .json(
+        const friendsWithStatus = acceptedFriends.map(friendship => {
+            const friend = friendship.requester.equals(userId)
+                ? friendship.recipient
+                : friendship.requester;
+
+            return {
+                friend,
+                friendshipStatus: 'friend',
+            };
+        });
+
+        return res.status(200).json(
             new ApiResponse(
                 200,
-                acceptedFriends,
+                friendsWithStatus,
                 "Successfully fetched friends list"
             )
-        )
-        
-    }catch(err){
-        console.error(`Error occurred while fetching the friend list : ${err}`);
+        );
+
+    } catch (err) {
+        console.error(`Error occurred while fetching the friend list: ${err}`);
         throw new ApiError(400, err?.message || "Error occurred while fetching the friend list");
     }
-})
+});
 
-const getPendingRequests = asyncHandler(async(req, res, next) => {
-    try{
+const getPendingRequests = asyncHandler(async (req, res, next) => {
+    try {
         const userId = req.user._id;
-        
+
         const pendingRequests = await Friendship.find({
-            recipient : userId,
-            status : "pending"
+            recipient: userId,
+            status: "pending"
         }).populate('requester', 'name email');
 
-        return res.status(200)
-        .json(
+
+        const requestsWithStatus = pendingRequests.map(request => ({
+            requester: request.requester,
+            friendshipStatus: 'requestReceived',
+        }));
+
+        return res.status(200).json(
             new ApiResponse(
-                200, 
-                pendingRequests,
+                200,
+                requestsWithStatus,
                 "Pending Friend Requests fetched Successfully"
             )
         );
 
-    }catch(err){
-        console.error(`Error occurred while fetching pending friend requests : ${err}`);
-        throw new ApiError(400, err?.message || "Error occurred while fetching pending friend requests !!");
+    } catch (err) {
+        console.error(`Error occurred while fetching pending friend requests: ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching pending friend requests!");
     }
-})
+});
 
-const removeFriend = asyncHandler(async(req, res, next) => {
-    try{
+
+const removeFriend = asyncHandler(async (req, res, next) => {
+    try {
         const { friendId } = req.params;
         const userId = req.user._id;
-        if(!isValidObjectId(friendId)){
+        if (!isValidObjectId(friendId)) {
             throw new ApiError(400, "Invalid Friend Id");
         }
 
         const friendship = await Friendship.findOneAndDelete({
-            $or : [
-                { requester : userId, recipient : friendId, status : 'accepted'},
-                { requester : friendId, recipient : userId, status : 'accepted'}
+            $or: [
+                { requester: userId, recipient: friendId, status: 'accepted' },
+                { requester: friendId, recipient: userId, status: 'accepted' }
             ]
         });
 
-        if(!friendship){
-            throw new ApiError(400, "Friendshi not found !!");
+        if (!friendship) {
+            throw new ApiError(400, "Friendship not found!");
         }
 
-        return res.status(200)
-        .json(
+        return res.status(200).json(
             new ApiResponse(
                 200,
-                friendship,
+                { friendshipStatus: 'none' },
                 "Friend Removed Successfully"
             )
         );
-    }catch(err){
-        console.error(`Error occurred while removing a friend from friend list : ${err}`);
-        throw new ApiError(400, err?.message || "Error occurred while removing a friend from friend list !!");
+    } catch (err) {
+        console.error(`Error occurred while removing a friend from the friend list: ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while removing a friend from the friend list!");
     }
-})
+});
+
 
 export {
     sendFriendRequest,
@@ -236,6 +339,6 @@ export {
     listAllFriends,
     getPendingRequests,
     removeFriend,
-
+    searchFriendsByUsername
 }
 
