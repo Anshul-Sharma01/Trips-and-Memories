@@ -1,5 +1,25 @@
+import { useDispatch, useSelector } from "react-redux";
+import SendRequest from "./SendRequest.jsx";
+import CancelRequest from "./CancelRequest.jsx";
+import { acceptFriendRequestThunk, declineFriendRequestThunk } from "../../Redux/Slices/friendshipSlice.js";
+
 // Friend Component
-function Friend({ imgSrc, username, email, friendStatus }) {
+function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) {
+    const dispatch = useDispatch();
+
+    const userData = useSelector((state) => state?.auth?.userData);
+    if(userData.username === username){
+        return;
+    }
+
+    const handleAcceptRequest = () => {
+        dispatch(acceptFriendRequestThunk({requestId}));
+    };
+
+    const handleDeclineRequest = () => {
+        dispatch(declineFriendRequestThunk({requestId}));
+    };
+    
     return (
         <div className="friend-card flex items-center p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 bg-white dark:bg-gray-800">
             <div className="avatar-container flex justify-center items-center w-[60px] h-[60px] overflow-hidden rounded-full border border-gray-300">
@@ -14,20 +34,24 @@ function Friend({ imgSrc, username, email, friendStatus }) {
                 <p className="text-sm text-gray-600 dark:text-gray-300">{email || "someone@example.com"}</p>
             </div>
             <div className="flex space-x-2 gap-4 ml-auto">
-                {friendStatus === "received" && (
+                {friendStatus === "requestReceived" && (
                     <>
-                        <button className="accept-button px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200">
+                        <button
+                            onClick={handleAcceptRequest}
+                            className="accept-button px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+                        >
                             Accept
                         </button>
-                        <button className="decline-button px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200">
+                        <button
+                            onClick={handleDeclineRequest}
+                            className="decline-button px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200"
+                        >
                             Decline
                         </button>
                     </>
                 )}
-                {friendStatus === "sent" && (
-                    <button className="cancel-button px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-200">
-                        Cancel Request
-                    </button>
+                {friendStatus === "requestSent" && (
+                    <CancelRequest requestId={requestId} />
                 )}
                 {friendStatus === "friend" && (
                     <button className="remove-button px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200">
@@ -35,9 +59,7 @@ function Friend({ imgSrc, username, email, friendStatus }) {
                     </button>
                 )}
                 {friendStatus === "none" && (
-                    <button className="send-request-button px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">
-                        Send Friend Request
-                    </button>
+                    <SendRequest friendId={friendId} />
                 )}
             </div>
         </div>

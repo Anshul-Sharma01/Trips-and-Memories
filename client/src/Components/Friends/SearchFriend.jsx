@@ -2,24 +2,25 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { MdOutlineSearch } from "react-icons/md";
-import { useDispatch } from "react-redux";
-import { fetchSearchedUserThunk } from "../../Redux/Slices/friendshipSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUsersData, fetchSearchedUserThunk } from "../../Redux/Slices/friendshipSlice";
 import Friend from "./Friend.jsx";
 
 function SearchFriend() {
     const [query, setQuery] = useState("");
-    const [usersData, setUsersData] = useState([]);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-    const [totalPages, setTotalPages] = useState(1);
+
     const dispatch = useDispatch();
+    const usersData = useSelector((state) => state?.friendship?.usersData) || [];
+    const totalPages = useSelector((state) => state?.friendship?.totalPages);
 
     const handleChangeInQuery = (e) => {
         const val = e.target.value;
         setQuery(val);
 
         if (!val) {
-            setUsersData([]); 
+            dispatch(clearUsersData());
         }
     };
 
@@ -31,16 +32,16 @@ function SearchFriend() {
             toast.error("Search query not provided!!");
             return;
         }
+        
 
         const res = await dispatch(fetchSearchedUserThunk({ page, limit, query }));
-        console.log("Response : ", res);
-        setUsersData(res?.payload?.data?.searchedUser);
-        setTotalPages(res?.payload?.data?.totalPages);
+        console.log(res);
     }
+
 
     return (
         <section className="flex flex-col justify-center items-center gap-4">
-            <div className="relative mt-10 w-[300px]" id="input">
+            <div className="relative mt-10 w-[350px]" id="input">
                 <form onSubmit={handleSearchUser}>
                     <input
                         type="text"
@@ -55,16 +56,18 @@ function SearchFriend() {
                 </form>
             </div>
             <div className="flex flex-row flex-wrap justify-center items-center p-4 gap-2">
-                {usersData.length === 0 ? (
+                {usersData?.length === 0 ? (
                     <p>No users found</p>
                 ) : (
-                    usersData.map((ele) => (
+                    usersData?.map((ele) => (
                         <Friend
                             key={ele?.user?._id}
+                            friendId={ele?.user?._id}
                             imgSrc={ele?.user?.avatar?.secure_url}
                             username={ele?.user?.username}
                             email={ele?.user?.email}
                             friendStatus={ele?.friendshipStatus}
+                            requestId={ele?.requestId || "not-available"}
                         />
                     ))
                 )}

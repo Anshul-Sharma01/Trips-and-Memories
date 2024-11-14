@@ -2,40 +2,61 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../Helpers/axiosInstance";
 import toast from "react-hot-toast";
 
+const initialState = {
+    usersData: [],
+    totalPages: 1,
+    searchQuery : "",
+};
 
-export const sendFriendRequestThunk = createAsyncThunk("/friends/add/send", async({ recipientId }) => {
-    try{
-        const res = axiosInstance.get(`friends/request/${recipientId}`);
-        toast.promise(res, {
-            loading : "Sending friend request...",
-            success : (data) => data?.data?.message,
-            error : "Failed to send friend request !!"
-        })
+export const sendFriendRequestThunk = createAsyncThunk("/friends/add/send", async ({ recipientId }, { dispatch, getState }) => {
+        try {
+            const res =  axiosInstance.get(`friends/request/${recipientId}`);
+            toast.promise(res, {
+                loading: "Sending friend request...",
+                success: (data) => data?.data?.message,
+                error: "Failed to send friend request !!"
+            });
 
-        return (await res).data;
-    }catch(err){
-        console.error(`Error occurred while sending a friend request : ${err}`);
+
+            const { searchQuery } = getState().friendship;
+            if (searchQuery) {
+                await dispatch(fetchSearchedUserThunk({ page: 1, limit: 10, query: searchQuery }));
+            }
+
+            toast.dismiss();
+            return res.data;
+
+        } catch (err) {
+            console.error(`Error occurred while sending a friend request : ${err}`);
+        }
     }
-})
+);
 
-export const cancelFriendRequestThunk = createAsyncThunk("/friends/", async({requestId}) => {
-    try{
-        const res = axiosInstance.delete(`friends/request/cancel/${requestId}`);
-        toast.promise(res, {
-            loading : 'Cancelling the friend request...',
-            success : (data) => data?.data?.message,
-            error : "Failed to cancel the friend request"
-        });
+export const cancelFriendRequestThunk = createAsyncThunk("/friends/", async ({ requestId }, { dispatch, getState }) => {
+        try {
+            const res =  axiosInstance.delete(`friends/request/cancel/${requestId}`);
+            toast.promise(res, {
+                loading: 'Cancelling the friend request...',
+                success: (data) => data?.data?.message,
+                error: "Failed to cancel the friend request"
+            });
 
-        return (await res).data;
+            const { searchQuery } = getState().friendship;
+            if (searchQuery) {
+                dispatch(fetchSearchedUserThunk({ page: 1, limit: 10, query: searchQuery }));
+            }
+            toast.dismiss();
 
-    }catch(err){
-        console.error(`Error occurred while cancelling the friend request : ${err}`);
+            return res.data;
+        } catch (err) {
+            console.error(`Error occurred while cancelling the friend request : ${err}`);
+        }
     }
-})
+);
 
 export const acceptFriendRequestThunk = createAsyncThunk("/friends", async({ requestId }) => {
     try{
+        console.log("Here is the requestId : ", requestId );
         const res = axiosInstance.get(`friends/accept/${requestId}`);
         toast.promise(res, {
             loading : 'Updating friends list',
@@ -126,9 +147,23 @@ export const fetchSearchedUserThunk = createAsyncThunk("/friends", async({ page,
 })
 
 const friendShipSlice = createSlice({
-    name : 'createSlice',
-    initialState : {},
-    reducers : {}
-})
+    name: "friendship",
+    initialState,
+    reducers: {
+        clearUsersData: (state) => {
+            state.usersData = [];
+        },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchSearchedUserThunk.fulfilled, (state, action) => {
+            state.usersData = action?.payload?.data?.searchedUser;
+            state.totalPages = action?.payload?.data?.totalPages;
+            state.searchQuery = action?.meta?.arg?.query;
+        })
+    },
+});
 
+
+
+export const { clearUsersData } = friendShipSlice.actions;
 export default friendShipSlice.reducer;

@@ -4,6 +4,7 @@ import memorSliceReducer from "./Slices/memorySlice.js";
 import bucketListReducer from "./Slices/bucketListSlice.js";
 import commentReducer from './Slices/commentSlice.js';
 import likeReducer from "./Slices/likeSlice.js";
+import friendReducer from "./Slices/friendshipSlice.js";
 
 
 const store = configureStore({
@@ -12,7 +13,8 @@ const store = configureStore({
         memory : memorSliceReducer,
         bucketList : bucketListReducer,
         comment : commentReducer,
-        like : likeReducer
+        like : likeReducer,
+        friendship : friendReducer
     }
 })
 

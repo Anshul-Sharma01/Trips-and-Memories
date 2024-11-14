@@ -88,6 +88,9 @@ const acceptFriendRequest = asyncHandler(async(req, res, next) => {
     try{
         const { requestId } = req.params;
         const userId = req.user._id;
+        if (!isValidObjectId(requestId)) {
+            throw new ApiError(400, "Invalid or missing request ID");
+        }
 
         const friendRequest = await Friendship.findById(requestId);
 
@@ -154,7 +157,6 @@ const searchFriendsByUsername = asyncHandler(async (req, res, next) => {
 
         const userIds = users.map(user => user._id);
 
-        // Fetch all friendships in one query
         const friendships = await Friendship.find({
             $or: [
                 { requester: requesterId, recipient: { $in: userIds } },
@@ -172,13 +174,17 @@ const searchFriendsByUsername = asyncHandler(async (req, res, next) => {
             } else {
                 status = "requestReceived";
             }
-            map[friendId.toString()] = status;
+            map[friendId.toString()] = {
+                status,
+                requestId: friendship._id 
+            };
             return map;
         }, {});
 
         const searchedUser = users.map(user => ({
             user,
-            friendshipStatus: friendshipMap[user._id.toString()] || "none"
+            friendshipStatus: friendshipMap[user._id.toString()]?.status || "none",
+            requestId: friendshipMap[user._id.toString()]?.requestId || null
         }));
 
         return res.status(200).json(
@@ -199,8 +205,6 @@ const searchFriendsByUsername = asyncHandler(async (req, res, next) => {
         next(new ApiError(400, err.message || "Error occurred while searching for friends!"));
     }
 });
-
-
 
 const declineFriendRequest = asyncHandler(async(req, res, next) => {
     try{
@@ -237,11 +241,24 @@ const declineFriendRequest = asyncHandler(async(req, res, next) => {
 const listAllFriends = asyncHandler(async (req, res, next) => {
     try {
         const userId = req.user._id;
+        let { page, limit } = req.query;
+
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 10;
+        const skip = (page - 1) * limit;
 
         const acceptedFriends = await Friendship.find({
             $or: [{ requester: userId }, { recipient: userId }],
             status: 'accepted'
-        }).populate('requester recipient', 'name email');
+        })
+        .populate('requester recipient', 'name email avatar username')
+        .skip(skip)
+        .limit(limit);
+
+        const totalFriends = await Friendship.countDocuments({
+            $or: [{ requester: userId }, { recipient: userId }],
+            status: 'accepted'
+        });
 
         const friendsWithStatus = acceptedFriends.map(friendship => {
             const friend = friendship.requester.equals(userId)
@@ -257,7 +274,12 @@ const listAllFriends = asyncHandler(async (req, res, next) => {
         return res.status(200).json(
             new ApiResponse(
                 200,
-                friendsWithStatus,
+                {
+                    friends: friendsWithStatus,
+                    totalFriends,
+                    totalPages: Math.ceil(totalFriends / limit),
+                    currentPage: page,
+                },
                 "Successfully fetched friends list"
             )
         );
@@ -296,7 +318,6 @@ const getPendingRequests = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, err?.message || "Error occurred while fetching pending friend requests!");
     }
 });
-
 
 const removeFriend = asyncHandler(async (req, res, next) => {
     try {

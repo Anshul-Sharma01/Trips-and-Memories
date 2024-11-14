@@ -43,6 +43,7 @@ function App() {
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
 
         <Route path="/user/me/profile" element={<Profile/>}></Route>
+        <Route path="users/friends-list" element={<AllFriends/>}></Route>
 
         <Route path="/denied" element={<Denied />} > </Route>
         <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>
