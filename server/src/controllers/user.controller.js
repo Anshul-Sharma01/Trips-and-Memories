@@ -176,13 +176,17 @@ const logout = asyncHandler(async(req, res, next) => {
 
 const getProfile = asyncHandler(async(req, res, next) => {
     try{
-        const userId = req.user._id;
+        let { userId } = req.query ;
+        userId = userId !== undefined ? userId : req.user._id;
         const user = await User.findById(userId);
-        res.status(200)
+        // console.log(user);
+        return res.status(200)
         .json(
-            200,
-            user,
-            "User Fetched successfully"
+            new ApiResponse(
+                200,
+                user,
+                "User Fetched successfully"
+            )
         );
     }catch(err){
         throw new ApiError(400, err?.message || "Error occurred while fetching user profile");

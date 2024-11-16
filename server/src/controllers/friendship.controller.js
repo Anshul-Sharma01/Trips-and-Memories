@@ -9,6 +9,7 @@ const sendFriendRequest = asyncHandler(async(req, res, next) => {
     try{
         const { recipientId } = req.params;
         const userId = req.user._id;
+        // console.log("sending friend requests at backend..");
         if(!isValidObjectId(recipientId)){
             throw new ApiError(400, "Invalid Recipient Id ");
         }
@@ -293,14 +294,15 @@ const listAllFriends = asyncHandler(async (req, res, next) => {
 const getPendingRequests = asyncHandler(async (req, res, next) => {
     try {
         const userId = req.user._id;
-
+        // console.log("fetching pending requests from backend...");
         const pendingRequests = await Friendship.find({
             recipient: userId,
             status: "pending"
-        }).populate('requester', 'name email');
+        }).populate('requester', 'name email avatar username');
 
 
-        const requestsWithStatus = pendingRequests.map(request => ({
+        const requestsWithStatus = pendingRequests.map((request) => ({
+            requestId : request._id,
             requester: request.requester,
             friendshipStatus: 'requestReceived',
         }));
@@ -308,7 +310,7 @@ const getPendingRequests = asyncHandler(async (req, res, next) => {
         return res.status(200).json(
             new ApiResponse(
                 200,
-                requestsWithStatus,
+                {pendingRequests : requestsWithStatus},
                 "Pending Friend Requests fetched Successfully"
             )
         );

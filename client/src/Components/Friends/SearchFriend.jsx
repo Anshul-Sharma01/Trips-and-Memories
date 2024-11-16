@@ -51,7 +51,7 @@ function SearchFriend() {
                         className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-slate-200 appearance-none focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500-secondary"
                     />
                     <button className="absolute top-3 right-3">
-                        <MdOutlineSearch className="text-3xl" />
+                        <MdOutlineSearch className="text-3xl dark:text-black" />
                     </button>
                 </form>
             </div>

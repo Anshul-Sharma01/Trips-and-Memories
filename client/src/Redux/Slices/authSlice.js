@@ -77,15 +77,23 @@ export const resetPasswordThunk = createAsyncThunk("/auth/reset-password", async
     }
 });
 
-export const fetchMyProfile = createAsyncThunk("/user/me/profile", async() => {
+export const fetchMyProfile = createAsyncThunk("/user/me/profile", async({ userId }) => {
     try{
-        const res = axiosInstance.get("users/me");
+        let res;
+        if(userId){
+
+            res = axiosInstance.get(`users/me?userId=${userId}`);
+        }else{
+            res = axiosInstance.get("users/me");
+        }
         toastHandler(res, "Fetching your profile...", "profile fetched successfully", "Failed to fetch the profile");
+        // console.log("From slices : ", res);
         return (await res).data;
     }catch(err){
         console.error(`Error occurred while fetching the users profile : ${err}`);
     }
 })
+
 
 export const changePasswordThunk = createAsyncThunk("/auth/change-password", async (data) => {
     try{

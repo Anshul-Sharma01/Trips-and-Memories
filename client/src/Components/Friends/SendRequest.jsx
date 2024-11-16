@@ -8,6 +8,7 @@ function SendRequest({ friendId }){
     // const [recipientId, setRecipientId] = useState(friendId || "");
 
     async function handleSendFriendRequest(){
+        console.log("Sending friend request...");
         const res = await dispatch(sendFriendRequestThunk({ recipientId : friendId }));
         console.log("Response : ",res);
     }

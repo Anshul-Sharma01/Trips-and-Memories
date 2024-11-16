@@ -8,10 +8,12 @@ const initialState = {
     totalPages: 1,
     searchQuery : "",
     refreshKey: 0,
+    pendingRequests : []
 };
 
 export const sendFriendRequestThunk = createAsyncThunk("/friends/add/send", async ({ recipientId }, { dispatch, getState }) => {
         try {
+            console.log("sending friend request....");
             const res =  axiosInstance.get(`friends/request/${recipientId}`);
             toast.promise(res, {
                 loading: "Sending friend request...",
@@ -34,7 +36,7 @@ export const sendFriendRequestThunk = createAsyncThunk("/friends/add/send", asyn
     }
 );
 
-export const cancelFriendRequestThunk = createAsyncThunk("/friends/", async ({ requestId }, { dispatch, getState }) => {
+export const cancelFriendRequestThunk = createAsyncThunk("/friends/cancel/send", async ({ requestId }, { dispatch, getState }) => {
         try {
             const res =  axiosInstance.delete(`friends/request/cancel/${requestId}`);
             toast.promise(res, {
@@ -56,7 +58,7 @@ export const cancelFriendRequestThunk = createAsyncThunk("/friends/", async ({ r
     }
 );
 
-export const acceptFriendRequestThunk = createAsyncThunk("/friends", async({ requestId }, { dispatch }) => {
+export const acceptFriendRequestThunk = createAsyncThunk("/friends/accept", async({ requestId }, { dispatch, getState }) => {
     try{
         console.log("Here is the requestId : ", requestId );
         const res = await axiosInstance.get(`friends/accept/${requestId}`);
@@ -66,14 +68,20 @@ export const acceptFriendRequestThunk = createAsyncThunk("/friends", async({ req
         //     error : "Failed to accept the friend request",
         // });
 
-        await dispatch(fetchAllFriendsThunks());
+        const { searchQuery } = getState().friendship;
+        if(searchQuery){
+            dispatch(fetchSearchedUserThunk({ query : searchQuery}));
+        }
+
+        dispatch(fetchAllFriendsThunks());
+        dispatch(fetchPendingRequestsThunk());
         return res.data;
     }catch(err){
         console.error(`Error occurred while accepting the friend request : ${err}`);
     }
 })
 
-export const declineFriendRequestThunk = createAsyncThunk("/friends", async({ requestId, getState }) => {
+export const declineFriendRequestThunk = createAsyncThunk("/friends/decline", async({ requestId }, { dispatch, getState }) => {
     try{
         const res =  axiosInstance.get(`friends/decline/${requestId}`);
         toast.promise(res, {
@@ -84,8 +92,10 @@ export const declineFriendRequestThunk = createAsyncThunk("/friends", async({ re
 
         const { searchQuery } = getState().friendship;
         if(searchQuery){
-            await dispatch(fetchSearchedUserThunk({ page : 1, limit : 10, query : searchQuery }));
+            await dispatch(fetchSearchedUserThunk({ query : searchQuery }));
         }
+        
+        dispatch(fetchPendingRequestsThunk());
         toast.dismiss();
 
         return res.data;
@@ -95,16 +105,17 @@ export const declineFriendRequestThunk = createAsyncThunk("/friends", async({ re
     }
 })
 
-export const fetchPendingRequestsThunk = createAsyncThunk("/friends", async () => {
+export const fetchPendingRequestsThunk = createAsyncThunk("/friends-pending", async () => {
     try{
-        const res = axiosInstance.get(`friends/request/pending`);
+        const res = axiosInstance.get(`friends/requests-pending`);
+        console.log("this is called");
         toast.promise(res, {
             loading : 'fetching pending requests...',
             success : (data) => data?.data?.message,
             error : "Failed to fetch pending requests"
         });
-
-        return (await res).data;
+        // console.log("Awaited res data : ", (await res).data.data);
+        return (await res).data.data;
 
     }catch(err){
         console.error(`Error occurred while fetching all pending requests : ${err}`);
@@ -121,9 +132,9 @@ export const removeFriendThunk = createAsyncThunk("/friends-remove/", async({ fr
         });
 
         const { searchQuery } = getState().friendship;
-        if(searchQuery){
-            dispatch(fetchSearchedUserThunk({ page : 1, limit : 10, query : searchQuery}));
-        }
+
+        dispatch(fetchSearchedUserThunk({ page : 1, limit : 10, query : searchQuery}));
+        
 
         await dispatch(fetchAllFriendsThunks());
         dispatch(friendShipSlice.actions.incrementRefreshKey());
@@ -150,14 +161,14 @@ export const fetchAllFriendsThunks = createAsyncThunk("/friends-list", async() =
     }
 })
 
-export const fetchSearchedUserThunk = createAsyncThunk("/friends", async({ page, limit, query }) => {
+export const fetchSearchedUserThunk = createAsyncThunk("/friends-search", async({ query }) => {
     try{
-        const res = axiosInstance.get(`friends/search-query?page=${page}&limit=${limit}&query=${query}`);
-        toast.promise(res, {
-            loading : "Searching for user...",
-            success : (data) => data?.data?.message,
-            error : "Failed to search for user !!"
-        })
+        const res = axiosInstance.get(`friends/search-query?query=${query}`);
+        // toast.promise(res, {
+        //     loading : "Searching for user...",
+        //     success : (data) => data?.data?.message,
+        //     error : "Failed to search for user !!"
+        // })
         return (await res).data;
     }catch(err){
         console.error(`Error occurred while fetching searched user : ${err}`);
@@ -184,6 +195,10 @@ const friendShipSlice = createSlice({
             })
             .addCase(fetchAllFriendsThunks.fulfilled, (state, action) => {
                 state.friendsList = action?.payload?.data?.friends
+            })
+            .addCase(fetchPendingRequestsThunk.fulfilled, (state, action) => {
+                state.pendingRequests = action?.payload?.pendingRequests;
+                // console.log("State : ", state.pendingRequests);
             })
     },
 });

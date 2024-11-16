@@ -1,39 +1,68 @@
+import { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import RemoveFriend from "../../Components/Friends/RemoveFriend";
+import SendRequest from "../../Components/Friends/SendRequest";
+import { useDispatch } from "react-redux";
+import { fetchMyProfile } from "../../Redux/Slices/authSlice";
+import CancelRequest from "../../Components/Friends/CancelRequest";
 
 
-function FriendProfile({ imgSrc, username, email, name, onRemoveFriend, isFriend }) {
+
+function FriendProfile() {
+
+    const { friendId, friendStatus } = useParams();
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const requestId = queryParams.get("requestId");
+
+    const [ friendData, setFriendData ] = useState({
+        imgSrc : "",
+        username : "",
+        email : "",
+        name : "",
+        isFriend : ""
+    })
+
+    async function fetchFriendProfile(){
+        const res = await dispatch(fetchMyProfile({ userId : friendId }));
+        console.log("Friend Profile Data : ", res);
+        setFriendData({
+            imgSrc : res?.payload?.data?.avatar?.secure_url,
+            username : res?.payload?.data?.username,
+            email : res?.payload?.data?.email,
+            name : res?.payload?.data?.name
+        })
+    }
+    useEffect(() => {
+        fetchFriendProfile();
+    }, [])
+
+
     return (
-        <main className="friend-profile-container max-w-md mx-auto my-8 p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+        <main className=" max-w-md mx-auto my-8 p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800">
             <section className="flex flex-col items-center text-center">
                 <div className="avatar-container flex justify-center items-center w-[100px] h-[100px] overflow-hidden rounded-full border-4 border-gray-300 mb-4">
                     <img
-                        src={imgSrc || "https://www.ihna.edu.au/blog/wp-content/uploads/2022/10/user-dummy.png"}
+                        src={friendData?.imgSrc || "https://www.ihna.edu.au/blog/wp-content/uploads/2022/10/user-dummy.png"}
                         alt="User Avatar"
                         className="w-full h-full object-cover"
                     />
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{name || "John Doe"}</h1>
-                <p className="text-gray-600 dark:text-gray-300">{username || "@johndoe"}</p>
-                <p className="text-gray-500 dark:text-gray-400">{email || "someone@example.com"}</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{friendData?.name || "John Doe"}</h1>
+                <p className="text-gray-600 dark:text-gray-300">{friendData?.username || "@johndoe"}</p>
+                <p className="text-gray-500 dark:text-gray-400">{friendData?.email || "someone@example.com"}</p>
                 
                 <div className="flex justify-center items-center ">
-                    {
-                        isFriend ? (
-                            <button
-                                onClick={onRemoveFriend}
-                                className="remove-friend-btn mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 focus:outline-none"
-                            >
-                                Remove Friend
-                            </button>
-                        ) : (
-                                <button
-                                    onClick={onRemoveFriend}
-                                    className="remove-friend-btn mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 focus:outline-none"
-                                >
-                                    Add Friend
-                                </button>
-                        )
-                    } 
-                    
+                    {friendStatus === "requestSent" && (
+                        <CancelRequest requestId={requestId} />
+                    )}
+                    {friendStatus === "friend" && (
+                        <RemoveFriend friendId={friendId}/>
+                    )}
+                    {friendStatus === "none" && (
+                        <SendRequest friendId={friendId} />
+                    )}
 
                 </div>
 

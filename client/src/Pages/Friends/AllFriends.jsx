@@ -4,6 +4,7 @@ import { fetchAllFriendsThunks } from "../../Redux/Slices/friendshipSlice";
 import BackButton from "../../Components/BackButton";
 import SearchFriend from "../../Components/Friends/SearchFriend";
 import Friend from "../../Components/Friends/Friend";
+import PendingRequests from "../../Components/Friends/PendingRequests";
 
 function AllFriends() {
 
@@ -49,9 +50,15 @@ function AllFriends() {
                     </div>
                 )
             }
-            
-            <section className="overflow-y-scroll h-[400px] w-[90%] max-w-3xl bg-gray-200 dark:bg-gray-800 px-6 py-4 rounded-xl shadow-inner mt-10">
-                <SearchFriend />
+            <section className="flex justify-center items-center gap-10">
+                <section className="flex justify-center items-center w-1/2 bg-slate-300 min-w-[50%]  h-[400px]  px-6 py-4 rounded-xl shadow-inner overflow-y-scroll mt-10">
+                    <PendingRequests/>
+                </section>
+                
+                <section className="overflow-y-scroll min-w-[50%] h-[400px] w-1/2 bg-gray-200 dark:bg-gray-800 px-6 py-4 rounded-xl shadow-inner mt-10">
+                    <SearchFriend />
+                </section>
+
             </section>
         </div>
     );

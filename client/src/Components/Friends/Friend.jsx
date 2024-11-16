@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom"
 import SendRequest from "./SendRequest.jsx";
 import CancelRequest from "./CancelRequest.jsx";
 import { acceptFriendRequestThunk, declineFriendRequestThunk } from "../../Redux/Slices/friendshipSlice.js";
@@ -31,7 +32,9 @@ function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) 
                 />
             </div>
             <div className="ml-4 flex-grow mr-4">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{username || "John Doe"}</h2>
+                <Link to={`friend-profile/${friendId}/${friendStatus}?requestId=${requestId}`}>
+                    <h2 className="text-lg font-semibold text-blue-900 dark:text-white">{username || "John Doe"}</h2>
+                </Link>
                 <p className="text-sm text-gray-600 dark:text-gray-300">{email || "someone@example.com"}</p>
             </div>
             <div className="flex space-x-2 gap-4 ml-auto">

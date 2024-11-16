@@ -27,6 +27,7 @@ import Friend from "./Components/Friends/Friend.jsx";
 import FriendProfile from "./Pages/Friends/FriendProfile.jsx";
 import AllFriends from "./Pages/Friends/AllFriends.jsx";
 import SearchFriend from "./Components/Friends/SearchFriend.jsx";
+import PendingRequests from "./Components/Friends/PendingRequests.jsx";
 
 
 function App() {
@@ -37,13 +38,14 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<SearchFriend/>}></Route>
+        <Route path="/modal/check" element={<PendingRequests/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
 
         <Route path="/user/me/profile" element={<Profile/>}></Route>
         <Route path="users/friends-list" element={<AllFriends/>}></Route>
+        <Route path="users/friends-list/friend-profile/:friendId/:friendStatus" element={<FriendProfile/>}></Route>
 
         <Route path="/denied" element={<Denied />} > </Route>
         <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>

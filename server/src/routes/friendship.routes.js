@@ -21,7 +21,7 @@ router.route("/accept/:requestId")
 router.route("/decline/:requestId")
 .get(declineFriendRequest);
 
-router.route("/requests/pending")
+router.route("/requests-pending")
 .get(getPendingRequests);
 
 router.route("/remove/:friendId")
