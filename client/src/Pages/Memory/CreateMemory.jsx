@@ -172,6 +172,17 @@ function CreateMemory(){
                             <option value="Nature">Nature</option>
                             <option value="Foodie">Foodie</option>
                             <option value="Wildlife">Wildlife</option>
+                            <option value="Historical">Historical</option>
+                            <option value="Cultural">Cultural</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Eco-Friendly">Eco-Friendly</option>
+                            <option value="Urban">Urban</option>
+                            <option value="Adventure Sports">Adventure Sports</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Relaxation">Relaxation</option>
+                            <option value="Family">Family</option>
+                            <option value="Photogenic">Photogenic</option>
+                            <option value="Solo Travel">Solo Travel</option>
                         </select>
                     </div>
 

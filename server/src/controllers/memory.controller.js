@@ -36,6 +36,7 @@ const fetchAllMemories = asyncHandler(async(req, res, next) => {
             .skip(skip)
             .limit(limit)
             .populate("author", "username avatar")
+            .sort({ createdAt : -1 });
 
         const totalPages = Math.ceil(totalMemories / limit);
             if (page > totalPages) {

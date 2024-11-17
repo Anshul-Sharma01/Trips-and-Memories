@@ -6,11 +6,12 @@ import { Memory } from "../models/memory.model.js";
 
 const provideRecommendations = asyncHandler(async(req, res, next) => {
     try{
-        const userId = req.user._id;
+        const userId = req?.user?._id;
+        console.log(userId);
 
         const prevTrips = await Memory.find({ author : userId }).sort({ createdAt : -1 }).limit(5);
 
-        if(prevTrips.length == 0){
+        if(prevTrips.length !== 5){
             return res.status(200)
             .json(
                 new ApiResponse(
@@ -38,7 +39,12 @@ const provideRecommendations = asyncHandler(async(req, res, next) => {
         }
 
         const recommendedTrips = await Memory.aggregate([
-            {$match : {category : mostCommonCategory}},
+            {
+                $match : {
+                    category : mostCommonCategory,
+                    author: { $ne: userId }
+                }
+            },
             {$sample : {size : 5}}
         ]);
 

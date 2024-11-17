@@ -43,7 +43,7 @@ const memorySchema = new Schema({
     category : {
         type : String,
         required : [true, "Category is required"],
-        enum : ["Emotional", "Adventure", "Horror", "Funky", "Cute", "Romantic", "Spiritual", "Nature", "Foodie", "Wildlife"]
+        enum : ["Emotional", "Adventure", "Horror", "Funky", "Cute", "Romantic", "Spiritual", "Nature", "Foodie", "Wildlife", "Historical", "Cultural", "Luxury", "Eco-Friendly", "Urban", "Adventure Sports", "Travel", "Relaxation", "Family","Solo Travel", "Photogenic"]
     },
     comments : [
         {
