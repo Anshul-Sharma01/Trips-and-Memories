@@ -9,12 +9,15 @@ const initialState = {
 
 export const createTimeCapsuleThunk = createAsyncThunk("/create/time-capsule", async(data) => {
     try{    
+        console.log("Data : ", data);
         const res = axiosInstance.post(`time-capsule/create`, data);
         toast.promise(res, {
             loading : 'Creating time capsule...',
             success : (data) => data?.data?.message,
             error : "Failed to create a time capsule"
         })
+
+        // dispatch(fetchUserTimeCapsulesThunk());
 
         return (await res).data;
 

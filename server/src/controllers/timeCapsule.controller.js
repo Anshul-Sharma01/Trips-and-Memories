@@ -11,6 +11,13 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 const createTimeCapsule = asyncHandler(async(req, res, next) => {
     try{
         const {  title, description, openDate, memoryText,  memoryDescription } = req.body;
+        // console.log("title : ", title);
+        // console.log("description : ", description);
+        // console.log("openDate : ", openDate);
+        // console.log("memoryText : ", memoryText);
+        // console.log("memoryDescription : ", memoryDescription);
+
+        // console.log("Req.body : ", req.body);
 
         const userId = req.user._id;
 

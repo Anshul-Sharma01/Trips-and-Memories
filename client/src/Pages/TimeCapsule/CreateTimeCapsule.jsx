@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { IoMdTimer } from "react-icons/io";
+import { useDispatch } from 'react-redux';
+import { createTimeCapsuleThunk } from '../../Redux/Slices/timeCapsuleSlice';
+import toast from 'react-hot-toast';
 
 function CreateTimeCapsule() {
     const [formData, setFormData] = useState({
@@ -9,6 +12,8 @@ function CreateTimeCapsule() {
         memoryTitle: '',
         memoryDescription: '',
     });
+
+    const dispatch = useDispatch();
 
     const [imagePreview, setImagePreview] = useState(null);
     const [file, setFile] = useState(null);
@@ -25,10 +30,30 @@ function CreateTimeCapsule() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit =  async (e) => {
         e.preventDefault();
-        console.log("Form Data Submitted:", formData);
-        console.log("File Selected:", file);
+
+        const data = new FormData();
+        toast.dismiss();
+
+        if(!formData.title || !formData.description || !formData.memoryTitle || !formData.memoryDescription || !formData.openDate || !file){
+            toast.error("All Fields are mandatory");
+            return;
+        }
+
+        data.append("title", formData.title);
+        data.append("description", formData.description);
+        data.append("openDate", formData.openDate);
+        data.append("memoryText", formData.memoryTitle);
+        data.append("memoryDescription", formData.memoryDescription);
+        data.append("memoryImg", file);
+
+        const res = await dispatch(createTimeCapsuleThunk(data));
+        console.log(" Res : ", res);
+
+
+        // console.log("Form Data Submitted:", formData);
+        // console.log("File Selected:", file);
 
     };
 

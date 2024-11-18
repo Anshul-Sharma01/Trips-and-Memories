@@ -26,8 +26,12 @@ const timeCapsuleSchema = new Schema({
         required : [true, "The Text for the memory of time capsule is required"],
     },
     memoryImg : {
-        type : String,
-        required : [true, "The url for the image is required for the memory"]
+        public_id : {
+            type : String,
+        },
+        secure_url : {
+            type : String,
+        }
     },
     memoryDescription : {
         type : String,

@@ -3,45 +3,49 @@ import mongoose from "mongoose";
 import { asyncHandler } from "./asyncHandler.js";
 import { TimeCapsule } from "../models/timeCapsule.model.js";
 
-const unlockTimeCapsules = asyncHandler(async (req, res, next) => {
+const unlockTimeCapsules = asyncHandler(async () => {
     try {
         console.log("UnlockTimeCapsules function running...");
 
         const now = new Date();
         console.log("Current time:", now);
 
-        const capsulesToUnlock = await TimeCapsule.find({
-            openDate: { $lte: now },
-            isUnlocked: false
-        });
+        // Debugging: Log the query conditions
+        const query = { openDate: { $lte: now }, isUnlocked: false };
+        // console.log("Query conditions:", query);
 
-        console.log("Capsules to unlock:", capsulesToUnlock);
+        const capsulesToUnlock = await TimeCapsule.find(query);
+
+        // console.log("Capsules to unlock:", capsulesToUnlock);
 
         if (capsulesToUnlock.length > 0) {
-            await TimeCapsule.updateMany(
-                {
-                    _id: { $in: capsulesToUnlock.map((capsule) => capsule._id) },
-                },
+            const idsToUpdate = capsulesToUnlock.map((capsule) => capsule._id);
+            console.log("IDs to update:", idsToUpdate);
+
+            const updateResult = await TimeCapsule.updateMany(
+                { _id: { $in: idsToUpdate } },
                 { isUnlocked: true }
             );
 
-            console.log(`${capsulesToUnlock.length} capsules have been unlocked.`);
+            console.log("Update result:", updateResult);
         } else {
             console.log("No capsules to unlock at this time.");
         }
-
     } catch (err) {
-        console.error(`Error while unlocking capsules: ${err}`);
+        console.error("Error while unlocking capsules:", err);
     }
 });
 
-export const scheduleUnlockJob = () => {
+
+export const scheduleUnlockJob = async () => {
     console.log("Initializing cron job...");
-    
-    cron.schedule('0 0 * * *', async () => { 
-        console.log("Checking for time capsules to unlock...");
+
+    // Schedule the cron job to run daily at midnight
+    cron.schedule("*/5 * * * *", async () => { // Runs every 5 minutes
+        console.log("Testing cron job execution...");
         await unlockTimeCapsules();
     });
+    
 
     console.log("Cron job scheduled.");
 };
