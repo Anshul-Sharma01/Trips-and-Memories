@@ -23,7 +23,7 @@ function TripsRecomm() {
     const tripsRecommendations = useSelector((state) => state?.recomm?.tripRecommendations) || [];
 
     return (
-        <div className="flex flex-col items-center px-4 py-6 space-y-6">
+        <div className="dark:bg-gray-900 h-screen flex flex-col items-center px-4 py-6 space-y-6">
             <BackButton />
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200">
                 Trips Recommendations

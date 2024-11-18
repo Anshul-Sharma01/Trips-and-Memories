@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { createTimeCapsule, deleteTimeCapsule, fetchAllTimeCapsulesofUser, fetchTimeCapsuleDetails } from "../controllers/timeCapsule.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 
 const router = Router();
 
+router.use(verifyJWT);
 
 
 router.route("/create")

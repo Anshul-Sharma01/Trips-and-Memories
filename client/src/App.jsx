@@ -29,6 +29,7 @@ import AllFriends from "./Pages/Friends/AllFriends.jsx";
 import SearchFriend from "./Components/Friends/SearchFriend.jsx";
 import PendingRequests from "./Components/Friends/PendingRequests.jsx";
 import TripsRecomm from "./Pages/Recommendations/TripsRecomm.jsx";
+import CreateTimeCapsule from "./Pages/TimeCapsule/CreateTimeCapsule.jsx";
 
 
 function App() {
@@ -39,7 +40,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<TripsRecomm/>}></Route>
+        <Route path="/modal/check" element={<CreateTimeCapsule/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />

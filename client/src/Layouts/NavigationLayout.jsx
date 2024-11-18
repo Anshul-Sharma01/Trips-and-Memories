@@ -5,6 +5,7 @@ import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
 import ThemeToggle from "../Components/ThemeToggle";
 import { logoutUserAccount } from "../Redux/Slices/authSlice";
+import { IoMdTimer } from "react-icons/io";
 
 function NavigationLayout({ children }) {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -64,7 +65,7 @@ function NavigationLayout({ children }) {
                                 {isLoggedIn ? (
                                     <>
                                         <li><Link to="/memory/create-memory" className="hover:text-teal-300 transition-colors">Create Memory</Link></li>
-                                        <li><Link to="/time-capsules" className="hover:text-teal-300 transition-colors">Time Capsules</Link></li>
+                                        <li><Link to="/time-capsules" className="hover:text-teal-300 transition-colors flex justify-center items-center gap-2">Create Time Capsule <IoMdTimer className='text-lg'/></Link></li>
                                         <li><Link to="/memory/my" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
                                         <li><Link to="/my-friends" className="hover:text-teal-300 transition-colors">Friends List</Link></li>
                                         <li><Link to="/get-recomm" className="hover:text-teal-300 transition-colors">Recommendations</Link></li>
