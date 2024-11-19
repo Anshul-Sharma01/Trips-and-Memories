@@ -69,11 +69,13 @@ const fetchAllTimeCapsulesofUser = asyncHandler(async(req, res, next) => {
     try{
         const userId = req.user._id;
         const { status } = req.query;
-
         let query = { owner : userId };
-        query.isUnlocked = (status == "locked" )? false : true;
+        if(status){
+            query.isUnlocked = (status == "locked" ) ? false : true;
+        }
 
-        const capsules = await TimeCapsule.find(query);
+
+        const capsules = await TimeCapsule.find(query).select("-description -memoryDescription -owner");
 
         if(capsules.length == 0){
             return res.status(200).json(new ApiResponse(200, capsules, "No Time Capsules found"));
@@ -86,6 +88,34 @@ const fetchAllTimeCapsulesofUser = asyncHandler(async(req, res, next) => {
     }catch(err){        
         console.error(`Error occurred while fetching all Time Capsules of the user : ${err}`);
         throw new ApiError(400, err?.message || "Error occurred while fetching all time capsules of the user !!");
+    }
+})
+
+const fetchCapsuleDetails = asyncHandler(async(req, res, next) => {
+    try{
+        const userId = req?.user?._id;
+        const { capsuleId } = req.params;
+
+        if(!isValidObjectId(capsuleId)){
+            throw new ApiError(400, "Invalid Capsule Id");
+        }
+
+        const capsule = await TimeCapsule.findById(capsuleId);
+        if(!capsule){
+            throw new ApiError(400, "Time Capsule doesn't exists !!");
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                capsule,
+                "Successfully fetched Time Capsule Details"
+            )
+        )
+
+    }catch(err){
+        console.log(`Error occurred while fetching details of a capsule : ${err}`);
     }
 })
 
@@ -157,9 +187,11 @@ const deleteTimeCapsule = asyncHandler(async (req, res, next) => {
 
 export { 
     createTimeCapsule,
+    fetchCapsuleDetails,
     fetchAllTimeCapsulesofUser,
     fetchTimeCapsuleDetails,
-    deleteTimeCapsule
+    deleteTimeCapsule,
+
 }
 
 

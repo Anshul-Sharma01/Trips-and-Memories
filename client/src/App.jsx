@@ -30,6 +30,8 @@ import SearchFriend from "./Components/Friends/SearchFriend.jsx";
 import PendingRequests from "./Components/Friends/PendingRequests.jsx";
 import TripsRecomm from "./Pages/Recommendations/TripsRecomm.jsx";
 import CreateTimeCapsule from "./Pages/TimeCapsule/CreateTimeCapsule.jsx";
+import TimeCapsule from "./Components/TimeCapsule/TimeCapsule.jsx";
+import PersonalTimeCapsules from "./Pages/TimeCapsule/PersonalTimeCapsules.jsx";
 
 
 function App() {
@@ -40,7 +42,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<CreateTimeCapsule/>}></Route>
+        <Route path="/modal/check" element={<PersonalTimeCapsules/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
@@ -53,6 +55,9 @@ function App() {
 
         <Route path="/denied" element={<Denied />} > </Route>
         <Route path="/auth/change-password" element={<ChangePassword/>} ></Route>
+
+        <Route path="/time-capsules/create" element={<CreateTimeCapsule/>}></Route>
+        <Route path="/time-capsules/fetch/my" element={<PersonalTimeCapsules/>}></Route>
 
         <Route path="/memory/all" element={<AllMemories/>}></Route>
         <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
