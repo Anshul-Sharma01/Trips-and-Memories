@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { createTimeCapsuleThunk } from '../../Redux/Slices/timeCapsuleSlice';
 import toast from 'react-hot-toast';
 import BackButton from '../../Components/BackButton';
+import { useNavigate } from 'react-router-dom';
 
 function CreateTimeCapsule() {
     const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ function CreateTimeCapsule() {
     });
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [imagePreview, setImagePreview] = useState(null);
     const [file, setFile] = useState(null);
@@ -50,6 +52,14 @@ function CreateTimeCapsule() {
         data.append("memoryImg", file);
 
         const res = await dispatch(createTimeCapsuleThunk(data));
+        navigate("/time-capsules/fetch/my");
+        setFormData({
+            title: '',
+            description: '',
+            openDate: '',
+            memoryTitle: '',
+            memoryDescription: '',
+        })
         console.log(" Res : ", res);
 
 

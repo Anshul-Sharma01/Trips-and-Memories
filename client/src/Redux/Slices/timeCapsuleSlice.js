@@ -67,7 +67,7 @@ export const deleteTimeCapsuleThunk = createAsyncThunk("/delete/time-capsule", a
             error : "Failed to delete the time capsule !!!"
         })
 
-        dispatch(fetchUserTimeCapsulesThunk());
+        await dispatch(fetchUserTimeCapsulesThunk());
 
         return (await res).data;
 
@@ -85,6 +85,7 @@ const timeCapsuleSlice = createSlice({
         builder
             .addCase( fetchUserTimeCapsulesThunk.fulfilled, (state, action) => {
                 state.usersTimeCapsules = action?.payload?.data;
+                console.log("Fetched capsules : ", action?.payload?.data);
             })
     }
 })

@@ -7,26 +7,23 @@ import BackButton from '../../Components/BackButton.jsx';
 
 function PersonalTimeCapsules() {
     const dispatch = useDispatch();
-    const usersTimeCapsules = useSelector((state) => state?.timeCapsule?.usersTimeCapsules);
     const userData = useSelector((state) => state?.auth?.userData);
 
-    async function fetchUsersTimeCapsules() {
-        const res = await dispatch(fetchUserTimeCapsulesThunk());
-        console.log("Response : ", res);
-    }
+
+    const usersTimeCapsules = useSelector((state) => state?.timeCapsule?.usersTimeCapsules) || [];
 
     useEffect(() => {
-        fetchUsersTimeCapsules();
-    }, []);
+        dispatch(fetchUserTimeCapsulesThunk());
+    }, [dispatch]);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 py-10 px-4">
-            <BackButton/>
+            <BackButton />
             <h1 className="text-center text-4xl font-bold text-gray-800 mb-8">
                 <span className="text-blue-500">{userData?.name}'s</span> Time Capsules
             </h1>
             
-            {usersTimeCapsules?.length === 0 ? (
+            {usersTimeCapsules.length === 0 ? (
                 <div className="flex flex-col items-center justify-center mt-20">
                     <p className="text-xl text-gray-600 font-medium mb-4">
                         You haven't created a Time Capsule yet.
@@ -40,9 +37,9 @@ function PersonalTimeCapsules() {
                 </div>
             ) : (
                 <div className="flex justify-center items-center gap-6 flex-wrap">
-                    {usersTimeCapsules.map((ele) => (
+                    {usersTimeCapsules.map((ele, ind) => (
                         <TimeCapsule
-                            key={ele?.id}
+                            key={ind}
                             imgSrc={ele?.memoryImg?.secure_url}
                             capsuleTitle={ele?.title}
                             capsuleOpenDate={ele?.openDate}

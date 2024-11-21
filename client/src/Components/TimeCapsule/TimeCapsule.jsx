@@ -3,6 +3,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { MdOutlineLockClock } from "react-icons/md";
 import { GoUnlock } from "react-icons/go";
 import { Link } from "react-router-dom";
+import DeleteTimeCapsule from "./DeleteTimeCapsule";
 
 function TimeCapsule({ capsuleId, imgSrc, capsuleTitle, capsuleOpenDate, isUnlocked }) {
     const [isTimeUp, setIsTimeUp] = useState(false);
@@ -83,13 +84,16 @@ function TimeCapsule({ capsuleId, imgSrc, capsuleTitle, capsuleOpenDate, isUnloc
                     <p className="text-sm text-green-500 font-medium">This capsule is unlocked!</p>
                 )}
                 {isTimeUp && (
-                    <Link
-                        className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold rounded-lg shadow hover:from-blue-600 hover:to-blue-800 transition-all duration-200"
-                        to ={`/time-capsules/view/${capsuleId}`}
-                    >
-                        Relive Memory
-                    </Link>
+                    <>
+                        <Link
+                            className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold rounded-lg shadow hover:from-blue-600 hover:to-blue-800 transition-all duration-200"
+                            to ={`/time-capsules/view/${capsuleId}`}
+                        >
+                            Relive Memory
+                        </Link>
+                    </>
                 )}
+                <DeleteTimeCapsule capsuleId={capsuleId}/>
                 {!isTimeUp && (
                     <p className="mt-4 px-6 py-2 text-red-500 text-center text-lg">
                         This capsule is yet to be unlocked

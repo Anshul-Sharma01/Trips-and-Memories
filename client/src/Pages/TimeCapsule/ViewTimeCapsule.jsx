@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchTimeCapsuleDetailsThunk } from '../../Redux/Slices/timeCapsuleSlice';
+import DeleteTimeCapsule from '../../Components/TimeCapsule/DeleteTimeCapsule';
 
 function ViewTimeCapsule({ title, description, memoryText, memoryImg, memoryDescription, openDate }) {
     const { capsuleId } = useParams();
@@ -62,6 +63,7 @@ function ViewTimeCapsule({ title, description, memoryText, memoryImg, memoryDesc
                     <span className="font-medium">Open Date:</span> {formatDate(capsuleDetails?.openDate) || "N/A"}
                 </p>
             </div>
+            <DeleteTimeCapsule capsuleId={capsuleId}/>
         </div>
     );
 }
