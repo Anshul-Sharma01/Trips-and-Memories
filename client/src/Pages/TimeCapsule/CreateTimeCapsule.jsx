@@ -3,6 +3,7 @@ import { IoMdTimer } from "react-icons/io";
 import { useDispatch } from 'react-redux';
 import { createTimeCapsuleThunk } from '../../Redux/Slices/timeCapsuleSlice';
 import toast from 'react-hot-toast';
+import BackButton from '../../Components/BackButton';
 
 function CreateTimeCapsule() {
     const [formData, setFormData] = useState({
@@ -59,6 +60,7 @@ function CreateTimeCapsule() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6 flex flex-col items-center justify-center">
+            <BackButton/>
             <h1 className="text-4xl font-bold text-center mb-10 text-gray-900 dark:text-white flex justify-center items-center gap-4">
                 Create Time Capsule <IoMdTimer className='text-5xl'/>
             </h1>

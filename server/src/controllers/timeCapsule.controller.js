@@ -91,37 +91,11 @@ const fetchAllTimeCapsulesofUser = asyncHandler(async(req, res, next) => {
     }
 })
 
-const fetchCapsuleDetails = asyncHandler(async(req, res, next) => {
-    try{
-        const userId = req?.user?._id;
-        const { capsuleId } = req.params;
-
-        if(!isValidObjectId(capsuleId)){
-            throw new ApiError(400, "Invalid Capsule Id");
-        }
-
-        const capsule = await TimeCapsule.findById(capsuleId);
-        if(!capsule){
-            throw new ApiError(400, "Time Capsule doesn't exists !!");
-        }
-
-        return res.status(200)
-        .json(
-            new ApiResponse(
-                200,
-                capsule,
-                "Successfully fetched Time Capsule Details"
-            )
-        )
-
-    }catch(err){
-        console.log(`Error occurred while fetching details of a capsule : ${err}`);
-    }
-})
 
 const fetchTimeCapsuleDetails = asyncHandler(async(req, res, next) => {
     try{
         const { capsuleId } = req.params;
+        console.log("CapsuleID : ", capsuleId);
         const userId = req.user._id;
 
         if(!isValidObjectId(capsuleId)){
@@ -187,7 +161,6 @@ const deleteTimeCapsule = asyncHandler(async (req, res, next) => {
 
 export { 
     createTimeCapsule,
-    fetchCapsuleDetails,
     fetchAllTimeCapsulesofUser,
     fetchTimeCapsuleDetails,
     deleteTimeCapsule,

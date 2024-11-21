@@ -26,7 +26,7 @@ function PersonalTimeCapsules() {
                 <span className="text-blue-500">{userData?.name}'s</span> Time Capsules
             </h1>
             
-            {usersTimeCapsules.length === 0 ? (
+            {usersTimeCapsules?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center mt-20">
                     <p className="text-xl text-gray-600 font-medium mb-4">
                         You haven't created a Time Capsule yet.
@@ -47,6 +47,7 @@ function PersonalTimeCapsules() {
                             capsuleTitle={ele?.title}
                             capsuleOpenDate={ele?.openDate}
                             isUnlocked={ele?.isUnlocked}
+                            capsuleId={ele?._id}
                         />
                     ))}
                 </div>
