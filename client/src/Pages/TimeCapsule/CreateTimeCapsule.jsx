@@ -123,6 +123,9 @@ function CreateTimeCapsule() {
                             name="openDate"
                             value={formData.openDate}
                             onChange={handleChange}
+                            min={new Date(new Date().setDate(new Date().getDate() + 1))
+                                .toISOString()
+                                .split('T')[0]}
                             className="mt-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100 py-2 px-3"
                         />
                     </div>

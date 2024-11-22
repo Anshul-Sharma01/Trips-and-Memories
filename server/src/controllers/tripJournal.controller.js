@@ -35,6 +35,46 @@ const createTripJournal = asyncHandler(async(req, res, next) => {
     }
 })
 
+const fetchUserTripJournals = asyncHandler(async(req, res, next) => {
+    try{
+        const userId = req?.user?._id;
+
+        const searchCondition = {
+            $or: [
+                { createdBy: userId },
+                { contributors: { $in: [userId] } }
+            ]
+        }
+
+        const journalsCount = await TripJournal.countDocuments(searchCondition);
+
+        if(journalsCount == 0){
+            return res.status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    [],
+                    "No Journals found"
+                )
+            )
+        }
+
+        const journals = await TripJournal.find(searchCondition);
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journals,
+                "Successfully fetched user trip journals !!"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while fetching user trip journals : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching users trip journals ");
+    }
+})
+
 const addEntryToJournal = asyncHandler(async(req, res, next) => {
     try{
         const { journalId } = req.params;
@@ -94,7 +134,7 @@ const addEntryToJournal = asyncHandler(async(req, res, next) => {
     }
 })
 
-const fetchTripJournal = asyncHandler(async(req, res, next) => {
+const fetchTripJournalDetails = asyncHandler(async(req, res, next) => {
     try{
         const { journalId } = req.params;
 
@@ -293,7 +333,8 @@ const manageContributors = asyncHandler(async(req, res, next) => {
 export { 
     createTripJournal,
     addEntryToJournal,
-    fetchTripJournal,
+    fetchUserTripJournals,
+    fetchTripJournalDetails,
     deleteJournalEntry,
     updateJournalEntry,
     closeJournal,

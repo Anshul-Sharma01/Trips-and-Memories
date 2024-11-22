@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addEntryToJournal, closeJournal, createTripJournal, deleteJournalEntry, fetchTripJournal, manageContributors, updateJournalEntry } from "../controllers/tripJournal.controller.js";
+import { addEntryToJournal, closeJournal, createTripJournal, deleteJournalEntry, fetchTripJournalDetails, fetchUserTripJournals, manageContributors, updateJournalEntry } from "../controllers/tripJournal.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
@@ -9,9 +9,11 @@ const router = Router();
 router.route("/create")
 .post(createTripJournal);
 
+router.route("/fetch/my")
+.get(fetchUserTripJournals);
 
 router.route("/get/:journalId")
-.get(fetchTripJournal);
+.get(fetchTripJournalDetails);
 
 router.route("/add-entry/:journalId")
 .post(upload.array("journalImg", 5), addEntryToJournal);
@@ -19,7 +21,7 @@ router.route("/add-entry/:journalId")
 router.route("/delete/:journalId/:entryId")
 .delete(deleteJournalEntry);
 
-router.route("/update/:journalId/:entryId")
+router.route("/update-entry/:journalId/:entryId")
 .patch(updateJournalEntry);
 
 router.route("/close/:journalId")

@@ -33,6 +33,7 @@ import CreateTimeCapsule from "./Pages/TimeCapsule/CreateTimeCapsule.jsx";
 import TimeCapsule from "./Components/TimeCapsule/TimeCapsule.jsx";
 import PersonalTimeCapsules from "./Pages/TimeCapsule/PersonalTimeCapsules.jsx";
 import ViewTimeCapsule from "./Pages/TimeCapsule/ViewTimeCapsule.jsx";
+import CreateJournal from "./Pages/journal/CreateJournal.jsx";
 
 
 function App() {
@@ -43,7 +44,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<ViewTimeCapsule/>}></Route>
+        <Route path="/modal/check" element={<CreateJournal/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />

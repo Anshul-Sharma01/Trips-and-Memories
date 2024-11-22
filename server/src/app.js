@@ -27,7 +27,8 @@ import bucketListRoutes from "./routes/bucketList.routes.js";
 import timeCapsuleRoutes from "./routes/timeCapsule.routes.js";
 import friendshipRoutes from "./routes/friendship.routes.js";
 import tripStoryRoutes from "./routes/tripStory.routes.js";
-import recommRouter from "./routes/recommendations.routes.js";
+import recommRoutes from "./routes/recommendations.routes.js";
+import tripJournalRoutes from "./routes/tripJournal.routes.js";
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/memory", memoryRoutes);
@@ -37,7 +38,8 @@ app.use("/api/v1/bucket-list", bucketListRoutes);
 app.use("/api/v1/time-capsule", timeCapsuleRoutes);
 app.use("/api/v1/friends", friendshipRoutes);
 app.use("/api/v1/ai", tripStoryRoutes);
-app.use("/api/v1/recomm", recommRouter);
+app.use("/api/v1/recomm", recommRoutes);
+app.use("/api/v1/trip-journal", tripJournalRoutes);
 
 export { app };
 
