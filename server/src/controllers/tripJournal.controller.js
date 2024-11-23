@@ -17,6 +17,7 @@ const createTripJournal = asyncHandler(async(req, res, next) => {
         const newJournal = await TripJournal.create({
             title,
             description,
+            contributors : [userId],
             createdBy : userId
         })
 

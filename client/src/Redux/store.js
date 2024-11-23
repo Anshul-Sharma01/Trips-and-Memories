@@ -7,7 +7,7 @@ import likeReducer from "./Slices/likeSlice.js";
 import friendReducer from "./Slices/friendshipSlice.js";
 import recommReducer from "./Slices/recommSlice.js";
 import timeCapsuleReducer from "./Slices/timeCapsuleSlice.js";
-
+import tripJournalReducer from "./Slices/tripJournalSlice.js";
 
 const store = configureStore({
     reducer : {
@@ -18,7 +18,8 @@ const store = configureStore({
         like : likeReducer,
         friendship : friendReducer,
         recomm : recommReducer,
-        timeCapsule : timeCapsuleReducer
+        timeCapsule : timeCapsuleReducer,
+        tripJournal : tripJournalReducer
     }
 })
 

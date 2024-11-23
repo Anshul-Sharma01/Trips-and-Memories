@@ -52,6 +52,7 @@ export const fetchTripJournalDetailsThunk = createAsyncThunk("/fetch", async({ j
             success : (data) => data?.data?.message,
             error : 'Failed to get trip journal details !!'
         });
+        console.log("res");
 
         return (await res).data;
 
@@ -151,6 +152,7 @@ const tripJournalSlice = createSlice({
         builder
             .addCase(fetchUserTripJournalsThunk.fulfilled, (state, action) => {
                 state.usersJournals = action?.payload?.data;
+                console.log("redux : ", state.usersJournals);
             })
             .addCase( manageContributorsThunk.fulfilled, (state, action) => {
                 state.contributors = action?.payload?.data;
