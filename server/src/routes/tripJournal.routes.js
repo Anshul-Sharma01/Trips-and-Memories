@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { addEntryToJournal, closeJournal, createTripJournal, deleteJournalEntry, fetchTripJournalDetails, fetchUserTripJournals, manageContributors, updateJournalEntry } from "../controllers/tripJournal.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import {verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-
+router.use(verifyJWT)
 
 router.route("/create")
 .post(createTripJournal);

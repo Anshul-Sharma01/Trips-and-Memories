@@ -1,4 +1,9 @@
 import { useState } from "react";
+import BackButton from "../../Components/BackButton";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import { createTripJournalThunk } from "../../Redux/Slices/tripJournalSlice";
+import { useNavigate } from "react-router-dom";
 
 function CreateJournal() {
     const [journalData, setJournalData] = useState({
@@ -6,13 +11,34 @@ function CreateJournal() {
         description: ""
     });
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    async function handleCreateJournal(e){
+        e.preventDefault();
+        
+        if(!journalData.title && !journalData.description){
+            toast.dismiss();
+            toast.error("All fields are mandatory !!");
+            return;
+        }
+
+        const res = await dispatch(createTripJournalThunk(journalData));
+        console.log("Response : ", res);
+        if(res?.payload?.statusCode == 201){
+            navigate("/my-journals");
+        }
+
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 py-12 px-6 flex items-center justify-center">
+            <BackButton />
             <div className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-3xl p-8">
                 <h1 className="text-center font-bold text-4xl text-gray-900 dark:text-white mb-8">
                     Create Your Journal
                 </h1>
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleCreateJournal}>
                     <div>
                         <label
                             htmlFor="title"
@@ -51,7 +77,7 @@ function CreateJournal() {
 
                     <div className="flex justify-center">
                         <button
-                            type="button"
+                            type="submit"
                             className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all"
                         >
                             Save Journal

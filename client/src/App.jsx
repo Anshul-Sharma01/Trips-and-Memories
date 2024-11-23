@@ -62,6 +62,9 @@ function App() {
         <Route path="/time-capsules/fetch/my" element={<PersonalTimeCapsules/>}></Route>
         <Route path="/time-capsules/view/:capsuleId" element={<ViewTimeCapsule/>}></Route>
 
+        <Route path="/create-journal" element={<CreateJournal/>}></Route> 
+
+
         <Route path="/memory/all" element={<AllMemories/>}></Route>
         <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
         <Route path="/memory/my" element={<PersonalMemories/>}></Route>

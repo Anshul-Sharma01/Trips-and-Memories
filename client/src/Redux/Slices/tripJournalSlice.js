@@ -8,9 +8,12 @@ const initialState = {
     journalsEntries : []
 }
 
-export const createTripJournalThunk = createAsyncThunk("/create", async(data, { dispatch }) => {
+export const createTripJournalThunk = createAsyncThunk("/create", async(journalData, { dispatch }) => {
     try{
-        const res = axiosInstance.post('trip-journal/create', data);
+        const res = axiosInstance.post('trip-journal/create', {
+            title : journalData.title, 
+            description : journalData.description
+        });
         toast.promise(res, {
             loading : 'Creating a new trip journal',
             success : (data) => data?.data?.message,
