@@ -61,9 +61,9 @@ export const fetchTripJournalDetailsThunk = createAsyncThunk("/fetch", async({ j
     }
 })
 
-export const addEntryToJournalThunk = createAsyncThunk("/add-entry", async({ journalId, content }) => {
+export const addEntryToJournalThunk = createAsyncThunk("/add-entry", async({ journalId, formData}) => {
     try{
-        const res = axiosInstance.post(`trip-journal/add-entry/${journalId}`, { content });
+        const res = axiosInstance.post(`trip-journal/add-entry/${journalId}`, formData);
         toast.promise(res, {
             loading : 'Adding a new entry to journal...',
             success : (data) => data?.data?.message ,
@@ -72,7 +72,7 @@ export const addEntryToJournalThunk = createAsyncThunk("/add-entry", async({ jou
         return (await res).data;
 
     }catch(err){
-        console.error(`Error occurred while adding an entry to trip journal : ${err}`);
+        console.error(err?.message || `Error occurred while adding an entry to trip journal : ${err}`);
     }
 })
 
@@ -152,7 +152,7 @@ const tripJournalSlice = createSlice({
         builder
             .addCase(fetchUserTripJournalsThunk.fulfilled, (state, action) => {
                 state.usersJournals = action?.payload?.data;
-                console.log("redux : ", state.usersJournals);
+                // console.log("redux : ", state.usersJournals);
             })
             .addCase( manageContributorsThunk.fulfilled, (state, action) => {
                 state.contributors = action?.payload?.data;

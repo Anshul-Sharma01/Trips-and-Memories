@@ -81,15 +81,18 @@ const addEntryToJournal = asyncHandler(async(req, res, next) => {
         const { journalId } = req.params;
         const userId = req.user._id;
         const { content } = req.body;
+        // console.log("Req-body : ", req.body);
+        // console.log("JorunalId & content :", journalId, content);
+        // console.log("Req-files :", req.files);
 
         if(!isValidObjectId(journalId)){
             throw new ApiError(400, "Invalid Journal Id");
         }
 
         const journal = await TripJournal.findById(journalId);
-        if(!journal || !journal.isDeleted){
-            throw new ApiError(404, "Trip Journal not found !!");
-        }
+        // if(!journal || !journal.isDeleted){
+        //     throw new ApiError(404, "Trip Journal not found !!");
+        // }
 
         if(!journal.contributors.includes(userId)){
             throw new ApiError(403, "You are not a contributor to this journal !!");
@@ -97,7 +100,7 @@ const addEntryToJournal = asyncHandler(async(req, res, next) => {
 
         const images = [];
 
-        if(req.file || req.files.length > 0){
+        if(req?.file || req?.files?.length > 0){
             for(const file of req.files){
                 const imgLocalPath = file.path;
                 const img = await uploadOnCloudinary(imgLocalPath);
