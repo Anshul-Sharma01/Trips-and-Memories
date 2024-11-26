@@ -212,6 +212,11 @@ const tripJournalSlice = createSlice({
                     journal.status = "closed";
                 }
             })
+            .addCase(deleteJournalThunk.fulfilled, (state, action) => {
+                const journalId = action?.payload?.data?._id;
+                const updatedJournals = state.usersJournals.filter((journal) => journal._id !== journalId);
+                state.usersJournals = updatedJournals;
+            })
             
     }
 })
