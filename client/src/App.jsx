@@ -37,6 +37,7 @@ import CreateJournal from "./Pages/journal/CreateJournal.jsx";
 import TripJournal from "./Components/journal/TripJournal.jsx";
 import MyJournals from "./Pages/journal/MyJournals.jsx";
 import AddEntry from "./Pages/journal/AddEntry.jsx";
+import JournalEntry from "./Components/journal/JournalEntry.jsx";
 
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<AddEntry/>}></Route>
+        <Route path="/modal/check" element={<JournalEntry/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
