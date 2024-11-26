@@ -27,6 +27,7 @@ function MyJournals(){
                 usersJournals?.map((ele) => {
                     return <TripJournal
                         key={ele?._id}
+                        journalOpen={ele?.status == "open" ? true : false}
                         journalTitle={ele?.title}
                         journalDesc={ele?.description}
                         journalEntries={ele?.entries?.length}

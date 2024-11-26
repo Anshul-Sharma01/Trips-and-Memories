@@ -1,6 +1,7 @@
 import React from "react";
+import BackButton from "../../Components/BackButton";
 
-function JournalEntry({ entryContributor, entryContent, entryDate, entryImages }) {
+function JournalEntry({ entryContributor, entryContributorAvatar, entryContent, entryDate, entryImages }) {
   // Format the entry date to be user-friendly
     function formatDate(dateString) {
         const options = { year: "numeric", month: "long", day: "numeric" };
@@ -9,11 +10,14 @@ function JournalEntry({ entryContributor, entryContent, entryDate, entryImages }
 
     return (
         <section className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-4xl mx-auto border border-gray-200 dark:border-gray-700">
-
+            <BackButton/>
             <header className="border-b border-gray-300 dark:border-gray-600 pb-4 mb-6">
-                <h2 className="text-2xl font-serif text-gray-700 dark:text-gray-300 tracking-wide">
-                {entryContributor || "Anonymous Contributor"}
-                </h2>
+                <div className="flex flex-row justify-start items-center gap-2">
+                    <img src={entryContributorAvatar} className="h-[40px] rounded-full " alt="" />
+                    <h2 className="text-2xl font-serif text-blue-700 dark:text-gray-300 tracking-wide">
+                        {entryContributor || "Anonymous Contributor"}
+                    </h2>
+                </div>
                 <time className="block text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {formatDate(entryDate)}
                 </time>

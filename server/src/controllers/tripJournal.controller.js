@@ -94,6 +94,10 @@ const addEntryToJournal = asyncHandler(async(req, res, next) => {
         //     throw new ApiError(404, "Trip Journal not found !!");
         // }
 
+        if(journal.status == "closed"){
+            throw new ApiError(400, "Journal closed by author");
+        }
+
         if(!journal.contributors.includes(userId)){
             throw new ApiError(403, "You are not a contributor to this journal !!");
         }
@@ -168,6 +172,32 @@ const fetchTripJournalDetails = asyncHandler(async(req, res, next) => {
     }catch(err){
         console.error(`Error occurred while fetching a trip journal : ${err}`);
         throw new ApiError(400, err?.message ||  "Error occurred while fetching a trip journal !!");
+    }
+})
+
+const fetchTripJournalEntries = asyncHandler(async(req, res, next) => {
+    try{
+        const { journalId } = req.params;
+        if(!isValidObjectId(journalId)){
+            throw new ApiError(400, "Invalid Journal Id");
+        }
+
+        const journalEntries = await TripJournal.findById(journalId)
+        .select("-title -description -createdBy -createdAt -updatedAt -isDeleted  -contributors -aiGeneratedStory")
+        .populate("entries.contributor", "username name avatar");
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journalEntries,
+                "Successfully fetched journal Entries !!"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while fetching trip journal entries : ${err}`);
+        throw new ApiError(400, err?.message || "Error occurred while fetching trip journals entries !!");
     }
 })
 
@@ -297,6 +327,35 @@ const closeJournal = asyncHandler(async(req, res, next) => {
     }
 })
 
+const deleteJournal = asyncHandler(async(req, res, next) => {
+    try{
+        const { journalId } = req.params;
+        if(!isValidObjectId(journalId)){
+            throw new ApiError(400, "Invalid Journal Id");
+        }
+
+        const journalExists = await TripJournal.findById(journalId);
+        if(!journalExists){
+            throw new ApiError(400, "Requested Journal Does not exists !!");
+        }
+
+        await journalExists.deleteOne();
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journalExists,
+                "Journal Successfully Deleted"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while deleting the journal !!`);
+        throw new ApiError(400, err?.message || "Journal Deletion failed !!");
+    }
+})
+
 const manageContributors = asyncHandler(async(req, res, next) => {
     try{
         const { journalId } = req.params;
@@ -339,8 +398,10 @@ export {
     addEntryToJournal,
     fetchUserTripJournals,
     fetchTripJournalDetails,
+    fetchTripJournalEntries,
     deleteJournalEntry,
     updateJournalEntry,
     closeJournal,
+    deleteJournal,
     manageContributors
 }

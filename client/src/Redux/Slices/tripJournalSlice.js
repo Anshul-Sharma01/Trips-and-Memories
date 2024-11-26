@@ -28,6 +28,8 @@ export const createTripJournalThunk = createAsyncThunk("/create", async(journalD
     }
 })
 
+
+
 export const fetchUserTripJournalsThunk = createAsyncThunk("/fetch-my", async () => {
     try{
         const res = axiosInstance.get("trip-journal/fetch/my");
@@ -41,6 +43,22 @@ export const fetchUserTripJournalsThunk = createAsyncThunk("/fetch-my", async ()
 
     }catch(err){
         console.error(`Error occurred while fetching user trip journals  : ${err}`);
+    }
+})
+
+export const fetchTripJournalEntriesThunk = createAsyncThunk("/fetch-journal-entries", async({ journalId }) => {
+    try{
+        const res = axiosInstance.get(`trip-journal/get/journal-entries/${journalId}`);
+        toast.promise(res, {
+            loading : "Fetching trip journal entires...",
+            success : (data) => data?.data?.message,
+            error : "Failed to fetch the trip journal entries"
+        });
+
+        return (await res).data;
+
+    }catch(err){
+        console.error(`Error occurred while fetching trip journal entries : ${err}`);
     }
 })
 
@@ -127,6 +145,24 @@ export const closeJournalThunk = createAsyncThunk("/close-journal", async({ jour
     }
 }) 
 
+export const deleteJournalThunk = createAsyncThunk("/delete-journal", async({ journalId }, { dispatch }) => {
+    try{
+        const res = axiosInstance.delete(`trip-journal/d/${journalId}`);
+        toast.promise(res, {
+            loading : "Deleting the requested journal..",
+            success : (data) => data?.data?.message,
+            error : "Failed to delete the journal !!"
+        });
+
+        await dispatch(fetchUserTripJournalsThunk());
+
+        return (await res).data;
+
+    }catch(err){
+        console.error(`Error occurred while deleting the journal : ${err}`);
+    }
+})
+
 export const manageContributorsThunk = createAsyncThunk("/manage-contributors", async({ journalId, contributors }) => {
     try{
         const res = axiosInstance.patch(`trip-journal/manage/contributors/${journalId}`, {contributors});
@@ -157,6 +193,9 @@ const tripJournalSlice = createSlice({
             .addCase( manageContributorsThunk.fulfilled, (state, action) => {
                 state.contributors = action?.payload?.data;
             })
+            .addCase(fetchTripJournalEntriesThunk.fulfilled, (state, action) => {
+                state.journalsEntries = action?.payload?.data?.entries;
+            })
             .addCase(addEntryToJournalThunk.fulfilled, (state, action) => {
                 state.journalsEntries = action?.payload?.data;
             })
@@ -166,6 +205,14 @@ const tripJournalSlice = createSlice({
             .addCase(updateJournalEntryThunk.fulfilled, (state, action) => {
                 state.journalsEntries = action?.payload?.data;
             })
+            .addCase(closeJournalThunk.fulfilled, (state, action) => {
+                const closedJournalId = action?.payload?.data?._id;
+                const journal = state.usersJournals.find(journal => journal._id === closedJournalId);
+                if (journal) {
+                    journal.status = "closed";
+                }
+            })
+            
     }
 })
 

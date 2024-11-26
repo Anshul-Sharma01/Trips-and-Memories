@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import CloseJournal from "./CloseJournal";
 
-function TripJournal({ journalTitle, journalDesc, journalEntries, journalId }) {
+function TripJournal({ journalTitle, journalDesc, journalEntries, journalId, journalOpen }) {
     return (
         <div className="relative m-20">
             <Link to={`/view-journal/${journalId}`}>
@@ -28,17 +29,24 @@ function TripJournal({ journalTitle, journalDesc, journalEntries, journalId }) {
                 </div>
             </Link>
 
+            {
+                journalOpen ? (
+                    <div className="absolute flex gap-10 left-[50%] transform -translate-x-1/2">
+                        <Link to={`/add-entry/${journalId}`}>
+                            <button className="px-4 py-2 bg-blue-600 text-white rounded-bl-xl rounded-br-xl font-semibold hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700 transition-all shadow-md">
+                                Add Entry
+                            </button>
+                        </Link>
+                        <CloseJournal journalId={journalId} />
+                    </div>
+                ) : (
+                    <div className="absolute flex flex-col justify-center items-center left-[50%] transform -translate-x-1/2">
+                        <span className="text-red-500">Journal Closed</span>
+                        <p className="text-gray-600">You can still view all its entries</p>
+                    </div>
+                )
+            }
 
-            <div className="absolute flex gap-10 left-[50%] transform -translate-x-1/2">
-                <Link to={`/add-entry/${journalId}`}>
-                    <button className=" px-4 py-2 bg-red-600 text-white rounded-bl-xl rounded-br-xl font-semibold hover:bg-red-500 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-700 transition-all shadow-md">
-                        Add Entry
-                    </button>
-                </Link>
-                <button className="px-4 py-2 bg-red-600 text-white rounded-bl-xl rounded-br-xl font-semibold hover:bg-red-500 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-700 transition-all shadow-md">
-                    Delete Journal
-                </button>
-            </div >
         </div>
     );
 }

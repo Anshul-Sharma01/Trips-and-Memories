@@ -38,6 +38,7 @@ import TripJournal from "./Components/journal/TripJournal.jsx";
 import MyJournals from "./Pages/journal/MyJournals.jsx";
 import AddEntry from "./Pages/journal/AddEntry.jsx";
 import JournalEntry from "./Components/journal/JournalEntry.jsx";
+import ViewJournal from "./Pages/journal/ViewJournal.jsx";
 
 
 function App() {
@@ -69,7 +70,7 @@ function App() {
         <Route path="/create-journal" element={<CreateJournal/>}></Route> 
         <Route path="/my-journals" element={<MyJournals/>}></Route>
         <Route path="/add-entry/:journalId" element={<AddEntry/>}></Route>
-
+        <Route path="/view-journal/:journalId" element={<ViewJournal/>}></Route>
 
         <Route path="/memory/all" element={<AllMemories/>}></Route>
         <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
