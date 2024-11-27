@@ -298,6 +298,105 @@ const deleteJournal = asyncHandler(async(req, res, next) => {
     }
 })
 
+const addContributor = asyncHandler(async (req, res, next) => {
+    try {
+        const { friendId, journalId } = req.params;
+        const userId = req.user._id;
+
+
+        if (!isValidObjectId(friendId) || !isValidObjectId(journalId)) {
+            throw new ApiError(400, "Invalid Friend ID or Journal ID");
+        }
+
+        const journal = await TripJournal.findById(journalId);
+        if (!journal) {
+            throw new ApiError(404, "Trip Journal not found!");
+        }
+
+
+        if (journal.createdBy.toString() !== userId.toString()) {
+            throw new ApiError(403, "Only the journal creator can manage contributors");
+        }
+
+
+        const isAlreadyContributor = journal.contributors.includes(friendId);
+        if (isAlreadyContributor) {
+            throw new ApiError(400, "This user is already a contributor to the journal");
+        }
+
+
+        journal.contributors.push(friendId);
+        await journal.save();
+
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                journal.contributors,
+                "Contributor added successfully!"
+            )
+        );
+    } catch (err) {
+        console.error(`Error occurred while adding a new contributor: ${err}`);
+        throw new ApiError(
+            400,
+            err?.message || "Error occurred while adding a new contributor!"
+        );
+    }
+});
+
+const removeContributor = asyncHandler(async (req, res, next) => {
+    try {
+        const { friendId, journalId } = req.params;
+        const userId = req.user._id;
+
+
+        if (!isValidObjectId(friendId) || !isValidObjectId(journalId)) {
+            throw new ApiError(400, "Invalid Friend ID or Journal ID");
+        }
+
+
+        const journal = await TripJournal.findById(journalId);
+        if (!journal) {
+            throw new ApiError(404, "Trip Journal not found!");
+        }
+
+
+        if (journal.createdBy.toString() !== userId.toString()) {
+            throw new ApiError(403, "Only the journal creator can manage contributors");
+        }
+
+
+        const isContributor = journal.contributors.includes(friendId);
+        if (!isContributor) {
+            throw new ApiError(400, "This user is not a contributor to the journal");
+        }
+
+
+        journal.contributors = journal.contributors.filter(
+            (contributorId) => contributorId.toString() !== friendId
+        );
+
+
+        await journal.save();
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                journal.contributors,
+                "Contributor removed successfully!"
+            )
+        );
+    } catch (err) {
+        console.error(`Error occurred while removing a contributor: ${err}`);
+        throw new ApiError(
+            400,
+            err?.message || "Error occurred while removing a contributor!"
+        );
+    }
+});
+
+
 
 const manageContributors = asyncHandler(async(req, res, next) => {
     try{
@@ -345,5 +444,7 @@ export {
     closeJournal,
     deleteJournal,
     fetchJournalContributors,
-    manageContributors
+    manageContributors,
+    addContributor,
+    removeContributor
 }

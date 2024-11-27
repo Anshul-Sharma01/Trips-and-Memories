@@ -12,7 +12,7 @@ function Friend({ imgSrc, username, email, friendStatus, friendId, requestId, di
     const dispatch = useDispatch();
 
     const userData = useSelector((state) => state?.auth?.userData);
-    if(userData.username === username){
+    if(userData?.username === username){
         return;
     }
 

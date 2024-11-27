@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addEntryToJournal, closeJournal, createTripJournal, deleteJournal, fetchJournalContributors, fetchTripJournalDetails, fetchTripJournalEntries, fetchUserTripJournals, manageContributors } from "../controllers/tripJournal.controller.js";
+import { addContributor, addEntryToJournal, closeJournal, createTripJournal, deleteJournal, fetchJournalContributors, fetchTripJournalDetails, fetchTripJournalEntries, fetchUserTripJournals, manageContributors, removeContributor } from "../controllers/tripJournal.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import {verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -33,6 +33,12 @@ router.route("/get/c/:journalId")
 
 router.route("/manage/contributors/:journalId")
 .patch(manageContributors);
+
+router.route("/add/j/:journalId/c/:friendId")
+.get(addContributor);
+
+router.route("/remove/j/:journalId/c/:friendId")
+.get(removeContributor);
 
 
 export default router;

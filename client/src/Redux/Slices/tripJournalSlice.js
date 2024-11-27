@@ -161,6 +161,34 @@ export const fetchJournalContributorsThunk = createAsyncThunk("/fetch-contributo
     }
 })
 
+export const addContributorThunk = createAsyncThunk("/add-contributor", async({ journalId, friendId }) => {
+    try{
+        const res = axiosInstance.get(`trip-journal/add/j/${journalId}/c/${friendId}`);
+        toast.promise(res, {
+            loading : 'adding a new contributor ..',
+            success : (data) => data?.data?.message,
+            error : "failed to add a new contributor"
+        })
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while adding a new contributor : ${err}`);
+    }
+})
+
+const removeContributorThunk = createAsyncThunk("/remove-contributor", async({ journalId, friendId }) => {
+    try{
+        const res = axiosInstance.get(`trip-journal/remove/j/${journalId}/c/${friendId}`);
+        toast.promise(res,{
+            loading : 'removing a contributor...',
+            success : (data) => data?.data?.message,
+            error : "Failed to remove the contributor !!"
+        });
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while removing contributor : ${err}`);
+    }
+})
+
 const tripJournalSlice = createSlice({
     name : "tripJournal",
     initialState,
@@ -171,7 +199,10 @@ const tripJournalSlice = createSlice({
                 state.usersJournals = action?.payload?.data;
                 // console.log("redux : ", state.usersJournals);
             })
-            .addCase( manageContributorsThunk.fulfilled, (state, action) => {
+            .addCase( addContributorThunk.fulfilled, (state, action) => {
+                state.contributors = action?.payload?.data;
+            })
+            .addCase( removeContributorThunk.fulfilled, (state, action) => {
                 state.contributors = action?.payload?.data;
             })
             .addCase(fetchTripJournalEntriesThunk.fulfilled, (state, action) => {

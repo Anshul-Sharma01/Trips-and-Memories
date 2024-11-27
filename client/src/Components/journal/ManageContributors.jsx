@@ -32,8 +32,8 @@ function ManageContributors() {
     }
 
     useEffect(() => {
-        // fetchAllFriends();
-        // fetchContributors();
+        fetchAllFriends();
+        fetchContributors();
         console.log("Friendslist:",friendsList);
         console.log("contributors-redux : ", contributors);
     }, [])
@@ -126,7 +126,7 @@ function ManageContributors() {
                                             className="h-10 w-10 rounded-full border border-gray-300"
                                         />
                                         <div className="flex-grow">
-                                            <p className="font-semibold text-gray-800 dark:text-gray-200">
+                                            <p className={`font-semibold text-gray-800 dark:text-gray-200 ${userData?._id === ele?._id ? "text-green-500" : "text-gray-800"}`}>
                                                 {ele?.username}
                                             </p>
                                             <p className="text-gray-600 dark:text-gray-400 text-sm">
@@ -134,7 +134,7 @@ function ManageContributors() {
                                             </p>
                                         </div>
                                         <button
-                                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow transition duration-200"
+                                            className={`bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow transition duration-200 ${userData?._id == ele?._id ? "hidden" : ""}`}
                                             onClick={handleContributorRemoval}
                                         >
                                             Remove
