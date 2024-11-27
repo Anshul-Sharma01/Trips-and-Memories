@@ -118,6 +118,7 @@ function AddEntry() {
                             Save Entry
                         </button>
                     </div>
+                    <p className="text-center text-gray-400">*You won't be able to update or delete this entry later, the only option would be to delete the <span className="text-red-500">Trip Journal</span></p>
                 </form>
             </div>
         </div>
@@ -125,3 +126,4 @@ function AddEntry() {
 }
 
 export default AddEntry;
+1

@@ -3,6 +3,7 @@ import { fetchUserTripJournalsThunk } from "../../Redux/Slices/tripJournalSlice"
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import TripJournal from "../../Components/journal/TripJournal";
+import BackButton from "../../Components/BackButton";
 
 function MyJournals(){
 
@@ -24,6 +25,7 @@ function MyJournals(){
     
     return(
         <>
+            <BackButton/>
             {
                 usersJournals.length > 0 ? (
                     usersJournals?.map((ele) => {

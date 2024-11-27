@@ -94,39 +94,6 @@ export const addEntryToJournalThunk = createAsyncThunk("/add-entry", async({ jou
     }
 })
 
-export const updateJournalEntryThunk = createAsyncThunk("/update-entry", async({ journalId, entryId, content }) => {
-    try{
-        const res = axiosInstance.patch(`trip-journal/update-entry/${journalId}/${entryId}`, { content });
-
-        toast.promise(res, {
-            loading : 'updating journal entry...',
-            success : (data) => data?.data?.message,
-            error : 'Failed to update the journal entry'
-        })
-
-        return (await res).data;
-
-    }catch(err){
-        console.error(`Error occurred while updating journal entry : ${err}`);
-    }
-})
-
-export const deleteJournalEntryThunk = createAsyncThunk("/delete-entry", async({ journalId, entryId }) => {
-    try{
-        const res = axiosInstance.delete(`trip-journal/${journalId}/${entryId}`);
-        toast.promise(res, {
-            loading : 'Deleting journal entry....',
-            success : (data) => data?.data?.message,
-            error : 'Failed to delete this entry !!'
-        });
-
-        return (await res).data;
-
-    }catch(err){
-        console.error(`Error occurred while deleting journal entry : ${err}`);
-    }
-})
-
 export const closeJournalThunk = createAsyncThunk("/close-journal", async({ journalId }, { dispatch }) => {
     try{
         const res = axiosInstance.get(`trip-journal/close/${journalId}`);
@@ -179,6 +146,20 @@ export const manageContributorsThunk = createAsyncThunk("/manage-contributors", 
     }
 })
 
+export const fetchJournalContributorsThunk = createAsyncThunk("/fetch-contributors", async({ journalId }) => {
+    try{
+        const res = axiosInstance.get(`trip-journal/get/c/${journalId}`);
+        toast.promise(res, {
+            loading : 'fetching contributors list...',
+            success : (data) => data?.data?.message,
+            error : "Failed to fetch the journal contributors !!"
+        });
+
+        return (await res).data;
+    }catch(err){
+        console.error(`Error occurred while fetching journal contributors : ${err}`);
+    }
+})
 
 const tripJournalSlice = createSlice({
     name : "tripJournal",
@@ -199,12 +180,6 @@ const tripJournalSlice = createSlice({
             .addCase(addEntryToJournalThunk.fulfilled, (state, action) => {
                 state.journalsEntries = action?.payload?.data;
             })
-            .addCase(deleteJournalEntryThunk.fulfilled, (state, action) => {
-                state.journalsEntries = action?.payload?.data;
-            })
-            .addCase(updateJournalEntryThunk.fulfilled, (state, action) => {
-                state.journalsEntries = action?.payload?.data;
-            })
             .addCase(closeJournalThunk.fulfilled, (state, action) => {
                 const closedJournalId = action?.payload?.data?._id;
                 const journal = state.usersJournals.find(journal => journal._id === closedJournalId);
@@ -216,6 +191,9 @@ const tripJournalSlice = createSlice({
                 const journalId = action?.payload?.data?._id;
                 const updatedJournals = state.usersJournals.filter((journal) => journal._id !== journalId);
                 state.usersJournals = updatedJournals;
+            })
+            .addCase(fetchJournalContributorsThunk.fulfilled, (state, action) => {
+                state.contributors = action?.payload?.data?.contributors;
             })
             
     }

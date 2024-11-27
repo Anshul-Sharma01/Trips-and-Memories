@@ -4,9 +4,11 @@ import SendRequest from "./SendRequest.jsx";
 import CancelRequest from "./CancelRequest.jsx";
 import { acceptFriendRequestThunk, declineFriendRequestThunk } from "../../Redux/Slices/friendshipSlice.js";
 import RemoveFriend from "./RemoveFriend.jsx"
+import { IoMdCopy } from "react-icons/io";
+import toast from "react-hot-toast";
 
 // Friend Component
-function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) {
+function Friend({ imgSrc, username, email, friendStatus, friendId, requestId, disableLink }) {
     const dispatch = useDispatch();
 
     const userData = useSelector((state) => state?.auth?.userData);
@@ -21,6 +23,17 @@ function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) 
     const handleDeclineRequest = () => {
         dispatch(declineFriendRequestThunk({requestId}));
     };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(friendId)
+        .then(() => {
+            toast.success("Friend Id copied to clipboard");
+        })
+        .catch((err) => {
+            toast.error("Failed to copy the friend Id");
+            console.error("Failed to copy the friend Id : ", err);
+        })
+    }
     
     return (
         <div className="friend-card flex items-center p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 bg-white dark:bg-gray-800">
@@ -32,9 +45,28 @@ function Friend({ imgSrc, username, email, friendStatus, friendId, requestId }) 
                 />
             </div>
             <div className="ml-4 flex-grow mr-4">
-                <Link to={`friend-profile/${friendId}/${friendStatus}?requestId=${requestId}`}>
-                    <h2 className="text-lg font-semibold text-blue-900 dark:text-white">{username || "John Doe"}</h2>
-                </Link>
+                <div className="flex items-center">
+                    {disableLink ? (
+                            <h2 className="text-lg font-semibold text-gray-500 dark:text-gray-400">
+                                {username || "John Doe"}&nbsp;( {friendId} )
+                            </h2>
+                        ) : (
+                            <Link
+                                to={`friend-profile/${friendId}/${friendStatus}?requestId=${requestId}`}
+                                className="text-lg font-semibold text-blue-900 hover:text-blue-400 dark:text-white"
+                            >
+                                {username || "John Doe"}&nbsp;( {friendId} )
+                            </Link>
+                        )}
+                    <button
+                        onClick={handleCopy}
+                        className="copy-icon text-gray-500 hover:text-gray-700 transition duration-200"
+                        title="Copy Friend ID"
+                    >
+                        <IoMdCopy size={20} />
+                    </button>
+                </div>
+                    
                 <p className="text-sm text-gray-600 dark:text-gray-300">{email || "someone@example.com"}</p>
             </div>
             <div className="flex space-x-2 gap-4 ml-auto">

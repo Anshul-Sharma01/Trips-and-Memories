@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addEntryToJournal, closeJournal, createTripJournal, deleteJournal, deleteJournalEntry, fetchTripJournalDetails, fetchTripJournalEntries, fetchUserTripJournals, manageContributors, updateJournalEntry } from "../controllers/tripJournal.controller.js";
+import { addEntryToJournal, closeJournal, createTripJournal, deleteJournal, fetchJournalContributors, fetchTripJournalDetails, fetchTripJournalEntries, fetchUserTripJournals, manageContributors } from "../controllers/tripJournal.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import {verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -22,17 +22,14 @@ router.route("/get/journal-entries/:journalId")
 router.route("/add-entry/:journalId")
 .post(upload.array("journalImg", 5), addEntryToJournal);
 
-router.route("/delete/:journalId/:entryId")
-.delete(deleteJournalEntry);
-
-router.route("/update-entry/:journalId/:entryId")
-.patch(updateJournalEntry);
-
 router.route("/close/:journalId")
 .get(closeJournal);
 
 router.route("/d/:journalId")
 .delete(deleteJournal);
+
+router.route("/get/c/:journalId")
+.get(fetchJournalContributors);
 
 router.route("/manage/contributors/:journalId")
 .patch(manageContributors);

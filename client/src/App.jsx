@@ -39,6 +39,7 @@ import MyJournals from "./Pages/journal/MyJournals.jsx";
 import AddEntry from "./Pages/journal/AddEntry.jsx";
 import JournalEntry from "./Components/journal/JournalEntry.jsx";
 import ViewJournal from "./Pages/journal/ViewJournal.jsx";
+import ManageContributors from "./Components/journal/ManageContributors.jsx";
 
 
 function App() {
@@ -49,7 +50,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/modal/check" element={<JournalEntry/>}></Route>
+        <Route path="/modal/check" element={<ManageContributors/>}></Route>
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/forgot-password' element={<ForgotPassword />} />
         <Route path='/auth/reset/:resetToken' element={<ResetPassword />} />
@@ -71,6 +72,7 @@ function App() {
         <Route path="/my-journals" element={<MyJournals/>}></Route>
         <Route path="/add-entry/:journalId" element={<AddEntry/>}></Route>
         <Route path="/view-journal/:journalId" element={<ViewJournal/>}></Route>
+        <Route path="/manage-contributors/:journalId" element={<ManageContributors/>}></Route>
 
         <Route path="/memory/all" element={<AllMemories/>}></Route>
         <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>

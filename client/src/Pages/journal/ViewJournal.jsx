@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import JournalEntry from "../../Components/journal/JournalEntry";
 import {fetchTripJournalEntriesThunk } from "../../Redux/Slices/tripJournalSlice.js";
 
@@ -44,6 +44,7 @@ function ViewJournal() {
                 This journal currently has no entries yet.
                 </p>
             )}
+            <Link to={`/manage-contributors/${journalId}`} className="text-blue-400 hover:text-blue-800">Manage Contributors</Link>
         </section>
     );
 }
