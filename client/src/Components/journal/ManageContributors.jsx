@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllFriendsThunks } from '../../Redux/Slices/friendshipSlice';
 import Friend from '../Friends/Friend';
 import { Link, useParams } from 'react-router-dom';
-import { fetchJournalContributorsThunk } from '../../Redux/Slices/tripJournalSlice';
+import { addContributorThunk, fetchJournalContributorsThunk, removeContributorThunk } from '../../Redux/Slices/tripJournalSlice';
+import toast from 'react-hot-toast';
 
 function ManageContributors() {
 
+    const [ friendId, setFriendId ] = useState("");
+
     const { journalId } = useParams();
     const dispatch = useDispatch();
+
     let friendsList = useSelector((state) => state?.friendship?.friendsList) || []
     let contributors = useSelector((state) => state?.tripJournal?.contributors) || [];
     const userData = useSelector((state) => state?.auth?.userData);
@@ -19,12 +23,27 @@ function ManageContributors() {
         console.log("Friends : ", res);
     }
 
-    const handleContributorRemoval = async(e) => {
-        const id = e.target.id;
-        const updatedContributors = contributors.filter((ele) => ele._id != id);
-        const contributors1 = updatedContributors.map((ele) => ele._id);
-        console.log("Contributors-upda : ", contributors1);
+    const handleAddContributor = async(e) => {
+        e.preventDefault();
+        toast.dismiss();
+        if(!friendId){
+            toast.error("Friend Id is required !!");
+            return;
+        }
+
+        const res = await dispatch(addContributorThunk({ journalId, friendId }));
+        console.log("Add Contributor response : ", res);
+
     }
+
+    const handleRemoveContributor = async(e) => {
+        const friendId = e.target.id;
+        e.preventDefault();
+        toast.dismiss();
+        const res = await dispatch(removeContributorThunk({ journalId, friendId }));
+        console.log("Remove Contributor : ", res);
+    }
+
 
     async function fetchContributors(){
         const res = await dispatch(fetchJournalContributorsThunk({ journalId }));
@@ -73,7 +92,7 @@ function ManageContributors() {
                 )
             }
             <section>
-                <form className="contributor-form bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mt-8 mx-auto max-w-md">
+                <form onSubmit={handleAddContributor} className="contributor-form bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mt-8 mx-auto max-w-md">
                     <h2 className="text-lg font-semibold text-center mb-4 text-gray-800 dark:text-gray-200">
                         Add Contributor
                     </h2>
@@ -87,6 +106,8 @@ function ManageContributors() {
                         <input
                             type="text"
                             id="friend-unique-id"
+                            value={friendId}
+                            onChange={(e) => setFriendId(e.target.value)}
                             placeholder="Enter friend ID to add as a contributor"
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                         />
@@ -114,10 +135,9 @@ function ManageContributors() {
                     ) : (
                         <div className="flex flex-wrap gap-6 justify-center">
                             {
-                                contributors.map((ele) => (
+                                contributors.map((ele, ind) => (
                                     <div
-                                        key={ele?._id}
-                                        id={ele?._id}
+                                        key={ele?._id || Math.random()}
                                         className="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md w-full max-w-lg transform hover:scale-105 transition duration-300"
                                     >
                                         <img
@@ -135,7 +155,8 @@ function ManageContributors() {
                                         </div>
                                         <button
                                             className={`bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow transition duration-200 ${userData?._id == ele?._id ? "hidden" : ""}`}
-                                            onClick={handleContributorRemoval}
+                                            id={ele?._id}
+                                            onClick={handleRemoveContributor}
                                         >
                                             Remove
                                         </button>

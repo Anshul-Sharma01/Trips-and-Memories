@@ -175,7 +175,7 @@ export const addContributorThunk = createAsyncThunk("/add-contributor", async({ 
     }
 })
 
-const removeContributorThunk = createAsyncThunk("/remove-contributor", async({ journalId, friendId }) => {
+export const removeContributorThunk = createAsyncThunk("/remove-contributor", async({ journalId, friendId }) => {
     try{
         const res = axiosInstance.get(`trip-journal/remove/j/${journalId}/c/${friendId}`);
         toast.promise(res,{
@@ -206,7 +206,7 @@ const tripJournalSlice = createSlice({
                 state.contributors = action?.payload?.data;
             })
             .addCase(fetchTripJournalEntriesThunk.fulfilled, (state, action) => {
-                state.journalsEntries = action?.payload?.data?.entries;
+                state.journalsEntries = action?.payload?.data;
             })
             .addCase(addEntryToJournalThunk.fulfilled, (state, action) => {
                 state.journalsEntries = action?.payload?.data;

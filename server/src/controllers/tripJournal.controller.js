@@ -183,7 +183,7 @@ const fetchTripJournalEntries = asyncHandler(async(req, res, next) => {
         }
 
         const journalEntries = await TripJournal.findById(journalId)
-        .select("-title -description -createdBy -createdAt -updatedAt -isDeleted  -contributors -aiGeneratedStory")
+        .select("-title -description -createdAt -updatedAt -isDeleted  -contributors -aiGeneratedStory")
         .populate("entries.contributor", "username name avatar");
 
         return res.status(200)
@@ -308,7 +308,7 @@ const addContributor = asyncHandler(async (req, res, next) => {
             throw new ApiError(400, "Invalid Friend ID or Journal ID");
         }
 
-        const journal = await TripJournal.findById(journalId);
+        let journal = await TripJournal.findById(journalId);
         if (!journal) {
             throw new ApiError(404, "Trip Journal not found!");
         }
@@ -327,6 +327,13 @@ const addContributor = asyncHandler(async (req, res, next) => {
 
         journal.contributors.push(friendId);
         await journal.save();
+
+        journal = await TripJournal.findById(journalId)
+        .select("-title -description -isDeleted -status -entries -aiGeneratedStory")
+        .populate({
+            path : "contributors",
+            select : "username name email avatar"
+        });
 
 
         return res.status(200).json(
@@ -356,7 +363,7 @@ const removeContributor = asyncHandler(async (req, res, next) => {
         }
 
 
-        const journal = await TripJournal.findById(journalId);
+        let journal = await TripJournal.findById(journalId);
         if (!journal) {
             throw new ApiError(404, "Trip Journal not found!");
         }
@@ -379,6 +386,12 @@ const removeContributor = asyncHandler(async (req, res, next) => {
 
 
         await journal.save();
+        journal = await TripJournal.findById(journalId)
+        .select("-title -description -isDeleted -status -entries -aiGeneratedStory")
+        .populate({
+            path : "contributors",
+            select : "username name email avatar"
+        });
 
         return res.status(200).json(
             new ApiResponse(

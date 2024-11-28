@@ -9,6 +9,8 @@ function ViewJournal() {
     const dispatch = useDispatch();
     const journalsEntries = useSelector((state) => state?.tripJournal?.journalsEntries) || [];
 
+    const userData = useSelector((state) => state?.auth?.userData);
+
     async function fetchJournalEntries() {
         const res = await dispatch(fetchTripJournalEntriesThunk({ journalId }));
         console.log("Response for journal entries : ", res);
@@ -26,9 +28,9 @@ function ViewJournal() {
                 Journal Entries
             </h1>
 
-            {journalsEntries.length > 0 ? (
+            {journalsEntries.entries.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {journalsEntries.map((entry, index) => (
+                {journalsEntries?.entries?.map((entry, index) => (
                     <JournalEntry
                         key={index}
                         entryContributor={entry.contributor.username}
@@ -44,7 +46,11 @@ function ViewJournal() {
                 This journal currently has no entries yet.
                 </p>
             )}
-            <Link to={`/manage-contributors/${journalId}`} className="text-blue-400 hover:text-blue-800">Manage Contributors</Link>
+            {
+                userData._id == journalsEntries.createdBy && (
+                    <Link to={`/manage-contributors/${journalId}`} className="text-blue-400 hover:text-blue-800">Manage Contributors</Link>
+                )
+            }
         </section>
     );
 }
