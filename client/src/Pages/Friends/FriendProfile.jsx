@@ -5,12 +5,15 @@ import SendRequest from "../../Components/Friends/SendRequest";
 import { useDispatch } from "react-redux";
 import { fetchMyProfile } from "../../Redux/Slices/authSlice";
 import CancelRequest from "../../Components/Friends/CancelRequest";
+import { fetchAuthorMemoriesThunk } from "../../Redux/Slices/memorySlice";
+import MemoryCard from "../../Components/Memory/MemoryCard.jsx";
 
 
 
 function FriendProfile() {
 
     const { friendId, friendStatus } = useParams();
+    const [ friendMemories, setFriendMemories ] = useState([]);
     const dispatch = useDispatch();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -34,8 +37,16 @@ function FriendProfile() {
             name : res?.payload?.data?.name
         })
     }
+
+    async function fetchAuthorMemories(){
+        const res = await dispatch(fetchAuthorMemoriesThunk({ authorId : friendId }));
+        setFriendMemories(res?.payload?.data);
+        console.log("friends memories : ", res);
+    }
+
     useEffect(() => {
         fetchFriendProfile();
+        fetchAuthorMemories;
     }, [])
 
 
@@ -70,9 +81,17 @@ function FriendProfile() {
 
             <section className="memories-section mt-8">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Memories</h2>
-                <div className="memories-placeholder p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-                    <p>No Memories available yet. Check back soon!</p>
-                </div>
+                {
+                    friendMemories.length == 0 ? (
+                        <div className="memories-placeholder p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                            <p>No Memories available yet. Check back soon!</p>
+                        </div>
+                    ) : (
+                        friendMemories.map((ele, ind) => {
+                            return <MemoryCard memory={ele} key={ind}/>
+                        })
+                    )
+                }
             </section>
         </main>
     );

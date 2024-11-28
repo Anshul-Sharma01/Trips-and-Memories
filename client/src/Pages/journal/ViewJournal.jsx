@@ -48,7 +48,7 @@ function ViewJournal() {
             )}
             {
                 userData._id == journalsEntries.createdBy && (
-                    <Link to={`/manage-contributors/${journalId}`} className="text-blue-400 hover:text-blue-800">Manage Contributors</Link>
+                    <Link to={`/manage-contributors/${journalId}`} className="text-blue-400 text-center  text-xl underline hover:text-blue-800">Manage Contributors</Link>
                 )
             }
         </section>

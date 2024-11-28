@@ -36,7 +36,7 @@ function Friend({ imgSrc, username, email, friendStatus, friendId, requestId, di
     }
     
     return (
-        <div className="friend-card flex items-center p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 bg-white dark:bg-gray-800">
+        <div className="friend-card flex items-center p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 bg-white dark:bg-gray-800 w-[900px]">
             <div className="avatar-container flex justify-center items-center w-[60px] h-[60px] overflow-hidden rounded-full border border-gray-300">
                 <img
                     src={imgSrc || "https://www.ihna.edu.au/blog/wp-content/uploads/2022/10/user-dummy.png"}

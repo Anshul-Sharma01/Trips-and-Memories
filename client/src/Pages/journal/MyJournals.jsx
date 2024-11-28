@@ -14,6 +14,9 @@ function MyJournals(){
         console.log("Users trips journals : ", res);
     }
     
+
+
+    
     useEffect(() => {
         fetchMyJournals();
         console.log("USers journals array : ", usersJournals);
@@ -32,6 +35,7 @@ function MyJournals(){
                         return <TripJournal
                             key={ele?._id}
                             journalOpen={ele?.status == "open" ? true : false}
+                            createdBy={ele?.createdBy}
                             journalTitle={ele?.title}
                             journalDesc={ele?.description}
                             journalEntries={ele?.entries?.length}

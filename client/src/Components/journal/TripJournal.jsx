@@ -2,8 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import CloseJournal from "./CloseJournal";
 import DeleteJournal from "./DeleteJournal";
+import { useSelector } from "react-redux";
 
-function TripJournal({ journalTitle, journalDesc, journalEntries, journalId, journalOpen }) {
+function TripJournal({ journalTitle, journalDesc, journalEntries, journalId, journalOpen, createdBy }) {
+
+    const userData = useSelector((state) => state?.auth?.userData);
+
     return (
         <div className="relative m-20">
             <div className="relative max-w-lg mx-auto mt-10 p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-lg rounded-xl font-caveat">
@@ -29,7 +33,7 @@ function TripJournal({ journalTitle, journalDesc, journalEntries, journalId, jou
                         <span className="ml-2 text-xl font-semibold">{journalEntries || 0}</span>
                     </div>
                     {
-                        !journalOpen && (
+                        !journalOpen && userData._id == createdBy && (
                             <DeleteJournal
                                 journalId={journalId}
                                 className="text-red-600 hover:text-red-800"
@@ -46,7 +50,11 @@ function TripJournal({ journalTitle, journalDesc, journalEntries, journalId, jou
                             Add Entry
                         </button>
                     </Link>
-                    <CloseJournal journalId={journalId} />
+                    {
+                        userData?._id == createdBy && (
+                            <CloseJournal journalId={journalId} />
+                        )
+                    }
                 </div>
             ) : (
                 <div className="absolute flex flex-col justify-center items-center left-[50%] transform -translate-x-1/2 mt-4">
