@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmail, isPassword } from "../Helpers/regexMatcher.js";
 import { createUserAccount } from '../Redux/Slices/authSlice.js';
+import { CgSpinnerTwo } from 'react-icons/cg';
 
 function Register() {
 
@@ -12,6 +13,7 @@ function Register() {
     const navigate = useNavigate();
     const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
     const [avatarUrl, setAvatarUrl] = useState();
+    const [ isRegisteringUser, setIsRegisteringUser ] = useState(false);
     
     const [userData, setUserData] = useState({
         name: "",
@@ -34,6 +36,7 @@ function Register() {
     }
 
     async function handleFormSubmit(e) {
+        toast.dismiss();
         e.preventDefault();
         const { username, name, email, password, avatar } = userData;
         
@@ -59,11 +62,14 @@ function Register() {
             formData.append(key, userData[key]);
         });
 
+        setIsRegisteringUser(true);
+        
         const response = await dispatch(createUserAccount(formData));
         if (response?.payload?.statusCode === 201) {
             toast.success("Account created successfully!");
             navigate("/");
         }
+        setIsRegisteringUser(false);
     }
 
     function handleStateChange(e) {
@@ -153,8 +159,12 @@ function Register() {
 
                     <button 
                         type="submit"
-                        className='mt-4 bg-blue-600 text-white font-bold px-8 py-4 text-xl rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-300'
+                        className='mt-4 bg-blue-600 text-white font-bold px-8 py-4 text-xl rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-300 flex flex-row justify-center gap-4 items-center disabled:cursor-not-allowed disabled:bg-gray-600'
+                        disabled={isRegisteringUser}
                     >
+                        {
+                            isRegisteringUser && <CgSpinnerTwo className='animate-spin'/>
+                        }
                         Register
                     </button>
                 </form>

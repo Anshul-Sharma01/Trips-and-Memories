@@ -503,6 +503,9 @@ const deleteMemory = asyncHandler(async (req, res, next) => {
         }
 
         const deletedMemory = await Memory.findByIdAndDelete(memoryId);
+
+        await deleteFromCloudinary(deletedMemory?.thumbnail?.public_id);
+
         if (!deletedMemory) {
             throw new ApiError(400, "Memory not deleted, please try again later");
         }

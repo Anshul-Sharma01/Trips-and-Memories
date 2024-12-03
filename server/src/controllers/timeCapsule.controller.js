@@ -3,7 +3,7 @@ import { TimeCapsule } from "../models/timeCapsule.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
 
@@ -138,6 +138,8 @@ const deleteTimeCapsule = asyncHandler(async (req, res, next) => {
             _id: capsuleId,
             owner: userId
         });
+
+        await deleteFromCloudinary(deletedCapsule?.memoryImg?.public_id);
 
         if (!deletedCapsule) {
             return res.status(404).json(new ApiError(404, "Time Capsule not found or you are not authorized to delete it"));

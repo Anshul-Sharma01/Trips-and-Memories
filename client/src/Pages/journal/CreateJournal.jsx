@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { createTripJournalThunk } from "../../Redux/Slices/tripJournalSlice";
 import { useNavigate } from "react-router-dom";
+import { CgSpinnerTwo } from "react-icons/cg";
 
 function CreateJournal() {
     const [journalData, setJournalData] = useState({
@@ -14,20 +15,26 @@ function CreateJournal() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [ isSubmitting, setIsSubmitting ] = useState(false);
+
     async function handleCreateJournal(e){
+        toast.dismiss();
         e.preventDefault();
         
         if(!journalData.title && !journalData.description){
-            toast.dismiss();
             toast.error("All fields are mandatory !!");
             return;
         }
 
+        setIsSubmitting(true);
+        
         const res = await dispatch(createTripJournalThunk(journalData));
         console.log("Response : ", res);
         if(res?.payload?.statusCode == 201){
             navigate("/my-journals");
+            setIsSubmitting(false);
         }
+        setIsSubmitting(false);
 
     }
 
@@ -78,8 +85,12 @@ function CreateJournal() {
                     <div className="flex justify-center">
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all"
+                            className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all flex flex-row justify-center gap-4 items-center disabled:cursor-not-allowed disabled:bg-gray-600"
+                            disabled={isSubmitting}
                         >
+                            {
+                                isSubmitting && <CgSpinnerTwo className="animate-spin"/>
+                            }
                             Save Journal
                         </button>
                     </div>

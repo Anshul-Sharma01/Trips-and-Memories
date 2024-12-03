@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { TripJournal } from "../models/tripJournal.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createTripJournal = asyncHandler(async(req, res, next) => {
     try{
@@ -281,6 +281,16 @@ const deleteJournal = asyncHandler(async(req, res, next) => {
             throw new ApiError(400, "Requested Journal Does not exists !!");
         }
 
+        for(const entry of journalExists.entries){
+            if(entry?.images?.length){
+                for(const img of entry.images){
+                    if(img?.public_id){
+                        await deleteFromCloudinary(img.public_id);
+                    }
+                }
+            }
+        }
+
         await journalExists.deleteOne();
 
         return res.status(200)
@@ -408,7 +418,6 @@ const removeContributor = asyncHandler(async (req, res, next) => {
         );
     }
 });
-
 
 
 const manageContributors = asyncHandler(async(req, res, next) => {

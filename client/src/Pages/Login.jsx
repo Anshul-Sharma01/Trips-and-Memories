@@ -4,10 +4,13 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmail, isPassword } from "../Helpers/regexMatcher.js";
 import { authenticateUser } from '../Redux/Slices/authSlice.js';
+import { CgSpinnerTwo } from "react-icons/cg";
 
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [ isCheckingUser, setIsCheckingUser ] = useState(false);
 
     const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
 
@@ -32,6 +35,7 @@ function Login() {
             toast.error("Invalid username or email");
             return;
         }
+        setIsCheckingUser(true);
 
 
         const response = await dispatch(authenticateUser({ loginInput, password }));
@@ -42,7 +46,10 @@ function Login() {
                 loginInput: "",
                 password: ""
             });
+            setIsCheckingUser(false);
         }
+
+        setIsCheckingUser(false);
     }
 
     function handleStateChange(e) {
@@ -96,8 +103,12 @@ function Login() {
 
                     <button 
                         type="submit"
-                        className='mt-4 bg-blue-600 dark:bg-blue-500 text-white font-bold px-8 py-4 text-xl rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300 w-full'
+                        className='mt-4 bg-blue-600 dark:bg-blue-500 text-white font-bold px-8 py-4 text-xl rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300 w-full flex flex-row justify-center gap-4 items-center disabled:cursor-not-allowed disabled:bg-gray-600 '
+                        disabled={isCheckingUser}
                     >
+                        {
+                            isCheckingUser && (<CgSpinnerTwo className='animate-spin text-white' />)
+                        }
                         Login
                     </button>
                 </form>
