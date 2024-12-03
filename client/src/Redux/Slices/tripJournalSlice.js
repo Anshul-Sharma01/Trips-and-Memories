@@ -189,6 +189,23 @@ export const removeContributorThunk = createAsyncThunk("/remove-contributor", as
     }
 })
 
+export const addTripStoryThunk = createAsyncThunk(`add-ai-trip-story`, async({journalId}, {dispatch}) => {
+    try {
+        const res = axiosInstance.get(`ai/create-story/${journalId}`);
+        toast.promise(res, {
+            loading : 'creating ai generated story ...',
+            success : (data) => data?.data?.message,
+            error : "Failed to create the trip story !!"
+        });
+
+        await dispatch(fetchTripJournalEntriesThunk({ journalId }));
+    
+        return (await res).data;
+    } catch (err) {
+        console.error(`Error occurred while creating an ai generated trip story : ${err}`);
+    }
+})
+
 const tripJournalSlice = createSlice({
     name : "tripJournal",
     initialState,

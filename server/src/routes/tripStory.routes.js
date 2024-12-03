@@ -4,6 +4,6 @@ import { createTripStory } from "../controllers/tripStory.controller.js";
 const router = Router();
 
 router.route("/create-story/:journalId")
-.post(createTripStory);
+.get(createTripStory);
 
 export default router;

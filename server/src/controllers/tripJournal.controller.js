@@ -183,7 +183,7 @@ const fetchTripJournalEntries = asyncHandler(async(req, res, next) => {
         }
 
         const journalEntries = await TripJournal.findById(journalId)
-        .select("-title -description -createdAt -updatedAt -isDeleted  -contributors -aiGeneratedStory")
+        .select("-title -description -createdAt -updatedAt -isDeleted  -contributors")
         .populate("entries.contributor", "username name avatar");
 
         return res.status(200)
