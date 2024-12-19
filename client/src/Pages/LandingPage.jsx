@@ -45,6 +45,30 @@ function LandingPage() {
                     </div>
                 </section>
 
+                {/* New: Testimonials Section */}
+                <section className="py-20 bg-gray-200 dark:bg-gray-700">
+                    <div className="container mx-auto px-4 text-center">
+                        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-10">What Our Users Say</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                                <p className="text-lg text-gray-600 dark:text-gray-300">"Trips & Memories has allowed me to keep my most cherished memories in one place. I love how easy it is to share my adventures!"</p>
+                                <h3 className="text-xl font-bold mt-4">Sarah J.</h3>
+                                <p className="text-gray-500">Traveler</p>
+                            </div>
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                                <p className="text-lg text-gray-600 dark:text-gray-300">"Collaborative journals have brought my friends and I closer as we document our travels together. Truly an amazing experience!"</p>
+                                <h3 className="text-xl font-bold mt-4">Tom R.</h3>
+                                <p className="text-gray-500">Adventurer</p>
+                            </div>
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                                <p className="text-lg text-gray-600 dark:text-gray-300">"The virtual memory box is such a creative way to preserve memories. It's like a time capsule for the future!"</p>
+                                <h3 className="text-xl font-bold mt-4">Emily L.</h3>
+                                <p className="text-gray-500">Explorer</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Statistics Section */}
                 <section className="py-20 bg-gray-200 dark:bg-gray-700">
                     <div className="container mx-auto px-4 text-center">
@@ -133,17 +157,13 @@ function LandingPage() {
 
                 {/* Call to Action Section */}
                 <section className="py-20 bg-blue-600 dark:bg-blue-800 text-white text-center">
-                    <div className="container mx-auto">
-                        <h2 className="text-3xl font-bold mb-4">Ready to Start Your Journey?</h2>
-                        <p className="text-lg mb-6">Join us today and begin capturing unforgettable memories with Trips & Memories.</p>
-                        <button className="px-6 py-3 bg-teal-400 text-white rounded-lg hover:bg-teal-500 transition-colors">
-                            Get Started
-                        </button>
-                    </div>
+                    <h2 className="text-3xl font-bold mb-4">Start Creating Your Memories Today!</h2>
+                    <p className="text-xl mb-6">Join our community and relive your most unforgettable moments.</p>
+                    <button className="px-6 py-3 bg-teal-400 text-white rounded-lg hover:bg-teal-500 transition-colors">
+                        Get Started
+                    </button>
                 </section>
-                <footer className="bg-gray-900 text-white py-6 text-center">
-                    <p>&copy; 2024 Trips & Memories. All rights reserved.</p>
-                </footer>
+
             </div>
         </NavigationLayout>
     );

@@ -34,9 +34,8 @@ Welcome to the **Trips & Memories** project! This application aims to help users
   - Users can create a friend list and accept friend requests from others.
   - Friends can be added as contributors to trip journals, facilitating collaboration on shared travel experiences.
 
-## Project Status 🚧
-- The backend development is currently completed, including user authentication, time capsule creation, memories management, bucket list management, trip journals, and AI-generated stories.
-- The frontend development has not yet started.
+# Project Status 🚧
+ **This project is now completed with both fronend and backend work**
 
 ## Technologies Used 💻
 - **Database:** MongoDB for data storage.
@@ -57,6 +56,5 @@ Welcome to the **Trips & Memories** project! This application aims to help users
   - mongoose for MongoDB object modeling.
 
 ## Future Work 🔮
-- Implement frontend development using React.js.
 - Enhance user experience with additional features and improvements.
 - Continue to refine and expand existing features based on user feedback.
