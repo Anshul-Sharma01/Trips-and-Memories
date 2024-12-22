@@ -29,7 +29,9 @@ import friendshipRoutes from "./routes/friendship.routes.js";
 import tripStoryRoutes from "./routes/tripStory.routes.js";
 import recommRoutes from "./routes/recommendations.routes.js";
 import tripJournalRoutes from "./routes/tripJournal.routes.js";
+import serverCheckRoutes from "./routes/serverCheck.routes.js";
 
+app.use("/ap/v1/health", serverCheckRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/memory", memoryRoutes);
 app.use("/api/v1/like", likeRoutes);
