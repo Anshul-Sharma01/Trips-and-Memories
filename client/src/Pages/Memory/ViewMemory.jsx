@@ -10,6 +10,8 @@ import UpdateMemoryThumbnail from '../../Components/Memory/UpdateMemoryThumbnail
 import UpdateMemoryDetails from '../../Components/Memory/UpdateMemoryDetails.jsx';
 import DeleteMemoryModal from '../../Components/Memory/DeleteMemoryModal.jsx';
 import CommentsSection from '../../Components/Comments/CommentsSection.jsx';
+import { FaRegShareSquare } from "react-icons/fa";
+import ShareMemory from '../../Components/Memory/ShareMemory.jsx';
 
 function ViewMemory() {
     const { memoryId } = useParams();
@@ -75,6 +77,7 @@ function ViewMemory() {
                                 <FaTag className="text-green-500" />
                                 <span>{memoryData?.category}</span>
                             </div>
+                            <ShareMemory memoryId={memoryData?._id}/>
                         </div>
                     </div>
 
