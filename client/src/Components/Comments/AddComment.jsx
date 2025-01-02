@@ -32,7 +32,7 @@ function AddComment({ closeModal, memoryId }) {
                     <textarea
                         name="content"
                         placeholder="Enter new comment here"
-                        className="border border-solid border-gray-300 rounded-lg w-full h-24 p-2 focus:outline-none focus:border-blue-500 transition-colors"
+                        className="border border-solid border-gray-300 rounded-lg w-full h-24 p-2 dark:text-black focus:outline-none focus:border-blue-500 transition-colors"
                         value={commentText}
                         onChange={(e) => setCommentText(e.target.value)}
                     />

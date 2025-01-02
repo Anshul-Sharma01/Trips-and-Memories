@@ -6,6 +6,7 @@ import Friend from '../Friends/Friend';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { addContributorThunk, fetchJournalContributorsThunk, removeContributorThunk } from '../../Redux/Slices/tripJournalSlice';
 import toast from 'react-hot-toast';
+import BackButton from '../BackButton';
 
 function ManageContributors() {
 
@@ -63,18 +64,19 @@ function ManageContributors() {
     }, [])
 
     return (
-        <section className='flex flex-col justify-center items-center px-4 py-8'>
-            <h1 className="text-center font-sans text-4xl font-extrabold my-6 text-blue-600">
+        <section className='flex flex-col justify-center items-center px-4 py-8 bg-gray-100 dark:bg-gray-900 h-[100vh]'>
+            <BackButton/>
+            <h1 className="text-center font-sans text-4xl font-extrabold my-6 text-blue-600 dark:text-blue-400">
                 Manage Contributors
             </h1>
             {
                 friendsList.length === 0 ? (
-                    <p className="text-center text-gray-600 text-lg">
+                    <p className="text-center text-gray-600 text-lg dark:text-gray-400">
                         You don't have any friends yet! 🥲
                     </p>
                 ) : (
-                    <section className="flex flex-wrap flex-col justify-center items-center gap-4 bg-cyan-300 w-full md:w-[60vw] h-auto rounded-xl p-6 shadow-lg">
-                        <h3 className='text-center text-blue-800 text-xl font-bold'>Your Friends</h3>
+                    <section className="flex flex-wrap flex-col justify-center items-center gap-4 bg-cyan-300 dark:bg-cyan-700 w-full md:w-[60vw] h-auto rounded-xl p-6 shadow-lg">
+                        <h3 className='text-center text-blue-800 dark:text-blue-300 text-xl font-bold'>Your Friends</h3>
                         <div className="flex flex-col gap-4 w-full">
                             {
                                 friendsList.map((ele) => (
@@ -111,17 +113,17 @@ function ManageContributors() {
                             value={friendId}
                             onChange={(e) => setFriendId(e.target.value)}
                             placeholder="Enter friend ID to add as a contributor"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition duration-200"
+                        className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition duration-200"
                     >
                         Add Contributor
                     </button>
                     <p className="text-center mt-4 text-gray-600 dark:text-gray-400 text-sm">
-                        * To add someone outside of your friends list, first add them as a friend from <Link to="/users/friends-list" className="text-blue-500 hover:underline">Manage Friends</Link>.
+                        * To add someone outside of your friends list, first add them as a friend from <Link to="/users/friends-list" className="text-blue-500 dark:text-blue-300 hover:underline">Manage Friends</Link>.
                     </p>
                 </form>
                 <section className="w-full lg:w-1/2 bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
@@ -130,7 +132,7 @@ function ManageContributors() {
                     </h1>
                     {
                         contributors.length === 0 ? (
-                            <p className="text-center text-gray-600 text-lg">
+                            <p className="text-center text-gray-600 dark:text-gray-400 text-lg">
                                 No contributors yet! Add some to get started. 🚀
                             </p>
                         ) : (
@@ -144,7 +146,7 @@ function ManageContributors() {
                                             <img
                                                 src={ele?.avatar?.secure_url}
                                                 alt="contributor-avatar"
-                                                className="h-10 w-10 rounded-full border border-gray-300"
+                                                className="h-10 w-10 rounded-full border border-gray-300 dark:border-gray-600"
                                             />
                                             <div className="flex-grow">
                                                 <p className={`font-semibold text-lg ${userData?._id === ele?._id ? "text-green-500" : "text-gray-800 dark:text-gray-200"}`}>

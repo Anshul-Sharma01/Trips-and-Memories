@@ -30,7 +30,7 @@ function Comment({ avatarSrc, ownerId, ownerUserName, commentId, content, totalL
                             )}
                         </div>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm leading-relaxed">{content || "Unable to fetch this comment right now..."}</p>
+                    <p className="text-gray-600 dark:text-black-300 mt-2 text-sm leading-relaxed">{content || "Unable to fetch this comment right now..."}</p>
                 </div>
             </div>
             {showModal && <DeleteComment memoryId={memoryId} closeModal={closeDeleteModal} commentId={commentId} />}
