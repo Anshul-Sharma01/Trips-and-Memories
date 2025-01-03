@@ -56,7 +56,7 @@ function App() {
         <Route element={<RequireAuth allowedRoles={['USER']} />}>
             <Route path="/get-recomm" element={<TripsRecomm/>}></Route>
             <Route path="/time-capsules/create" element={<CreateTimeCapsule/>}></Route>
-            <Route path="/time-capsules/fetch/my" element={<PersonalTimeCapsules/>}></Route>
+            <Route path="/time-capsules/my" element={<PersonalTimeCapsules/>}></Route>
             <Route path="/time-capsules/view/:capsuleId" element={<ViewTimeCapsule/>}></Route>
             <Route path="/create-journal" element={<CreateJournal/>}></Route> 
             <Route path="/my-journals" element={<MyJournals/>}></Route>

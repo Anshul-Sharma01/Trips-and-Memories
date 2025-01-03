@@ -30,6 +30,7 @@ import tripStoryRoutes from "./routes/tripStory.routes.js";
 import recommRoutes from "./routes/recommendations.routes.js";
 import tripJournalRoutes from "./routes/tripJournal.routes.js";
 import serverCheckRoutes from "./routes/serverCheck.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 app.use("/ap/v1/health", serverCheckRoutes);
 app.use("/api/v1/users", userRoutes);
@@ -42,6 +43,7 @@ app.use("/api/v1/friends", friendshipRoutes);
 app.use("/api/v1/ai", tripStoryRoutes);
 app.use("/api/v1/recomm", recommRoutes);
 app.use("/api/v1/trip-journal", tripJournalRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 export { app };
 
