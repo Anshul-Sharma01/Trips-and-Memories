@@ -85,6 +85,7 @@ function NavigationLayout({ children }) {
                                         <li><Link to="/time-capsules/create" className="hover:text-teal-300 transition-colors flex items-center gap-2">
                                             Create Time Capsule <IoMdTimer className="text-lg" />
                                         </Link></li>
+                                        <li><Link to="/time-capsules/my" className="hover:text-teal-300 transition-colors">My Time Capsules</Link></li>
                                         <li><Link to="/my-bucket-list" className="hover:text-teal-300 transition-colors">Bucket List</Link></li>
                                         <li><Link to="/user/me/profile" className="hover:text-teal-300 transition-colors">Profile</Link></li>
                                         <li><Link to="/users/friends-list" className="hover:text-teal-300 transition-colors">Friends</Link></li>

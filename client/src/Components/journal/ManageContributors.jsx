@@ -10,13 +10,12 @@ import BackButton from '../BackButton';
 
 function ManageContributors() {
 
-    const [ friendId, setFriendId ] = useState("");
-
+    const [friendId, setFriendId] = useState("");
     const { journalId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    let friendsList = useSelector((state) => state?.friendship?.friendsList) || []
+    let friendsList = useSelector((state) => state?.friendship?.friendsList) || [];
     let contributors = useSelector((state) => state?.tripJournal?.contributors) || [];
     const userData = useSelector((state) => state?.auth?.userData);
 
@@ -25,31 +24,29 @@ function ManageContributors() {
         console.log("Friends : ", res);
     }
 
-    const handleAddContributor = async(e) => {
+    const handleAddContributor = async (e) => {
         e.preventDefault();
         toast.dismiss();
-        if(!friendId){
+        if (!friendId) {
             toast.error("Friend Id is required !!");
             return;
         }
         setFriendId("");
 
         const res = await dispatch(addContributorThunk({ journalId, friendId }));
-        if(res?.payload?.data?.statusCode != 200){
+        if (res?.payload?.data?.statusCode !== 200) {
             navigate("/my-journals");
         }
         console.log("Add Contributor response : ", res);
-
     }
 
-    const handleRemoveContributor = async(e) => {
+    const handleRemoveContributor = async (e) => {
         const friendId = e.target.id;
         e.preventDefault();
         toast.dismiss();
         const res = await dispatch(removeContributorThunk({ journalId, friendId }));
         console.log("Remove Contributor : ", res);
     }
-
 
     async function fetchContributors(){
         const res = await dispatch(fetchJournalContributorsThunk({ journalId }));
@@ -59,13 +56,13 @@ function ManageContributors() {
     useEffect(() => {
         fetchAllFriends();
         fetchContributors();
-        console.log("Friendslist:",friendsList);
+        console.log("Friendslist:", friendsList);
         console.log("contributors-redux : ", contributors);
     }, [])
 
     return (
-        <section className='flex flex-col justify-center items-center px-4 py-8 bg-gray-100 dark:bg-gray-900 h-[100vh]'>
-            <BackButton/>
+        <section className='flex flex-col justify-center items-center px-6 py-8 bg-gray-100 dark:bg-gray-900 h-auto'>
+            <BackButton />
             <h1 className="text-center font-sans text-4xl font-extrabold my-6 text-blue-600 dark:text-blue-400">
                 Manage Contributors
             </h1>
@@ -96,7 +93,7 @@ function ManageContributors() {
                 )
             }
             <div className="flex flex-col lg:flex-row gap-8 w-full mt-10">
-                <form onSubmit={handleAddContributor} className="contributor-form bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full lg:w-1/2">
+                <form onSubmit={handleAddContributor} className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full lg:w-1/2 space-y-6">
                     <h2 className="text-lg font-semibold text-center mb-4 text-gray-800 dark:text-gray-200">
                         Add Contributor
                     </h2>
@@ -172,7 +169,6 @@ function ManageContributors() {
                 </section>
             </div>
         </section>
-
     );
 }
 
