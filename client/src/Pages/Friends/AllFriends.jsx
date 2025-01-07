@@ -21,18 +21,18 @@ function AllFriends() {
     }, [refreshKey])
 
     return (
-        <div className="all-friends-container flex flex-col justify-center items-center h-screen p-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
+        <div className="all-friends-container flex flex-col justify-center items-center h-screen px-8 py-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
             <BackButton />
             <h1 className="text-5xl font-extrabold tracking-wide text-center mb-6 text-gray-800 dark:text-white">
                 All Friends
             </h1>
             {
                 friendsList.length === 0 ? (
-                    <p className="text-lg bg-gray-200 dark:bg-gray-700 rounded-md p-4 shadow-md mb-4">
+                    <p className="text-lg bg-gray-200 dark:bg-gray-700 rounded-md p-4 shadow-lg mb-6 text-center">
                         You haven't added any friends yet
                     </p>
                 ) : (
-                    <div className="friends-list w-full max-w-2xl mt-6 space-y-4">
+                    <div className="friends-list w-full max-w-3xl mt-6 space-y-6">
                         {
                             friendsList.map((ele) => 
                             <Friend
@@ -44,21 +44,19 @@ function AllFriends() {
                                 email={ele?.friend?.email}
                                 name={ele?.friend?.name}
                             />
-                            
                             )
                         }
                     </div>
                 )
             }
-            <section className="flex justify-center items-center gap-10">
-                <section className="flex justify-center items-center w-1/2 bg-slate-300 min-w-[50%]  h-[400px]  px-6 py-4 rounded-xl shadow-inner overflow-y-scroll mt-10">
-                    <PendingRequests/>
+            <section className="flex flex-wrap justify-center items-center gap-8 mt-10 w-full max-w-screen-xl">
+                <section className="pending-requests-section w-full sm:w-1/2 bg-slate-300 dark:bg-slate-700 p-6 rounded-xl shadow-lg overflow-y-auto">
+                    <PendingRequests />
                 </section>
                 
-                <section className="overflow-y-scroll min-w-[50%] h-[400px] w-1/2 bg-gray-200 dark:bg-gray-800 px-6 py-4 rounded-xl shadow-inner mt-10">
+                <section className="search-friend-section w-full sm:w-1/2 bg-gray-200 dark:bg-gray-800 p-6 rounded-xl shadow-lg overflow-y-auto">
                     <SearchFriend />
                 </section>
-
             </section>
         </div>
     );
