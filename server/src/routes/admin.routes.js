@@ -1,7 +1,12 @@
 import { Router } from "express";
+import { verifyJWT, verifyAdmin } from "../middlewares/auth.middleware.js";
 import { fetchUsersCount, fetchMemoriesCount, fetchMemories, fetchAllUsers, fetchUserById, updateUserById, deleteUserById, deleteMemoryById, deleteCommentById, fetchComments, fetchCommentsCount, fetchLikes, fetchLikesCount, fetchLikeById, updateLikeById, deleteLikeById} from "../controllers/admin.controllers.js";
 
 const router = Router();
+
+router.use(verifyJWT);
+router.use(verifyAdmin);
+
 
 router.route("/fetch-users-count").get(fetchUsersCount);
 router.route("/fetch-memories-count").get(fetchMemoriesCount);

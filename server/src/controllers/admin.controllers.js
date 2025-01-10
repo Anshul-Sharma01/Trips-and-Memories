@@ -91,6 +91,8 @@ const fetchUserById = asyncHandler(async(req, res, next) => {
 const updateUserById = asyncHandler(async(req, res, next) => {  
     try{
 
+        
+
     }catch(err){
         console.error(`Error occurred while updating user by id : ${err}`);
     }
@@ -223,8 +225,7 @@ const fetchMemoryById = asyncHandler(async(req, res, next) => {
 const updateMemoryById = asyncHandler(async(req, res, next) => {  
     try{
 
-
-
+        
 
     }catch(err){
         console.error(`Error occurred while updating memory by id : ${err}`);

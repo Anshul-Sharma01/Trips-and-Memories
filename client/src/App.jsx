@@ -27,6 +27,7 @@ import ViewJournal from "./Pages/journal/ViewJournal.jsx";
 import ManageContributors from "./Components/journal/ManageContributors.jsx";
 
 import RequireAuth from "./Helpers/RequireAuth.jsx";
+import Dashboard from "./Pages/Admin/Dashboard.jsx";
 
 
 function App() {
@@ -53,7 +54,7 @@ function App() {
         
 
 
-        <Route element={<RequireAuth allowedRoles={['USER']} />}>
+        <Route element={<RequireAuth allowedRoles={['USER', 'ADMIN']} />}>
             <Route path="/get-recomm" element={<TripsRecomm/>}></Route>
             <Route path="/time-capsules/create" element={<CreateTimeCapsule/>}></Route>
             <Route path="/time-capsules/my" element={<PersonalTimeCapsules/>}></Route>
@@ -65,9 +66,14 @@ function App() {
             <Route path="/manage-contributors/:journalId" element={<ManageContributors/>}></Route>
         </Route>
 
+        <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
+          <Route path="/admin/dashboard" element={<Dashboard/>}></Route>
+        </Route>
+
+
         <Route path="/memory/all" element={<AllMemories/>}></Route>
 
-        <Route element={<RequireAuth allowedRoles={['USER']}/>}>
+        <Route element={<RequireAuth allowedRoles={['USER', 'ADMIN']}/>}>
             <Route path="/memory/create-memory" element={<CreateMemory/>} ></Route>
             <Route path="/memory/my" element={<PersonalMemories/>}></Route>
             <Route path="/memory/:memoryId" element={<ViewMemory/>}></Route>
