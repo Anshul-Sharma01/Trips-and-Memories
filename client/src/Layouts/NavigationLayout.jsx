@@ -12,6 +12,7 @@ function NavigationLayout({ children }) {
 
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
+    const userRole = useSelector((state) => state?.auth?.userRole);
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
@@ -80,6 +81,9 @@ function NavigationLayout({ children }) {
                                 {isLoggedIn ? (
                                     <>
                                         {/* User-Specific Links */}
+                                        {
+                                            userRole == 'ADMIN' &&  <li><Link to="/admin/dashboard" className="hover:text-red-800 transition-colors">Dashboard</Link></li>
+                                        }
                                         <li><Link to="/create-journal" className="hover:text-teal-300 transition-colors">Create Journal</Link></li>
                                         <li><Link to="/memory/create-memory" className="hover:text-teal-300 transition-colors">Create Memory</Link></li>
                                         <li><Link to="/time-capsules/create" className="hover:text-teal-300 transition-colors flex items-center gap-2">
