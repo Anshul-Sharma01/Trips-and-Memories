@@ -35,7 +35,7 @@ const fetchAllUsers = asyncHandler(async(req, res, next) => {
 const fetchUsersCount = asyncHandler(async(req, res, next) => {
     try{
         
-        const allUsers = await User.find({}).countDocuments();
+        const allUsers = await User.countDocuments();
         if(allUsers == 0){
             return res.status(200)
             .json(
@@ -147,7 +147,7 @@ const deleteUserById = asyncHandler(async(req, res, next) => {
 const fetchMemoriesCount = asyncHandler(async(req, res, next) => {
     try{
 
-        const allMemories = await Memory.find({}).countDocuments();
+        const allMemories = await Memory.countDocuments();
         if(allMemories == 0){
             return res.status(200)
             .json(
@@ -265,7 +265,7 @@ const deleteMemoryById = asyncHandler(async(req, res, next) => {
 const fetchCommentsCount = asyncHandler(async(req, res, next) => {
     try{
 
-        const allComments = await Comment.find({}).countDocuments();
+        const allComments = await Comment.countDocuments();
         if(allComments == 0){
             return res.status(200)
             .json(
@@ -379,7 +379,7 @@ const deleteCommentById = asyncHandler(async(req, res, next) => {
 const fetchLikesCount = asyncHandler(async(req, res, next) => {
     try{
 
-        const allLikes = await Like.find({}).countDocuments();
+        const allLikes = await Like.countDocuments();
         if(allLikes == 0){
             return res.status(200)
             .json(
