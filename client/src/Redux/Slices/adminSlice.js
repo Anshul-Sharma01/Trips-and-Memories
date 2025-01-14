@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../Helpers/axiosInstance.js";
+import toast from "react-hot-toast";
 
 const initialState = {
     totalUsers: null,
+    allUsers :[],
     totalMemories: null,
     totalLikes: null,
     totalComments: null,
@@ -31,6 +33,20 @@ export const fetchTotalComments = createAsyncThunk("dashboard/fetchCommentsCount
     return response.data.data;
 });
 
+export const fetchAllUsersThunk = createAsyncThunk("dashboard/fetch-users", async() => {
+    try{
+        const response = axiosInstance.get("admin/fetch-users");
+        toast.promise(response, {
+            loading : 'Fetching all users',
+            success : (data) => data?.data?.message,
+            error : "Failed to fetch users !!"
+        });
+        return (await response).data;
+    }catch(err){
+        console.error(`Error occurred while fetching all users : ${err}`);
+    }
+})
+
 
 
 const adminSlice = createSlice({
@@ -58,7 +74,10 @@ const adminSlice = createSlice({
             })
             .addCase(fetchTotalComments.fulfilled, (state, action) => {
                 state.totalComments = action.payload;
-            });
+            })
+            .addCase(fetchAllUsersThunk.fulfilled, (state, action) => {
+                state.allUsers = action.payload.data;
+            })
     }
 })
 
