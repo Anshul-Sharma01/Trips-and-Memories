@@ -176,7 +176,7 @@ const fetchMemoriesCount = asyncHandler(async(req, res, next) => {
 const fetchMemories = asyncHandler(async(req, res, next) => {
     try{
 
-        const allMemories = await Memory.find({});
+        const allMemories = await Memory.find({}).populate("author", "username");
         if(allMemories.length == 0){
             throw new ApiError(404, "No memories found.");
         }

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 const initialState = {
     totalUsers: null,
     allUsers :[],
+    allMemories : [],
     totalMemories: null,
     totalLikes: null,
     totalComments: null,
@@ -45,6 +46,20 @@ export const fetchAllUsersThunk = createAsyncThunk("dashboard/fetch-users", asyn
     }catch(err){
         console.error(`Error occurred while fetching all users : ${err}`);
     }
+});
+
+export const fetchAllMemoriesThunk = createAsyncThunk("dashboard/fetch-memories", async() => {
+    try{
+        const response = axiosInstance.get("admin/fetch-memories");
+        toast.promise(response, {
+            loading : 'fetching memories...',
+            success : (data) => data?.data?.message,
+            error : 'Failed to fetch memories !!!'
+        });
+        return (await response).data;
+    }catch(err){
+        console.error(`Error occurred while fetching all memories : ${err}`);
+    }
 })
 
 
@@ -77,6 +92,9 @@ const adminSlice = createSlice({
             })
             .addCase(fetchAllUsersThunk.fulfilled, (state, action) => {
                 state.allUsers = action.payload.data;
+            })
+            .addCase(fetchAllMemoriesThunk.fulfilled, (state, action) => {
+                state.allMemories = action.payload.data;
             })
     }
 })

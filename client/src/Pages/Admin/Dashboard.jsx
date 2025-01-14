@@ -4,6 +4,7 @@ import AdminDashboard from "../../Components/Dashboard/AdminDashboard";
 import ManageUsers from "../../Components/Dashboard/ManageUsers";
 import Analytics from "../../Components/Dashboard/Analytics";
 import { useNavigate } from "react-router-dom";
+import ManageMemories from "../../Components/Dashboard/ManageMemories";
 
 function Dashboard() {
     const [currentView, setCurrentView] = useState("Dashboard");
@@ -18,8 +19,8 @@ function Dashboard() {
                 return <AdminDashboard />;
             case "Users":
                 return <ManageUsers />;
-            case "Memory":
-                return <h1 className="text-2xl font-bold text-center">Memory Usage Section</h1>;
+            case "Memories":
+                return <ManageMemories/>
             case "Analytics":
                 return <Analytics />;
             default:
@@ -65,9 +66,9 @@ function Dashboard() {
                         className={`p-2 text-left rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 dark:text-white ${
                             currentView === "Memory" ? "bg-gray-300 dark:bg-gray-700" : ""
                         }`}
-                        onClick={() => setCurrentView("Memory")}
+                        onClick={() => setCurrentView("Memories")}
                     >
-                        Memory
+                        Memories
                     </button>
                     <button
                         className={`p-2 text-left rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 dark:text-white ${
