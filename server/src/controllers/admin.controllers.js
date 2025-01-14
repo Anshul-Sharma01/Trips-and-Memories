@@ -4,6 +4,7 @@ import { Memory } from "../models/memory.model.js";
 import { Friendship } from "../models/friendship.model.js";
 import { Comment } from "../models/comment.model.js";
 import { Like } from "../models/like.model.js";
+import { Journal } from "../models/journal.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -490,6 +491,91 @@ const deleteLikeById = asyncHandler(async(req, res, next) => {
     }
 })
 
+const fetchJournalCount = asyncHandler(async(req, res, next) => {
+    try{
+
+        const allJournals = await Journal.countDocuments();
+        if(allJournals == 0){
+            return res.status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    0,
+                    "No journals found"
+                )
+            )
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                allJournals,
+                "Successfully fetched all journals count !!"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while fetching journals count : ${err}`);
+    }
+});
+
+const fetchAllJournals = asyncHandler(async(req, res, next) => {
+    try{
+
+        const allJournals = await Journal.find({});
+        if(allJournals.length == 0){
+            throw new ApiError(404, "No journals found.");
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                allJournals,
+                "Successfully fetched all Journals !!"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while fetching journals : ${err}`);
+    }
+});
+
+const fetchJournalById = asyncHandler(async(req, res, next) => {
+    try{
+
+        const journalId = req.params.journalId;
+        if(!isValidObjectId(journalId)){
+            throw new ApiError(400, "Invalid journal id");
+        }
+
+        const journal = await Journal.findById(journalId);
+        if(!journal){
+            throw new ApiError(404, "Journal not found");
+        }
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                journal,
+                "Successfully fetched journal by id !!"
+            )
+        )
+
+    }catch(err){
+        console.error(`Error occurred while fetching journal by id : ${err}`);
+    }
+});
+
+const updateJournalById = asyncHandler(async(req, res, next) => {
+    try{
+
+    }catch(err){
+        console.error(`Error occurred while updating journal by id : ${err}`);
+    }
+});
 
 export {
     fetchAllUsers,
@@ -511,7 +597,11 @@ export {
     fetchLikes,
     fetchLikeById,
     updateLikeById,
-    deleteLikeById
+    deleteLikeById,
+    fetchJournalCount,
+    fetchAllJournals,
+    fetchJournalById,
+    updateJournalById
 }
 
 

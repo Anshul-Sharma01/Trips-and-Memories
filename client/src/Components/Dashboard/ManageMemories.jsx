@@ -15,7 +15,7 @@ function ManageMemories() {
     }, [dispatch]);
 
     return (
-        <div className="h-full overflow-y-scroll w-[100vw] bg-gray-100 dark:bg-gray-800 py-8 px-4">
+        <div className="h-screen overflow-y-scroll w-[100vw] bg-gray-100 dark:bg-gray-800 py-8 px-4">
             <section className="max-w-7xl mx-auto">
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
                     Manage Memories
