@@ -604,28 +604,39 @@ const fetchCategoryStats = asyncHandler(async (req, res, next) => {
 
 
 const fetchMemoryOverTime = asyncHandler(async (req, res, next) => {
-    try{
+    try {
         const stats = await Memory.aggregate([
-            { $group : {_id : "$tripDate", count : {$sum : 1}} },
-            { $project : {date : "$_id", count : 1, _id : 0}},
-            { $sort : { date : 1 } },
+            { $group: { _id: "$tripDate", count: { $sum: 1 } } },
+            { 
+                $project: { 
+                    date: "$_id", 
+                    count: 1, 
+                    _id: 0 
+                } 
+            },
+            { $sort: { date: 1 } },
         ]);
 
-        return res.status(200)
-        .json(
+        // Format the date before sending the response
+        const formattedStats = stats.map(stat => ({
+            date: new Date(stat.date).toISOString().split("T")[0], // Converts to 'YYYY-MM-DD'
+            count: stat.count,
+        }));
+
+        return res.status(200).json(
             new ApiResponse(
                 200,
-                stats,
+                formattedStats,
                 "Successfully fetched memory over time stats !!"
             )
         );
-        
 
-    }catch(err){
+    } catch (err) {
         console.error(`Error occurred while fetching memory stats : ${err}`);
         throw new ApiError(400, "Error occurred while fetching memory stats !!");
     }
 });
+
 
 
 const fetchPopularLocations = asyncHandler(async (req, res, next) => {

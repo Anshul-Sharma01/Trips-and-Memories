@@ -125,6 +125,15 @@ const adminSlice = createSlice({
             .addCase(fetchAllMemoriesThunk.fulfilled, (state, action) => {
                 state.allMemories = action.payload.data;
             })
+            .addCase(fetchPopularLocationsThunk.fulfilled, (state, action) => {
+                state.locationStats = action.payload.data;
+            })
+            .addCase(fetchCategoryStatsThunk.fulfilled, (state, action) => {
+                state.categoryStats = action.payload.data;
+            })
+            .addCase(fetchMemoryStatsThunk.fulfilled, (state, action) => {
+                state.memoryStats = action.payload.data;
+            })
     }
 })
 
