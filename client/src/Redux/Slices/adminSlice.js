@@ -6,6 +6,9 @@ const initialState = {
     totalUsers: null,
     allUsers :[],
     allMemories : [],
+    categoryStats :[],
+    memoryStats : [],
+    locationStats : [],
     totalMemories: null,
     totalLikes: null,
     totalComments: null,
@@ -15,7 +18,6 @@ const initialState = {
 
 export const fetchUsersCount = createAsyncThunk("dashboard/fetchTotalUsers", async () => {
     const response = await axiosInstance.get("admin/fetch-users-count");
-    console.log(response.data.data);
     return response.data.data;
 });
 
@@ -59,6 +61,33 @@ export const fetchAllMemoriesThunk = createAsyncThunk("dashboard/fetch-memories"
         return (await response).data;
     }catch(err){
         console.error(`Error occurred while fetching all memories : ${err}`);
+    }
+})
+
+export const fetchPopularLocationsThunk = createAsyncThunk("dashboard/fetch-locations", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-locations-stats");
+        return response.data;
+    }catch(err){
+        console.error(`Error occurred while fetching popular locations : ${err}`);
+    }
+});
+
+export const fetchCategoryStatsThunk = createAsyncThunk("dashboard/fetch-categories", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-category-stats");
+        return response.data;
+    }catch(err){
+        console.error(`Error occurred while fetching category stats : ${err}`);
+    }
+})
+
+export const fetchMemoryStatsThunk = createAsyncThunk("dashboard/fetch-memories-stats", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-memory-stats");
+        return response.data;
+    }catch(err){
+        console.error(`Error occurred while fetching memories stats : ${err}`);
     }
 })
 

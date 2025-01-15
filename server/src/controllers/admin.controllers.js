@@ -688,7 +688,10 @@ export {
     fetchJournalCount,
     fetchAllJournals,
     fetchJournalById,
-    updateJournalById
+    updateJournalById,
+    fetchCategoryStats,
+    fetchMemoryOverTime,
+    fetchPopularLocations
 }
 
 
