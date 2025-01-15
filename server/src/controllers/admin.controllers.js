@@ -4,7 +4,7 @@ import { Memory } from "../models/memory.model.js";
 import { Friendship } from "../models/friendship.model.js";
 import { Comment } from "../models/comment.model.js";
 import { Like } from "../models/like.model.js";
-import { Journal } from "../models/journal.model.js";
+import { TripJournal } from "../models/tripJournal.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -494,7 +494,7 @@ const deleteLikeById = asyncHandler(async(req, res, next) => {
 const fetchJournalCount = asyncHandler(async(req, res, next) => {
     try{
 
-        const allJournals = await Journal.countDocuments();
+        const allJournals = await TripJournal.countDocuments();
         if(allJournals == 0){
             return res.status(200)
             .json(
@@ -523,7 +523,7 @@ const fetchJournalCount = asyncHandler(async(req, res, next) => {
 const fetchAllJournals = asyncHandler(async(req, res, next) => {
     try{
 
-        const allJournals = await Journal.find({});
+        const allJournals = await TripJournal.find({});
         if(allJournals.length == 0){
             throw new ApiError(404, "No journals found.");
         }
@@ -550,7 +550,7 @@ const fetchJournalById = asyncHandler(async(req, res, next) => {
             throw new ApiError(400, "Invalid journal id");
         }
 
-        const journal = await Journal.findById(journalId);
+        const journal = await TripJournal.findById(journalId);
         if(!journal){
             throw new ApiError(404, "Journal not found");
         }
@@ -576,6 +576,93 @@ const updateJournalById = asyncHandler(async(req, res, next) => {
         console.error(`Error occurred while updating journal by id : ${err}`);
     }
 });
+
+
+
+const fetchCategoryStats = asyncHandler(async (req, res, next) => {
+    try{
+        const stats = await Memory.aggregate([
+            { $group : {_id : "$category", count : {$sum : 1}} },
+            { $project : {category : "$_id", count : 1, _id : 0}},
+        ]);
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                stats,
+                "Successfully fetched category stats !!"
+            )
+        );
+        
+
+    }catch(err){
+        console.error(`Error occurred while fetching category stats : ${err}`);
+        throw new ApiError(400, "Error occurred while fetching category stats !!");
+    }
+}) 
+
+
+const fetchMemoryOverTime = asyncHandler(async (req, res, next) => {
+    try{
+        const stats = await Memory.aggregate([
+            { $group : {_id : "$tripDate", count : {$sum : 1}} },
+            { $project : {date : "$_id", count : 1, _id : 0}},
+            { $sort : { date : 1 } },
+        ]);
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                stats,
+                "Successfully fetched memory over time stats !!"
+            )
+        );
+        
+
+    }catch(err){
+        console.error(`Error occurred while fetching memory stats : ${err}`);
+        throw new ApiError(400, "Error occurred while fetching memory stats !!");
+    }
+});
+
+
+const fetchPopularLocations = asyncHandler(async (req, res, next) => {
+    try{
+
+        const stats = await Memory.aggregate([
+            {$group : { _id : "$location", count : {$sum : 1}}},
+            { $sort : { count : -1 } },
+            { $limit : 5 },
+            { $project : { location : "$_id", count : 1, _id : 0}},
+        ]);
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                stats,
+                "Successfully fetched popular locations !!"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while fetching popular locations : ${err}`);
+        throw new ApiError(400, "Error occurred while fetching popular locations !!");
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 export {
     fetchAllUsers,
