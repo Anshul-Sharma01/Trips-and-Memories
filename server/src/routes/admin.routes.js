@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT, verifyAdmin } from "../middlewares/auth.middleware.js";
-import { fetchUsersCount, fetchMemoriesCount, fetchMemories, fetchAllUsers, fetchUserById, updateUserById, deleteUserById, deleteMemoryById, deleteCommentById, fetchComments, fetchCommentsCount, fetchLikes, fetchLikesCount, fetchLikeById, updateLikeById, deleteLikeById, fetchPopularLocations, fetchMemoryOverTime, fetchCategoryStats} from "../controllers/admin.controllers.js";
+import { fetchUsersCount, fetchMemoriesCount, fetchMemories, fetchAllUsers, fetchUserById, updateUserById, deleteUserById, deleteMemoryById, deleteCommentById, fetchComments, fetchCommentsCount, fetchLikes, fetchLikesCount, fetchLikeById, updateLikeById, deleteLikeById, fetchPopularLocations, fetchMemoryOverTime, fetchCategoryStats, fetchUserEngagements, fetchUserGrowthStats, fetchMemoryEngagementStats} from "../controllers/admin.controllers.js";
 
 const router = Router();
 
@@ -35,7 +35,9 @@ router.route("/delete-like/:likeId").delete(deleteLikeById);
 router.route("/fetch-locations-stats").get(fetchPopularLocations);
 router.route("/fetch-category-stats").get(fetchCategoryStats);
 router.route("/fetch-memory-stats").get(fetchMemoryOverTime);
-
+router.route("/fetch-user-engagement-stats").get(fetchUserEngagements);
+router.route("/fetch-user-growth-stats").get(fetchUserGrowthStats);
+router.route("/fetch-memory-engagement-stats").get(fetchMemoryEngagementStats);
 
 
 export default router;

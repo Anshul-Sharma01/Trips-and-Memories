@@ -638,7 +638,6 @@ const fetchMemoryOverTime = asyncHandler(async (req, res, next) => {
 });
 
 
-
 const fetchPopularLocations = asyncHandler(async (req, res, next) => {
     try{
 
@@ -664,9 +663,90 @@ const fetchPopularLocations = asyncHandler(async (req, res, next) => {
 })
 
 
+const fetchMemoryEngagementStats = asyncHandler(async (req, res, next) => {
+    try{
+
+        const totalMemories = await Memory.countDocuments({});
+        const totalLikes = await Memory.aggregate([
+            { $group : { _id : null, totalLikes : {$sum : "$numberOfLikes"} }}
+        ]);
+        const totalComments = await Comment.countDocuments({});
+        const averageLikes = totalLikes[0]?.totalLikes / totalMemories || 0;
+        const averageComments = totalComments / totalMemories || 0;
+
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    averageLikesPerMemory : averageLikes.toFixed(2),
+                    averageCommentsPerMemory : averageComments.toFixed(2)
+                },
+                "Successfully fetched memory engagement stats !!"
+            )
+        );
+
+    }catch(err){
+        console.error(`Error occurred while fetching memory engagement stats : ${err}`);
+        throw new ApiError(400, "Error occurred fetching memory engagement stats !!");
+    }
+})
+
+const fetchUserEngagements = asyncHandler(async(req, res, next) => {
+    try{
+        const memoryStats = await Memory.aggregate([
+            { $group : {_id : "$tripDate", memoryCount : {$sum : 1} } },
+        ]);
+        const commentStats = await Comment.aggregate([
+            { $group : {_id : "$createdAt", commentCount : {$sum : 1}}},
+        ]);
+        const likeStats = await Memory.aggregate([
+            {$group : {_id : "$tripDate", likeCount : {$sum : "$numberOfLikes"}}},
+        ]);
+        const mergedStats = memoryStats.map((stat) => {
+            const comments = commentStats.find((c) => c._id === stat._id)?.commentCount || 0;
+            const likes = likeStats.find((l) => l._id === stat._id)?.likeCount || 0;
+            return {
+                date : stat._id,
+                memoryCount : stat.memoryCount,
+                commentCount : comments,
+                likeCount : likes
+            };
+        });
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                mergedStats,
+                "Successfully fetched user engagement stats"
+            )
+        );
+    }catch(err){
+        console.error(`Error occurred while fetching user engagements : ${err}`);
+        throw new ApiError(400, "Error occurred while fetching user engagements !!");
+    }
+})
 
 
-
+const fetchUserGrowthStats = asyncHandler(async (req, res, next) => {
+    try{
+        const stats = await User.aggregate([
+            {$groupt : {_id : {$dateToString : {format : "%Y-%m-%d", date : "$createdAt"}}, count : {$sum : 1}}},
+            { $sort : {_id : 1}},
+        ]);
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                stats,
+                "Sucessfully fetched user growth stats !!"
+            )
+        );
+    }catch(err){
+        console.error(`Error occurred while fetching user growth stats : ${err}`);
+        throw new ApiError(400, "Error occurred while fetching user growth stats !!");
+    }
+})
 
 
 
@@ -702,7 +782,10 @@ export {
     updateJournalById,
     fetchCategoryStats,
     fetchMemoryOverTime,
-    fetchPopularLocations
+    fetchPopularLocations,
+    fetchMemoryEngagementStats,
+    fetchUserEngagements,
+    fetchUserGrowthStats
 }
 
 
