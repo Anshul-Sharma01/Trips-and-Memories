@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT, verifyAdmin } from "../middlewares/auth.middleware.js";
-import { fetchUsersCount, fetchMemoriesCount, fetchMemories, fetchAllUsers, fetchUserById, updateUserById, deleteUserById, deleteMemoryById, deleteCommentById, fetchComments, fetchCommentsCount, fetchLikes, fetchLikesCount, fetchLikeById, updateLikeById, deleteLikeById, fetchPopularLocations, fetchMemoryOverTime, fetchCategoryStats, fetchUserEngagements, fetchUserGrowthStats, fetchMemoryEngagementStats} from "../controllers/admin.controllers.js";
+import { fetchUsersCount, fetchMemoriesCount, fetchMemories, fetchAllUsers, fetchUserById, updateUserById, deleteUserById, deleteMemoryById, deleteCommentById, fetchComments, fetchCommentsCount, fetchLikes, fetchLikesCount, fetchLikeById, updateLikeById, deleteLikeById, fetchPopularLocations, fetchMemoryOverTime, fetchCategoryStats, fetchUserEngagements, fetchUserGrowthStats, fetchMemoryEngagementStats, fetchJournalCount, fetchBucketListCount, fetchtimeCapsulesCount} from "../controllers/admin.controllers.js";
 
 const router = Router();
 
@@ -23,6 +23,10 @@ router.route("/delete-user/:userId").delete(deleteUserById);
 router.route("/delete-comment/:commentId").delete(deleteCommentById);
 router.route("/fetch-comments").get(fetchComments);
 router.route("/fetch-comments-count").get(fetchCommentsCount);
+
+router.route("/fetch-journal-count").get(fetchJournalCount);
+router.route("/fetch-bucket-list-count").get(fetchBucketListCount);
+router.route("/fetch-time-capsules-count").get(fetchtimeCapsulesCount);
 
 
 router.route("/fetch-likes").get(fetchLikes);

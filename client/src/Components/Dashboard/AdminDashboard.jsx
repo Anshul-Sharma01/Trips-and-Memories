@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaUsers, FaImages, FaThumbsUp, FaComments } from "react-icons/fa";
-import { fetchUsersCount, fetchMemoriesCount, fetchTotalComments, fetchTotalLikes } from "../../Redux/Slices/adminSlice.js";
+import { BsJournals } from "react-icons/bs";
+import { FaBitbucket } from "react-icons/fa6";
+import { LuTimer } from "react-icons/lu";
+import { fetchUsersCount, fetchMemoriesCount, fetchTotalComments, fetchTotalLikes, fetchJournalCounts, fetchBucketListCounts, fetchTimeCapsuleCounts } from "../../Redux/Slices/adminSlice.js";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
@@ -13,6 +16,9 @@ function AdminDashboard() {
         memories : "loading..",
         likes : "loading..",
         comments : "loading..",
+        journals : "loading..",
+        buckets : "loading..",
+        capsules : "loading.."
     })
 
     useEffect(() => {
@@ -23,6 +29,10 @@ function AdminDashboard() {
                     dispatch(fetchMemoriesCount()).unwrap().catch((err) => console.error("Memories Count Error:", err)),
                     dispatch(fetchTotalLikes()).unwrap().catch((err) => console.error("Likes Count Error:", err)),
                     dispatch(fetchTotalComments()).unwrap().catch((err) => console.error("Comments Count Error:", err)),
+                    dispatch(fetchJournalCounts()).unwrap().catch((err) => console.error("Journals count : ", err)),
+                    dispatch(fetchBucketListCounts()).unwrap().catch((err) => console.error("Bucket List Count : ", err)),
+                    dispatch(fetchTimeCapsuleCounts()).unwrap().catch((err) => console.error("Time Capsules Error :" , err))
+
                 ]);
                 
                 
@@ -30,6 +40,9 @@ function AdminDashboard() {
                 const memories = results[1].status === "fulfilled" ? results[1].value : "Error";
                 const likes = results[2].status === "fulfilled" ? results[2].value : "Error";
                 const comments = results[3].status === "fulfilled" ? results[3].value : "Error";
+                const journals = results[4].status === "fulfilled" ? results[4].value : "Error";
+                const buckets = results[5].status === "fulfilled" ? results[5].value : "Error";
+                const capsules = results[6].status === "fulfilled" ? results[6].value : "Error";
     
     
                 setDataCounts({
@@ -37,6 +50,9 @@ function AdminDashboard() {
                     memories,
                     likes,
                     comments,
+                    journals,
+                    buckets,
+                    capsules
                 });
                 console.log("Data : ", results);
     
@@ -53,6 +69,8 @@ function AdminDashboard() {
                     memories: "Error",
                     likes: "Error",
                     comments: "Error",
+                    journals : "Error",
+                    buckets : " Error"
                 });
             }
         };
@@ -86,6 +104,24 @@ function AdminDashboard() {
             value: dataCounts.comments,
             icon: <FaComments size={40} className="text-red-500" />,
         },
+        {
+            id : 5,
+            title : "Total Journals",
+            value : dataCounts.journals,
+            icon :  <BsJournals size={40} className="text-slate-400" />
+        },
+        {
+            id : 6,
+            title : "Total Buckets",
+            value : dataCounts.buckets,
+            icon : <FaBitbucket size={40} className="text-cyan-500" />
+        },
+        {
+            id : 7,
+            title : "Total Time Capsules",
+            value : dataCounts.capsules,
+            icon : <LuTimer size={40} className="text-violet-500" />
+        }
     ];
     
 

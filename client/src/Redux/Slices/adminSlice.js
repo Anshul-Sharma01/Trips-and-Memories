@@ -15,6 +15,8 @@ const initialState = {
     totalMemories: null,
     totalLikes: null,
     totalComments: null,
+    totalJounrals : null,
+    totalBuckets : null,
     loading: false,
     error: null,
 }
@@ -38,6 +40,33 @@ export const fetchTotalComments = createAsyncThunk("dashboard/fetchCommentsCount
     const response = await axiosInstance.get("admin/fetch-comments-count");
     return response.data.data;
 });
+
+export const fetchJournalCounts = createAsyncThunk("dashboard/fetch-journal-count", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-journal-count");
+        return response.data.data;
+    }catch(err){
+        console.error(`Error occurred while fetching journal counts : ${err}`);
+    }
+})
+
+export const fetchBucketListCounts = createAsyncThunk("dashboard/fetch-bucket-list-count", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-bucket-list-count");
+        return response.data.data;
+    }catch(err){
+        console.log(`Error occured while fetching bucket list count : ${err}`);
+    }
+})
+
+export const fetchTimeCapsuleCounts = createAsyncThunk("dashboard/fetch-time-capsule-count", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-time-capsules-count");
+        return response.data.data;
+    }catch(err){
+        console.error(`Error occurred while fetching time capsules count : ${err}`);
+    }
+})
 
 export const fetchAllUsersThunk = createAsyncThunk("dashboard/fetch-users", async() => {
     try{
@@ -148,6 +177,12 @@ const adminSlice = createSlice({
             })
             .addCase(fetchTotalComments.fulfilled, (state, action) => {
                 state.totalComments = action.payload;
+            })
+            .addCase(fetchJournalCounts.fulfilled, (state, action) => {
+                state.totalJounrals = action.payload;
+            })
+            .addCase(fetchBucketListCounts.fulfilled, (state, action) => {
+                state.totalBuckets = action.payload;
             })
             .addCase(fetchAllUsersThunk.fulfilled, (state, action) => {
                 state.allUsers = action.payload.data;

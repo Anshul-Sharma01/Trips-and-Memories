@@ -5,6 +5,8 @@ import { Friendship } from "../models/friendship.model.js";
 import { Comment } from "../models/comment.model.js";
 import { Like } from "../models/like.model.js";
 import { TripJournal } from "../models/tripJournal.model.js";
+import { TimeCapsule } from "../models/timeCapsule.model.js";
+import { BucketList } from "../models/bucketList.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -577,6 +579,38 @@ const updateJournalById = asyncHandler(async(req, res, next) => {
     }
 });
 
+const fetchBucketListCount = asyncHandler(async(req, res, next) => {
+    try{
+        const bucketListCount = await BucketList.countDocuments({});
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                bucketListCount,
+                "Successfully fetched bucket list count !!"
+            )
+        )
+    }catch(err){
+        console.error(`Error occurred while fetching bucket list count : ${err}`);
+        throw new ApiError(400, "Error occurred while fething bucket list count !!");
+    }
+})
+
+const fetchtimeCapsulesCount = asyncHandler(async(req, res, next) => {
+    try{
+        const timeCapsules = await TimeCapsule.countDocuments({});
+        return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                timeCapsules,
+                "Successfully fetched time capsules"
+            )
+        );
+    }catch(err){
+        console.error(`Error occurred while fetching time capsules count : ${err}`);
+    }
+})
 
 
 const fetchCategoryStats = asyncHandler(async (req, res, next) => {
@@ -808,7 +842,9 @@ export {
     fetchPopularLocations,
     fetchMemoryEngagementStats,
     fetchUserEngagements,
-    fetchUserGrowthStats
+    fetchUserGrowthStats,
+    fetchBucketListCount,
+    fetchtimeCapsulesCount
 }
 
 

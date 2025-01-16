@@ -22,9 +22,9 @@ function ManageUsers() {
         <div className="min-h-screen w-[100vw] overflow-y-scroll bg-gray-100 dark:bg-gray-900 py-8 px-4">
             <section className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                    {users?.map((user) => (
+                    {users?.map((user, ind) => (
                         <div
-                            key={user.id}
+                            key={ind}
                             className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 border-solid border-2 border-black"
                         >
                             <div className="flex flex-col items-center gap-4">
