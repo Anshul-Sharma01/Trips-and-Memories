@@ -9,6 +9,9 @@ const initialState = {
     categoryStats :[],
     memoryStats : [],
     locationStats : [],
+    userEngagementStats : [],
+    userGrowthStats : [],
+    memoryEngagementStats : {},
     totalMemories: null,
     totalLikes: null,
     totalComments: null,
@@ -91,6 +94,33 @@ export const fetchMemoryStatsThunk = createAsyncThunk("dashboard/fetch-memories-
     }
 })
 
+export const fetchUserEngagementStatsThunk = createAsyncThunk("dashboard/fetch-user-engagement-stats", async () => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-user-engagement-stats");
+        return response.data;
+    }catch(err){
+        console.error(`Error occurred while fetching user engagement stats : ${err}`);
+    }
+})
+
+export const fetchUserGrowthStatsThunk = createAsyncThunk("dashboard/fetch-user-growth-stats", async() => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-user-growth-stats");
+        return response.data;
+    }catch(err){
+        console.error(`Error occurred while fetching user growth stats : ${err}`);
+    }
+})
+
+export const fetchMemoryEngagementStatsThunk = createAsyncThunk("dashboard/fetch-memory-engagement-stats", async () => {
+    try{
+        const response = await axiosInstance.get("admin/fetch-memory-engagement-stats");
+        return response.data;
+    }catch(err){
+        console.error(`Error occurred while fetching memory engagement stats : ${err}`);
+    }
+})
+
 
 
 const adminSlice = createSlice({
@@ -133,6 +163,15 @@ const adminSlice = createSlice({
             })
             .addCase(fetchMemoryStatsThunk.fulfilled, (state, action) => {
                 state.memoryStats = action.payload.data;
+            })
+            .addCase(fetchUserEngagementStatsThunk.fulfilled, (state, action) => {
+                state.userEngagementStats = action.payload.data;
+            })
+            .addCase(fetchUserGrowthStatsThunk.fulfilled, (state, action) => {
+                state.userGrowthStats = action.payload.data;
+            })
+            .addCase(fetchMemoryEngagementStatsThunk.fulfilled, (state, action) => {
+                state.memoryEngagementStats = action.payload.data;
             })
     }
 })

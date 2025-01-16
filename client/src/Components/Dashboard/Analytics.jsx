@@ -4,8 +4,11 @@ import { Bar, Line, Pie } from "react-chartjs-2";
 import { useSelector, useDispatch } from "react-redux";
 import {
     fetchCategoryStatsThunk,
+    fetchMemoryEngagementStatsThunk,
     fetchMemoryStatsThunk,
     fetchPopularLocationsThunk,
+    fetchUserEngagementStatsThunk,
+    fetchUserGrowthStatsThunk,
 } from "../../Redux/Slices/adminSlice";
 import toast from "react-hot-toast";
 
@@ -20,6 +23,9 @@ function Analytics() {
         categoryStats,
         memoryStats,
         locationStats,
+        userEngagementStats,
+        userGrowthStats,
+        memoryEngagementStats,
     } = useSelector((state) => state.admin);
 
     // Fetch data on component mount
@@ -30,6 +36,9 @@ function Analytics() {
                     dispatch(fetchCategoryStatsThunk()),
                     dispatch(fetchMemoryStatsThunk()),
                     dispatch(fetchPopularLocationsThunk()),
+                    dispatch(fetchUserEngagementStatsThunk()),
+                    dispatch(fetchUserGrowthStatsThunk()),
+                    dispatch(fetchMemoryEngagementStatsThunk()),
                 ]);
                 console.log("Result of analytics : ", results);
 
@@ -98,28 +107,99 @@ function Analytics() {
         ],
     };
 
-    return (
-        <div className="bg-gray-100 dark:bg-gray-900 h-screen flex flex-col items-center p-6 overflow-y-scroll w-screen">
-            <h1 className="text-4xl font-bold mb-10 text-gray-800 dark:text-gray-100">Analytics Dashboard</h1>
+    const userEngagementGrowth = {
+        labels: userEngagementStats?.map((stat) => stat.date) || [],
+        datasets: [
+            {
+                label: "Memories",
+                data: userEngagementStats?.map((stat) => stat.memoryCount) || [],
+                borderColor: "#36a2eb",
+                fill: false,
+            },
+            {
+                label: "Likes",
+                data: userEngagementStats?.map((stat) => stat.likeCount) || [],
+                borderColor: "#ff6384",
+                fill: false,
+            },
+            {
+                label: "Comments",
+                data: userEngagementStats?.map((stat) => stat.commentCount) || [],
+                borderColor: "#4caf50",
+                fill: false,
+            },
+        ],
+    };
 
-            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-3xl mb-10">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Category Stats</h2>
+    const userGrowthGraph = {
+        labels: userGrowthStats?.map((stat) => stat._id) || [],
+        datasets: [
+            {
+                label: "User Growth",
+                data: userGrowthStats?.map((stat) => stat.count) || [],
+                borderColor: "#ffc107",
+                fill: false,
+            },
+        ],
+    };
+
+    const memoryEngagementGraph = {
+        labels: ["Average Likes", "Average Comments"],
+        datasets: [
+            {
+                label: "Memory Engagement Stats",
+                data: [
+                    memoryEngagementStats?.averageLikesPerMemory || 0,
+                    memoryEngagementStats?.averageCommentsPerMemory || 0,
+                ],
+                backgroundColor: ["#36a2eb", "#ff6384"],
+            },
+        ],
+    };
+
+    return (
+        <div className="bg-gray-100 dark:bg-gray-900 h-screen flex flex-col items-center gap-8 py-8 overflow-y-scroll w-screen">
+            <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">Analytics Dashboard</h1>
+
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Category Stats</h2>
                 <div className="h-[400px]">
                     <Bar data={categoryData} options={{ responsive: true, maintainAspectRatio: false }} />
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-3xl mb-10">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Memories Over Time</h2>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Memories Over Time</h2>
                 <div className="h-[400px]">
                     <Line data={memoryOverTimeData} options={{ responsive: true, maintainAspectRatio: false }} />
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-3xl">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Popular Locations</h2>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Popular Locations</h2>
                 <div className="h-[400px]">
                     <Pie data={popularLocationsData} options={{ responsive: true, maintainAspectRatio: false }} />
+                </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">User Engagement Stats</h2>
+                <div className="h-[400px]">
+                    <Line data={userEngagementGrowth} options={{ responsive: true, maintainAspectRatio: false }} />
+                </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">User Growth Stats</h2>
+                <div className="h-[400px]">
+                    <Line data={userGrowthGraph} options={{ responsive: true, maintainAspectRatio: false }} />
+                </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Memory Engagement Stats</h2>
+                <div className="h-[400px]">
+                    <Bar data={memoryEngagementGraph} options={{ responsive: true, maintainAspectRatio: false }} />
                 </div>
             </div>
         </div>

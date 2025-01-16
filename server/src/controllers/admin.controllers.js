@@ -692,63 +692,86 @@ const fetchMemoryEngagementStats = asyncHandler(async (req, res, next) => {
     }
 })
 
-const fetchUserEngagements = asyncHandler(async(req, res, next) => {
-    try{
+const fetchUserEngagements = asyncHandler(async (req, res, next) => {
+    try {
         const memoryStats = await Memory.aggregate([
-            { $group : {_id : "$tripDate", memoryCount : {$sum : 1} } },
+            { $group: { _id: "$tripDate", memoryCount: { $sum: 1 } } },
         ]);
         const commentStats = await Comment.aggregate([
-            { $group : {_id : "$createdAt", commentCount : {$sum : 1}}},
+            { $group: { _id: "$createdAt", commentCount: { $sum: 1 } } },
         ]);
         const likeStats = await Memory.aggregate([
-            {$group : {_id : "$tripDate", likeCount : {$sum : "$numberOfLikes"}}},
+            { $group: { _id: "$tripDate", likeCount: { $sum: "$numberOfLikes" } } },
         ]);
+
         const mergedStats = memoryStats.map((stat) => {
-            const comments = commentStats.find((c) => c._id === stat._id)?.commentCount || 0;
-            const likes = likeStats.find((l) => l._id === stat._id)?.likeCount || 0;
+            const comments = commentStats.find(
+                (c) => new Date(c._id).toISOString().split("T")[0] === new Date(stat._id).toISOString().split("T")[0]
+            )?.commentCount || 0;
+
+            const likes = likeStats.find(
+                (l) => new Date(l._id).toISOString().split("T")[0] === new Date(stat._id).toISOString().split("T")[0]
+            )?.likeCount || 0;
+
             return {
-                date : stat._id,
-                memoryCount : stat.memoryCount,
-                commentCount : comments,
-                likeCount : likes
+                date: new Date(stat._id).toISOString().split("T")[0], // Converts date to 'YYYY-MM-DD'
+                memoryCount: stat.memoryCount,
+                commentCount: comments,
+                likeCount: likes,
             };
         });
-        return res.status(200)
-        .json(
+
+        return res.status(200).json(
             new ApiResponse(
                 200,
                 mergedStats,
-                "Successfully fetched user engagement stats"
+                "Successfully fetched user engagement stats!"
             )
         );
-    }catch(err){
-        console.error(`Error occurred while fetching user engagements : ${err}`);
-        throw new ApiError(400, "Error occurred while fetching user engagements !!");
+    } catch (err) {
+        console.error(`Error occurred while fetching user engagements: ${err}`);
+        throw new ApiError(400, "Error occurred while fetching user engagements!");
     }
-})
+});
 
 
 const fetchUserGrowthStats = asyncHandler(async (req, res, next) => {
-    try{
+    try {
         const stats = await User.aggregate([
-            {$groupt : {_id : {$dateToString : {format : "%Y-%m-%d", date : "$createdAt"}}, count : {$sum : 1}}},
-            { $sort : {_id : 1}},
+            {
+                $group: {
+                    _id: "$createdAt", // Group by the createdAt field
+                    count: { $sum: 1 }, // Count the number of users created
+                },
+            },
+            {
+                $project: {
+                    date: "$_id", // Rename _id to date for clarity
+                    count: 1,
+                    _id: 0, // Exclude the original _id field from the result
+                },
+            },
+            { $sort: { date: 1 } }, // Sort by date
         ]);
-        return res.status(200)
-        .json(
+
+        // Format the date before sending the response
+        const formattedStats = stats.map(stat => ({
+            date: new Date(stat.date).toISOString().split("T")[0], // Converts to 'YYYY-MM-DD'
+            count: stat.count,
+        }));
+
+        return res.status(200).json(
             new ApiResponse(
                 200,
-                stats,
-                "Sucessfully fetched user growth stats !!"
+                formattedStats,
+                "Successfully fetched user growth stats!"
             )
         );
-    }catch(err){
-        console.error(`Error occurred while fetching user growth stats : ${err}`);
-        throw new ApiError(400, "Error occurred while fetching user growth stats !!");
+    } catch (err) {
+        console.error(`Error occurred while fetching user growth stats: ${err}`);
+        throw new ApiError(400, "Error occurred while fetching user growth stats!");
     }
-})
-
-
+});
 
 
 
