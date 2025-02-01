@@ -56,7 +56,7 @@ function ViewJournal() {
                             <JournalEntry
                                 key={index}
                                 entryContributor={entry.contributor.username}
-                                entryContributorAvatar={entry.contributor.avatar.secure_url}
+                                entryContributorAvatar={entry?.contributor?.avatar?.secure_url}
                                 entryContent={entry.content}
                                 entryDate={entry.date}
                                 entryImages={entry.images}

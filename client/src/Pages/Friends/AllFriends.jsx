@@ -21,7 +21,7 @@ function AllFriends() {
     }, [refreshKey])
 
     return (
-        <div className="all-friends-container flex flex-col justify-center items-center h-screen px-8 py-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
+        <div className="all-friends-container flex flex-col justify-center items-center h-[150vh] px-8 py-6 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
             <BackButton />
             <h1 className="text-5xl font-extrabold tracking-wide text-center mb-6 text-gray-800 dark:text-white">
                 All Friends

@@ -61,7 +61,7 @@ function ManageContributors() {
     }, [])
 
     return (
-        <section className='flex flex-col justify-center items-center px-6 py-8 bg-gray-100 dark:bg-gray-900 h-auto'>
+        <section className='flex flex-col justify-center items-center px-6 py-8 bg-gray-100 dark:bg-gray-900 h-[100vh]'>
             <BackButton />
             <h1 className="text-center font-sans text-4xl font-extrabold my-6 text-blue-600 dark:text-blue-400">
                 Manage Contributors
