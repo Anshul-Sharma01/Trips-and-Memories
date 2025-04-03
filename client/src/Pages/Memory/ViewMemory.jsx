@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import BackButton from '../../Components/BackButton.jsx';
+// import BackButton from '../../Components/BackButton.jsx';
 import { viewMemoryThunk } from '../../Redux/Slices/memorySlice.js';
 import NavigationLayout from '../../Layouts/NavigationLayout.jsx';
 import { FaCalendarAlt, FaMapMarkerAlt, FaTag } from 'react-icons/fa';
@@ -40,7 +40,7 @@ function ViewMemory() {
         <NavigationLayout>
             <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300 flex flex-col items-center p-4">
                 <div className="self-start mb-4">
-                    <BackButton />
+                    {/* <BackButton /> */}
                 </div>
 
                 <div className="max-w-3xl w-full text-center">

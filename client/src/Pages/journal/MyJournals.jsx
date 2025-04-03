@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import TripJournal from "../../Components/journal/TripJournal";
 import NavigationLayput from "../../Layouts/NavigationLayout";
-import BackButton from "../../Components/BackButton";
+// import BackButton from "../../Components/BackButton";
 
 function MyJournals() {
     const dispatch = useDispatch();
@@ -26,7 +26,7 @@ function MyJournals() {
     return (
         <NavigationLayput>
             <section className="dark:bg-gray-900 dark:text-white min-h-screen py-8 px-4">
-                <BackButton />
+                {/* <BackButton /> */}
                 {usersJournals.length > 0 ? (
                     <div className="">
                         {usersJournals?.map((ele) => (

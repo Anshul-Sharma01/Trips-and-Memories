@@ -24,7 +24,7 @@ function NavigationLayout({ children }) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors">
+        <div className="min-h-screen z-10 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors">
             {/* Navigation Bar */}
             <nav className="bg-blue-600 dark:bg-gray-800 text-white flex items-center justify-between px-6 py-4 shadow-md">
                 {/* Logo & Drawer Toggle */}
@@ -91,6 +91,7 @@ function NavigationLayout({ children }) {
                                         )}
                                         <li><Link to="/create-journal" className="hover:text-teal-300 transition-colors">Create Journal</Link></li>
                                         <li><Link to="/memory/create-memory" className="hover:text-teal-300 transition-colors">Create Memory</Link></li>
+                                        <li><Link to="/memory/my" className="hover:text-teal-300 transition-colors">My Memories</Link></li>
                                         <li><Link to="/time-capsules/create" className="hover:text-teal-300 transition-colors flex items-center gap-2">
                                             Create Time Capsule <IoMdTimer className="text-lg" />
                                         </Link></li>

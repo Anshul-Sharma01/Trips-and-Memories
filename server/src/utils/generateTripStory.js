@@ -17,7 +17,8 @@ const generateTripStory = async(inputText) => {
                 },
             }
         );
-        return response.data[0].generated_text;
+        // console.log("Response : ", response);
+        return response.data[0].generated_text.split("\n").slice(1).join("\n");
     }catch(err){
         console.error(`Error generating story : ${err}`);
         throw new Error("Failed to generate trip story !!");

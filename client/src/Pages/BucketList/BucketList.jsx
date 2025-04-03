@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import NavigationLayout from "../../Layouts/NavigationLayout";
 import { useNavigate } from "react-router-dom";
-import BackButton from "../../Components/BackButton";
+// import BackButton from "../../Components/BackButton";
 import { useEffect, useState } from "react";
 import MemoryCard from "../../Components/Memory/MemoryCard";
 import { clearBucketListThunk, getBucketListThunk } from "../../Redux/Slices/bucketListSlice";
@@ -59,7 +59,7 @@ function BucketList() {
     return (
         <NavigationLayout>
             <div className="container min-h-screen w-full flex flex-col justify-center items-center gap-4 mx-auto p-4 pb-8 bg-white dark:bg-gray-900">
-                <BackButton />
+                {/* <BackButton /> */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200">
                         <span className="capitalize">{userData?.name}'s </span>

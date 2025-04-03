@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchAllMemoriesThunk, fetchSearchMemoriesThunk } from '../../Redux/Slices/memorySlice.js';
 import MemoryCard from '../../Components/Memory/MemoryCard.jsx';
-import BackButton from '../../Components/BackButton.jsx';
+// import BackButton from '../../Components/BackButton.jsx';
 import NavigationLayout from '../../Layouts/NavigationLayout.jsx';
 import SearchMemory from '../../Components/Memory/SearchMemory.jsx';
 
@@ -51,7 +51,7 @@ function AllMemories() {
     return (
         <NavigationLayout>
             <div className="container min-h-screen w-full flex flex-col justify-center items-center gap-4 mx-auto p-4 pb-8 bg-white dark:bg-gray-900">
-                <BackButton />
+                {/* <BackButton /> */}
 
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200">
