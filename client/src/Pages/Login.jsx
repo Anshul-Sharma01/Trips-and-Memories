@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { isEmail, isPassword } from "../Helpers/regexMatcher.js";
 import { authenticateUser } from '../Redux/Slices/authSlice.js';
 import { CgSpinnerTwo } from "react-icons/cg";
+import DemoAccount from '../Components/DemoAccount.jsx';
 
 function Login() {
     const dispatch = useDispatch();
@@ -116,6 +117,7 @@ function Login() {
                     <p className='text-gray-600 dark:text-gray-300'>Don't have an account? <Link to="/auth/register" className='text-blue-900 dark:text-blue-400 font-bold'>Register</Link></p>
                     <p className='text-gray-600 dark:text-gray-300'>Forgot Password? <Link to="/auth/forgot-password" className='text-blue-900 dark:text-blue-400 font-bold'>Click Here</Link></p>
                 </div>
+                <DemoAccount/>
             </section>
         </main>
     );
